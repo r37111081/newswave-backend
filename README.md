@@ -2,10 +2,10 @@
 
 # NewsWave 新聞聚合網後端 API 系統
 
-![start](https://img.shields.io/github/stars/r37111081/newswave-backend-1.svg)｜
-![forks](https://img.shields.io/github/forks/r37111081/newswave-backend-1.svg)｜
-![issues-pr](https://img.shields.io/github/issues-pr/r37111081/newswave-backend-1.svg)｜
-![issues](https://img.shields.io/github/issues/r37111081/newswave-backend-1.svg)
+![start](https://img.shields.io/github/stars/r37111081/newswave-backend.svg)｜
+![forks](https://img.shields.io/github/forks/r37111081/newswave-backend.svg)｜
+![issues-pr](https://img.shields.io/github/issues-pr/r37111081/newswave-backend.svg)｜
+![issues](https://img.shields.io/github/issues/r37111081/newswave-backend.svg)
 
 ## 關於專案
 
@@ -34,13 +34,13 @@ Node.js 版本建議為：`18.16.0` 以上
 ### 取得專案
 
 ```bash
-git clone https://github.com/r37111081/newswave-backend-1.git
+git clone https://github.com/r37111081/newswave-backend.git
 ```
 
 ### 移動到專案內
 
 ```bash
-cd newswave-backend-1
+cd newswave-backend
 ```
 
 ### 安裝套件
@@ -59,32 +59,24 @@ npm install
 
 ```bash
 # 環境變數，區分開發環境或正式環境(development、production)
-NODE_ENV = "development"
+NODE_ENV = development
 
 # 伺服器埠號
 PORT = 3000
 
 # MongoDB 連結
-DATABASE = "mongodb connection string"
-# MongoDB 密碼
-DATABASE_PASSWORD = "your password"
+MONGODB_URI = mongodb connection string
 
-# JTW Token 到期日
-JWT_EXPIRES_DAY = "7d"
 # JTW Token 密鑰
-JWT_SECRET = "this is my jwt token"
+JWT_SECRET = this is my jwt token
 
-# Gmail 帳號
-EMAILER_USER = "example@gmail.com"
-# Gmail 應用程式密碼
-EMAILER_PASSWORD = "dwuq asxf dowp pidw"
 ```
 
-### 取得 EMAILER_PASSWORD
+<!-- ### 取得 EMAILER_PASSWORD
 
 若需要使用 Email 服務，需取得 EMAILER_PASSWORD。
 
-此專案有使用 Nodemailer 套件，預設使用 Gmail 寄信，可以參考「[Node.js 應用篇 - 使用 Nodemailer 來發送 Email](https://israynotarray.com/nodejs/20230722/1626712457/)」 來取得 EMAILER_PASSWORD 應用程式密碼。
+此專案有使用 Nodemailer 套件，預設使用 Gmail 寄信，可以參考「[Node.js 應用篇 - 使用 Nodemailer 來發送 Email](https://israynotarray.com/nodejs/20230722/1626712457/)」 來取得 EMAILER_PASSWORD 應用程式密碼。 -->
 
 ### 運行專案
 
