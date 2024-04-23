@@ -2,20 +2,20 @@
 
 # NewsWave 新聞聚合網後端 API 系統
 
-![start](https://img.shields.io/github/stars/r37111081/newswave-backend.svg)｜
-![forks](https://img.shields.io/github/forks/r37111081/newswave-backend.svg)｜
-![issues-pr](https://img.shields.io/github/issues-pr/r37111081/newswave-backend.svg)｜
-![issues](https://img.shields.io/github/issues/r37111081/newswave-backend.svg)
+![start](https://img.shields.io/github/stars/r37111081/newswave-backend-1.svg)｜
+![forks](https://img.shields.io/github/forks/r37111081/newswave-backend-1.svg)｜
+![issues-pr](https://img.shields.io/github/issues-pr/r37111081/newswave-backend-1.svg)｜
+![issues](https://img.shields.io/github/issues/r37111081/newswave-backend-1.svg)
 
 ## 關於專案
 
 - 2024 NODEJS 企業專題班 - NewsWave 新聞聚合網後端 API
-- 注意事項：此專案沒有實作使用者權限機制，因此只要取得 Token 都可以打 CRUD API
+<!-- - 注意事項：此專案沒有實作使用者權限機制，因此只要取得 Token 都可以打 CRUD API -->
 
 ## API 串接範例
 
 ```js
-fetch('http://localhost:3005/api/v1/home/news', { method: 'GET' })
+fetch('http://localhost:3000/api/v1/home/news', { method: 'GET' })
     .then(response => response.json())
     .then(res => {
         // { status: 'true', result: [{...}] }
@@ -34,13 +34,13 @@ Node.js 版本建議為：`18.16.0` 以上
 ### 取得專案
 
 ```bash
-git clone https://github.com/r37111081/newswave-backend.git
+git clone https://github.com/r37111081/newswave-backend-1.git
 ```
 
 ### 移動到專案內
 
 ```bash
-cd newswave-backend
+cd newswave-backend-1
 ```
 
 ### 安裝套件
@@ -62,12 +62,12 @@ npm install
 NODE_ENV = "development"
 
 # 伺服器埠號
-PORT = 3005
+PORT = 3000
 
 # MongoDB 連結
-DATABASE = "mongodb+srv://example:<password>@cluster0.xqonzdp.mongodb.net/"
+DATABASE = "mongodb connection string"
 # MongoDB 密碼
-DATABASE_PASSWORD = "yoaymj3C474VsrysWLp3"
+DATABASE_PASSWORD = "your password"
 
 # JTW Token 到期日
 JWT_EXPIRES_DAY = "7d"
@@ -148,9 +148,9 @@ newswave-backend
 
 - node.js v20.12.2
 - tsx v3.14.0
-- esbuild v0.19.5
+- esbuild v0.19.5 (還在確認)
 - express v4.19.2
-- mongoose v7.6.3
+- mongoose v8.3.2
 - jsonwebtoken v9.0.2
 
 ## 專案指令列表
@@ -168,7 +168,7 @@ npm run start
 # 產生 Swagger 文件指令 : 用來產生 Swagger 文件
 npm run swagger-autogen
 ```
-
+<!--
 ## Docker
 
 本專案可以使用 Docker，只需要使用以下指令
@@ -239,4 +239,4 @@ docker run -p 3005:3005 -d newswave-backend:v1
 - [使用 SSH 連接/上傳到你的 GitHub(Ed25519)](https://israynotarray.com/git/20210709/1381487661/)
 - [Node.js 實戰密技大統整（套件運用、金流、第三方登入、雲服務、Docker）](https://www.casper.tw/development/2023/10/15/ironman-collection/)
 - [《Node.js 不負責系列：把前端人員當作後端來用，就算是前端也能嘗試寫的後端～原來 Node.js 可以做這麼多事～》](https://ithelp.ithome.com.tw/articles/10339734)
-- [被迫吃芒果的前端工程師](https://israynotarray.com/nodejs/20220416/2123631571/)
+- [被迫吃芒果的前端工程師](https://israynotarray.com/nodejs/20220416/2123631571/) -->
