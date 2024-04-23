@@ -9,6 +9,8 @@ import cookieParser from 'cookie-parser'
 import userRouter from './routes/userRouter'
 import { authenticate } from './middleware/authMiddleware'
 import { errorHandler } from './middleware/errorMiddleware'
+import swaggerUi from 'swagger-ui-express'
+import swaggerFile from '../swagger_output.json'
 
 dotenv.config()
 
@@ -48,6 +50,7 @@ app.listen(port, () => {
 
 app.use(authRouter)
 app.use('/users', authenticate, userRouter)
+app.use('/api-doc', swaggerUi.serve, swaggerUi.setup(swaggerFile))
 
 app.use(errorHandler)
 
