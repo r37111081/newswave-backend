@@ -10,21 +10,29 @@ const router = express.Router()
 router.post('/register',
 /**
      * #swagger.tags = ['Users']
-     * #swagger.description  = "新使用者註冊"
-     * #swagger.parameters['body'] = {
+     * #swagger.parameters['obj'] = {
             in: 'body',
-            schema: {},
+            required: true,
+            description: "使用者註冊",
+            schema: {
+                "name":"user",
+                "email":"user@gmail.com",
+                "password":"user1234"
+            },
         }
-     * #swagger.responses[200] = {
+     * #swagger.responses[201] = {
+            description: '註冊成功',
             schema: {
                 "status": true,
-                "result": {},
+                "message": "註冊成功",
+                "uid": "QZDQO0zh...."
             }
         }
-     * #swagger.responses[404] = {
+     * #swagger.responses[400] = {
+            description: '使用者已存在',
             schema: {
                 "status": false,
-                "message": "此最新消息不存在",
+                "message": "使用者已存在",
             }
         }
      */

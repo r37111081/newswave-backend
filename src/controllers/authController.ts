@@ -7,7 +7,10 @@ const registerUser = async (req: Request, res: Response) => {
   const userExists = await User.findOne({ email })
 
   if (userExists) {
-    res.status(400).json({ message: '使用者已存在' })
+    res.status(400).json({
+      status: false,
+      message: '使用者已存在'
+    })
   }
   const user = await User.create({
     name, email, password
@@ -15,7 +18,9 @@ const registerUser = async (req: Request, res: Response) => {
   if (user) {
     generateToken(res, user._id)
     res.status(201).json({
-      id: user._id,
+      status: true,
+      message: '註冊成功',
+      uid: user._id,
       name: user.name,
       email: user.email
     })
