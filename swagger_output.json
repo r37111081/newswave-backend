@@ -22,19 +22,35 @@
         "tags": [
           "Users"
         ],
-        "description": "新使用者註冊",
+        "description": "",
         "parameters": [
           {
-            "name": "body",
+            "name": "obj",
             "in": "body",
+            "required": true,
+            "description": "使用者註冊",
             "schema": {
               "type": "object",
-              "properties": {}
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "example": "user"
+                },
+                "email": {
+                  "type": "string",
+                  "example": "user@gmail.com"
+                },
+                "password": {
+                  "type": "string",
+                  "example": "user1234"
+                }
+              }
             }
           }
         ],
         "responses": {
-          "200": {
+          "201": {
+            "description": "註冊成功",
             "schema": {
               "type": "object",
               "properties": {
@@ -42,24 +58,22 @@
                   "type": "boolean",
                   "example": true
                 },
-                "result": {
-                  "type": "object",
-                  "properties": {}
+                "message": {
+                  "type": "string",
+                  "example": "註冊成功"
+                },
+                "uid": {
+                  "type": "string",
+                  "example": "QZDQO0zh...."
                 }
               },
               "xml": {
                 "name": "main"
               }
-            },
-            "description": "OK"
-          },
-          "201": {
-            "description": "Created"
+            }
           },
           "400": {
-            "description": "Bad Request"
-          },
-          "404": {
+            "description": "使用者已存在",
             "schema": {
               "type": "object",
               "properties": {
@@ -69,14 +83,13 @@
                 },
                 "message": {
                   "type": "string",
-                  "example": "此最新消息不存在"
+                  "example": "使用者已存在"
                 }
               },
               "xml": {
                 "name": "main"
               }
-            },
-            "description": "Not Found"
+            }
           }
         }
       }
