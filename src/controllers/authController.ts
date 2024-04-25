@@ -11,6 +11,7 @@ const registerUser = async (req: Request, res: Response) => {
       status: false,
       message: '使用者已存在'
     })
+    return
   }
   const user = await User.create({
     name, email, password
@@ -20,7 +21,7 @@ const registerUser = async (req: Request, res: Response) => {
     res.status(201).json({
       status: true,
       message: '註冊成功',
-      uid: user._id,
+      id: user._id,
       name: user.name,
       email: user.email
     })
