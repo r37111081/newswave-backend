@@ -34,7 +34,6 @@ app.use(helmet())
 
 app.use(
   cors({
-    origin: 'http://newswave-backend.onrender.com',
     credentials: true
   })
 )
@@ -50,7 +49,11 @@ app.listen(port, () => {
 
 app.use(authRouter)
 app.use('/users', authenticate, userRouter)
-app.use('/api-doc', swaggerUi.serve, swaggerUi.setup(swaggerFile))
+app.use('/api-doc', swaggerUi.serve, swaggerUi.setup(swaggerFile, {
+  swaggerOptions: {
+    host: 'newswave-backend.onrender.com'
+  }
+}))
 
 app.use(errorHandler)
 
