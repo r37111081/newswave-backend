@@ -5,7 +5,7 @@
     "title": "REST API",
     "description": ""
   },
-  "host": "localhost:3000",
+  "host": "newswave-backend.onrender.com",
   "basePath": "/",
   "tags": [
     {
