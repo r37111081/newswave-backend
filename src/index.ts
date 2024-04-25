@@ -32,7 +32,12 @@ const app = express()
 const port = process.env.PORT || 8000
 app.use(helmet())
 
-app.use(cors())
+app.use(
+  cors({
+    origin: 'http://newswave-backend.onrender.com',
+    credentials: true
+  })
+)
 
 app.use(cookieParser())
 
