@@ -6,7 +6,8 @@ const doc = {
       name: 'Users',
       description: '使用者註冊登入'
     }
-  ]
+  ],
+  host: 'https://newswave-backend.onrender.com/'
 }
 
 const outputFile = './swagger_output.json' // 輸出的文件名稱
