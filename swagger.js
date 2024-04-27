@@ -7,6 +7,7 @@ const doc = {
       description: '使用者註冊登入'
     }
   ],
+  schemes: ['http', 'https'],
   host: 'newswave-backend.onrender.com'
 }
 

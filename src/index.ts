@@ -32,11 +32,7 @@ const app = express()
 const port = process.env.PORT || 8000
 app.use(helmet())
 
-app.use(
-  cors({
-    credentials: true
-  })
-)
+app.use(cors())
 
 app.use(cookieParser())
 
