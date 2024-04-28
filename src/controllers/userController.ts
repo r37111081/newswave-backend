@@ -9,7 +9,11 @@ const getUser = async (req: Request, res: Response) => {
     res.status(400)
   }
 
-  res.status(200).json(user)
+  res.status(200).json({
+    status: true,
+    message: '取得成功',
+    data: user
+  })
 }
 
 export { getUser }
