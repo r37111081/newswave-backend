@@ -21,9 +21,11 @@ const registerUser = async (req: Request, res: Response) => {
     res.status(201).json({
       status: true,
       message: '註冊成功',
-      id: user._id,
-      name: user.name,
-      email: user.email
+      data: {
+        id: user._id,
+        name: user.name,
+        email: user.email
+      }
     })
   } else {
     res.status(400).json({ message: '建立使用者發生錯誤' })
@@ -37,9 +39,13 @@ const authenticateUser = async (req: Request, res: Response) => {
   if (user && (await user.comparePassword(password))) {
     generateToken(res, user._id)
     res.status(201).json({
-      id: user._id,
-      name: user.name,
-      email: user.email
+      status: true,
+      message: '登入成功',
+      data: {
+        id: user._id,
+        name: user.name,
+        email: user.email
+      }
     })
   } else {
     res.status(401).json({ message: '找不到使用者 / 密碼錯誤' })
