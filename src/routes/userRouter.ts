@@ -1,5 +1,6 @@
 import express from 'express'
-import { getUser } from '../controllers/userController'
+import { getUser, updatePassword } from '../controllers/userController'
+import { authenticate } from '../middleware/authMiddleware'
 
 const router = express.Router()
 
@@ -21,5 +22,29 @@ router.get('/:id'
         }
      */
   , getUser)
-
+router.patch('/updatePassword', authenticate,
+  /*
+    #swagger.tags = ['User - 會員']
+    #swagger.description = '更新密碼 API'
+    #swagger.security = [{'api_key': ['apiKeyAuth']}]
+    #swagger.parameters['body'] = {
+      in: 'body',
+      type: 'object',
+      required: true,
+      description: '資料格式',
+      schema: {
+        $password: '',
+        $confirmPassword: '',
+      }
+    }
+    #swagger.responses[200] = {
+      description: '更新密碼資訊',
+      schema: {
+        status: true,
+        message: '更新密碼成功'
+      }
+    }
+  */
+  updatePassword
+)
 export default router
