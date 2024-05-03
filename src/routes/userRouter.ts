@@ -1,6 +1,6 @@
 import express from 'express'
 import { getUser, updatePassword } from '../controllers/userController'
-// import { authenticate } from '../middleware/authMiddleware'
+import { authenticate } from '../middleware/authMiddleware'
 
 const router = express.Router()
 
@@ -22,7 +22,7 @@ router.get('/:id'
         }
      */
   , getUser)
-router.patch('/updatePassword',
+router.patch('/updatePassword', authenticate,
   /*
     #swagger.tags = ['User - 會員']
     #swagger.description = '更新密碼 API'
