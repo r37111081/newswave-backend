@@ -9,7 +9,6 @@ const doc = {
   ],
   schemes: ['http', 'https'],
   host: 'newswave-backend.onrender.com'
-
 }
 
 const outputFile = './swagger_output.json' // 輸出的文件名稱
