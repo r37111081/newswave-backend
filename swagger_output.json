@@ -18,7 +18,7 @@
     "https"
   ],
   "paths": {
-    "/register": {
+    "/api/v1/member/register": {
       "post": {
         "tags": [
           "Users"
@@ -95,7 +95,7 @@
         }
       }
     },
-    "/login": {
+    "/api/v1/member/login": {
       "post": {
         "tags": [
           "Users"
@@ -159,7 +159,7 @@
         }
       }
     },
-    "/logout": {
+    "/api/v1/member/logout": {
       "post": {
         "tags": [
           "Users"
@@ -217,12 +217,12 @@
         }
       }
     },
-    "/users/{id}": {
+    "/api/v1/member/data/{id}": {
       "get": {
         "tags": [
           "Users"
         ],
-        "description": "取得使用者資料",
+        "description": "取得會員狀態資料",
         "parameters": [
           {
             "name": "id",
@@ -233,7 +233,6 @@
         ],
         "responses": {
           "200": {
-            "description": "OK",
             "schema": {
               "type": "object",
               "properties": {
@@ -249,10 +248,125 @@
               "xml": {
                 "name": "main"
               }
-            }
+            },
+            "description": "OK"
           },
-          "400": {
-            "description": "Bad Request"
+          "404": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "message": {
+                  "type": "string",
+                  "example": "此最新消息不存在"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            },
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/api/v1/member/updatePassword": {
+      "patch": {
+        "tags": [
+          "User - 會員"
+        ],
+        "description": "更新密碼 API",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "description": "資料格式",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "password": {
+                  "type": "string",
+                  "example": ""
+                },
+                "confirmPassword": {
+                  "type": "string",
+                  "example": ""
+                }
+              },
+              "required": [
+                "password",
+                "confirmPassword"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "更新密碼資訊",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "message": {
+                  "type": "string",
+                  "example": "更新密碼成功"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "api_key": [
+              "apiKeyAuth"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/v1/member/info/{id}": {
+      "get": {
+        "tags": [
+          "User - 會員"
+        ],
+        "description": "取得會員基本資料",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "result": {
+                  "type": "object",
+                  "properties": {}
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            },
+            "description": "OK"
           },
           "404": {
             "schema": {
