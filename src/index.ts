@@ -1,16 +1,22 @@
 import express from 'express'
-import authRouter from './routes/authRouter'
-import connectUserDB from './connections/userDB'
 import dotenv from 'dotenv'
 import cors from 'cors'
 import helmet from 'helmet'
 import bodyParser from 'body-parser'
 import cookieParser from 'cookie-parser'
-import userRouter from './routes/userRouter'
-import { authenticate } from './middleware/authMiddleware'
-import { errorHandler } from './middleware/errorMiddleware'
 import swaggerUi from 'swagger-ui-express'
 import swaggerFile from '../swagger_output.json'
+
+// connections
+import connectUserDB from './connections/userDB'
+
+// router
+import authRouter from './routes/authRouter'
+import userRouter from './routes/userRouter'
+
+// middleware
+import { authenticate } from './middleware/authMiddleware'
+import { errorHandler } from './middleware/errorMiddleware'
 
 dotenv.config()
 
@@ -21,7 +27,9 @@ interface UserBasicInfo {
 }
 
 declare global {
+  // eslint-disable-next-line no-unused-vars
   namespace Express {
+    // eslint-disable-next-line no-unused-vars
     interface Request {
       user?: UserBasicInfo | null;
     }
@@ -43,8 +51,8 @@ app.listen(port, () => {
   console.log(`Server is running on port ${port}`)
 })
 
-app.use(authRouter)
-app.use('/users', authenticate, userRouter)
+app.use('/api/v1/member', authRouter)
+app.use('/api/v1/member', authenticate, userRouter)
 app.use('/api-doc', swaggerUi.serve, swaggerUi.setup(swaggerFile, {
   swaggerOptions: {
     host: 'newswave-backend.onrender.com'

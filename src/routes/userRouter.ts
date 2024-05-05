@@ -1,13 +1,13 @@
 import express from 'express'
-import { getUser, updatePassword } from '../controllers/userController'
+import { getUser, updatePassword, getUserInfo } from '../controllers/userController'
 import { authenticate } from '../middleware/authMiddleware'
 
 const router = express.Router()
 
-router.get('/:id'
+router.get('/data/:id'
   /**
      * #swagger.tags = ['Users']
-     * #swagger.description  = "取得使用者資料"
+     * #swagger.description  = "取得會員狀態資料"
      * #swagger.responses[200] = {
             schema: {
                 "status": true,
@@ -47,4 +47,22 @@ router.patch('/updatePassword', authenticate,
   */
   updatePassword
 )
+router.get('/info/:id'
+  /**
+     * #swagger.tags = ['User - 會員']
+     * #swagger.description  = "取得會員基本資料"
+     * #swagger.responses[200] = {
+            schema: {
+                "status": true,
+                "result": {},
+            }
+        }
+     * #swagger.responses[404] = {
+            schema: {
+                "status": false,
+                "message": "此最新消息不存在",
+            }
+        }
+     */
+  , getUserInfo)
 export default router
