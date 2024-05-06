@@ -273,7 +273,7 @@
         }
       }
     },
-    "/api/v1/member/updatePassword": {
+    "/api/v1/member/password": {
       "patch": {
         "tags": [
           "User - 會員"
