@@ -22,7 +22,7 @@ router.get('/data/:id'
         }
      */
   , getUser)
-router.patch('/updatePassword', authenticate,
+router.patch('/password', authenticate,
   /*
     #swagger.tags = ['User - 會員']
     #swagger.description = '更新密碼 API'

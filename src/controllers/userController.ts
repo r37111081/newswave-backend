@@ -3,8 +3,9 @@ import User from '../models/User'
 import bcrypt from 'bcryptjs'
 import { catchAsync } from '../utils/catchAsync'
 import { appSuccess } from '../utils/appSuccess'
-import { appError } from '../utils/appError'
+import { appError } from '../middleware/errorMiddleware'
 import { apiState } from '../utils/apiState'
+// import { AuthenticationError } from '../middleware/errorMiddleware'
 
 // 取得會員狀態資料
 const getUser = catchAsync(async (req: Request, res: Response, next: NextFunction) => {

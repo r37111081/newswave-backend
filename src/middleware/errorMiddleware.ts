@@ -16,10 +16,19 @@ const errorHandler = (
 }
 
 class AuthenticationError extends Error {
-  constructor (message: string) {
+  statusCode: number
+  isOperational: boolean | undefined
+  constructor (statusCode: number, message: string) {
     super(message)
     this.name = 'AuthenticationError'
+    this.statusCode = statusCode
+    this.isOperational = true
   }
 }
 
-export { errorHandler, AuthenticationError }
+const appError = (apiState: any, next: NextFunction) => {
+  const error = new AuthenticationError(apiState.statusCode, apiState.message)
+  next(error)
+}
+
+export { errorHandler, AuthenticationError, appError }
