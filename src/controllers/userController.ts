@@ -38,9 +38,9 @@ const updatePassword = catchAsync(async (req: Request, res: Response, next: Next
 
   // 密碼正確
   if (password) {
-    // 密碼8碼
-    if (!validator.isLength(newPassword, { min: 8 })) {
-      return next(appError({ statusCode: 400, message: '密碼字數低於 8 碼' }, next))
+    // 密碼8~16碼
+    if (!validator.isLength(newPassword, { min: 8, max: 16 })) {
+      return next(appError({ statusCode: 400, message: '密碼長度需介於8~16碼' }, next))
     }
     bcrypt.compare(oldPassword, password).then((result) => {
       if (!result) {
