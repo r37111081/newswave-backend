@@ -1,10 +1,29 @@
-import { Request, Response } from 'express'
+import { Request, Response, NextFunction } from 'express'
 import User from '../models/User'
+import validator from 'validator'
 import { generateToken, clearToken } from '../utils/auth'
+import { appError } from '../middleware/errorMiddleware'
 
-const registerUser = async (req: Request, res: Response) => {
+const registerUser = async (req: Request, res: Response, next: NextFunction) => {
   const { name, email, password } = req.body
   const userExists = await User.findOne({ email })
+
+  if (email) {
+    if (!validator.isEmail(email)) {
+      return appError({ statusCode: 400, message: 'Email 格式不正確' }, next)
+    }
+  } else {
+    return appError({ statusCode: 400, message: 'Email為 undefined' }, next)
+  }
+
+  if (password) {
+    // 密碼8碼
+    if (!validator.isLength(password, { min: 8 })) {
+      return next(appError({ statusCode: 400, message: '密碼字數低於 8 碼' }, next))
+    }
+  } else {
+    return appError({ statusCode: 400, message: '密碼為undefined' }, next)
+  }
 
   if (userExists) {
     res.status(400).json({
@@ -13,6 +32,7 @@ const registerUser = async (req: Request, res: Response) => {
     })
     return
   }
+
   const user = await User.create({
     name, email, password
   })

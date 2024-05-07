@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express'
 import User from '../models/User'
 import bcrypt from 'bcryptjs'
+import validator from 'validator'
 import { catchAsync } from '../utils/catchAsync'
 import { appSuccess } from '../utils/appSuccess'
 import { appError } from '../middleware/errorMiddleware'
@@ -13,7 +14,7 @@ const getUser = catchAsync(async (req: Request, res: Response, next: NextFunctio
   const user = await User.findById(userId, 'name email')
 
   if (!user) {
-    return appError({ statusCode: 400, message: '登入發生錯誤，請稍候再嘗試' }, next)
+    return appError({ statusCode: 401, message: '登入發生錯誤，請稍候再嘗試' }, next)
   }
 
   appSuccess({
@@ -25,20 +26,36 @@ const getUser = catchAsync(async (req: Request, res: Response, next: NextFunctio
 
 // 更新密碼 API
 const updatePassword = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-  const { password, confirmPassword } = req.body
+  const userId = req.user?._id
+  const { oldPassword, newPassword } = req.body
+  const user = await User.findById(userId, 'password')
+  const password = user?.password
+
   // 資料欄位正確
-  if (!password || !confirmPassword) {
+  if (!oldPassword || !newPassword) {
     return appError(apiState.DATA_MISSING, next)
   }
+
   // 密碼正確
-  if (password !== confirmPassword) {
-    return appError({ statusCode: 400, message: '密碼不一致' }, next)
+  if (password) {
+    // 密碼8碼
+    if (!validator.isLength(newPassword, { min: 8 })) {
+      return next(appError({ statusCode: 400, message: '密碼字數低於 8 碼' }, next))
+    }
+    bcrypt.compare(oldPassword, password).then((result) => {
+      if (!result) {
+        return appError({ statusCode: 400, message: '密碼不一致' }, next)
+      }
+    })
+  } else {
+    return appError({ statusCode: 400, message: '密碼為undefined' }, next)
   }
+
   // 加密密碼
-  const newPassword = await bcrypt.hash(password, 8)
+  const bcryptPassword = await bcrypt.hash(newPassword, 8)
 
   await User.findByIdAndUpdate(req.user, {
-    password: newPassword
+    password: bcryptPassword
   }).exec()
 
   appSuccess({
