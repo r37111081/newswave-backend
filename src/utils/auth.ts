@@ -10,7 +10,7 @@ const generateToken = (res: Response, userId: string) => {
   res.cookie('jwt', token, {
     httpOnly: true,
     secure: process.env.NODE_ENV !== 'development',
-    domain: process.env.NODE_ENV !== 'development' ? process.env.FRONT_END_URL?.replace('https://', '.') : undefined,
+    domain: process.env.FRONT_END_URL?.includes('https://') ? process.env.FRONT_END_URL?.replace('https://', '.') : undefined,
     sameSite: 'strict',
     maxAge: 60 * 60 * 1000
   })
