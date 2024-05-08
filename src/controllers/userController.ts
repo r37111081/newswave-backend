@@ -64,7 +64,7 @@ const updatePassword = catchAsync(async (req: Request, res: Response, next: Next
       }
     })
   } else {
-    return appError({ statusCode: 400, message: '密碼為undefined' }, next)
+    return appError({ statusCode: 400, message: '請輸入密碼' }, next)
   }
 })
 

@@ -13,7 +13,7 @@ const registerUser = async (req: Request, res: Response, next: NextFunction) => 
       return appError({ statusCode: 400, message: 'Email 格式不正確' }, next)
     }
   } else {
-    return appError({ statusCode: 400, message: 'Email為undefined' }, next)
+    return appError({ statusCode: 400, message: '請輸入Email' }, next)
   }
 
   if (password) {
@@ -22,11 +22,11 @@ const registerUser = async (req: Request, res: Response, next: NextFunction) => 
       return next(appError({ statusCode: 400, message: '密碼長度需介於8~16碼' }, next))
     }
   } else {
-    return appError({ statusCode: 400, message: '密碼為undefined' }, next)
+    return appError({ statusCode: 400, message: '請輸入密碼' }, next)
   }
 
   if (!name) {
-    return appError({ statusCode: 400, message: '名稱為undefined' }, next)
+    return appError({ statusCode: 400, message: '請輸入暱稱' }, next)
   }
 
   if (userExists) {
