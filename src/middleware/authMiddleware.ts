@@ -10,26 +10,26 @@ const authenticate = asyncHandler(
       let token = req.cookies.jwt
 
       if (!token) {
-        throw new AuthenticationError('Token not found')
+        throw new AuthenticationError(401, 'Token not found')
       }
 
       const jwtSecret = process.env.JWT_SECRET || ''
       const decoded = jwt.verify(token, jwtSecret) as JwtPayload
 
       if (!decoded || !decoded.userId) {
-        throw new AuthenticationError('UserId not found')
+        throw new AuthenticationError(401, 'UserId not found')
       }
 
       const user = await User.findById(decoded.userId, '_id name email')
 
       if (!user) {
-        throw new AuthenticationError('User not found')
+        throw new AuthenticationError(401, 'User not found')
       }
 
       req.user = user
       next()
     } catch (e) {
-      throw new AuthenticationError('Invalid token')
+      throw new AuthenticationError(401, 'Invalid token')
     }
   }
 )

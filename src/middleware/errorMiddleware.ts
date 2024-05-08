@@ -9,17 +9,30 @@ const errorHandler = (
   console.error(err.stack)
 
   if (err instanceof AuthenticationError) {
-    res.status(401).json({ message: 'Unauthorized: ' + err.message })
+    if (err.statusCode === 400) {
+      res.status(400).json({ message: err.message })
+    } else {
+      res.status(401).json({ message: 'Unauthorized: ' + err.message })
+    }
   } else {
     res.status(500).json({ message: 'Internal Server Error' })
   }
 }
 
 class AuthenticationError extends Error {
-  constructor (message: string) {
+  statusCode: number
+  isOperational: boolean | undefined
+  constructor (statusCode: number, message: string) {
     super(message)
     this.name = 'AuthenticationError'
+    this.statusCode = statusCode
+    this.isOperational = true
   }
 }
 
-export { errorHandler, AuthenticationError }
+const appError = (apiState: any, next: NextFunction) => {
+  const error = new AuthenticationError(apiState.statusCode, apiState.message)
+  next(error)
+}
+
+export { errorHandler, AuthenticationError, appError }
