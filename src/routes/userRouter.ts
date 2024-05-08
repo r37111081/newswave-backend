@@ -33,8 +33,8 @@ router.patch('/password', authenticate,
       required: true,
       description: '資料格式',
       schema: {
-        $password: '',
-        $confirmPassword: '',
+        $oldPassword: '',
+        $newPassword: '',
       }
     }
     #swagger.responses[200] = {

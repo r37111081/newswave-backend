@@ -47,6 +47,9 @@ const updatePassword = catchAsync(async (req: Request, res: Response, next: Next
         return appError({ statusCode: 400, message: '密碼不一致' }, next)
       }
     })
+    if (oldPassword === newPassword) {
+      return appError({ statusCode: 400, message: '新密碼不可與原密碼相同' }, next)
+    }
   } else {
     return appError({ statusCode: 400, message: '密碼為undefined' }, next)
   }

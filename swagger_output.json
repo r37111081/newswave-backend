@@ -288,18 +288,18 @@
             "schema": {
               "type": "object",
               "properties": {
-                "password": {
+                "oldPassword": {
                   "type": "string",
                   "example": ""
                 },
-                "confirmPassword": {
+                "newPassword": {
                   "type": "string",
                   "example": ""
                 }
               },
               "required": [
-                "password",
-                "confirmPassword"
+                "oldPassword",
+                "newPassword"
               ]
             }
           }
