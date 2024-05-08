@@ -40,7 +40,15 @@ const app = express()
 const port = process.env.PORT || 8000
 app.use(helmet())
 
-app.use(cors())
+const corsOptions = {
+  origin: process.env.FRONT_END_URL,
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  preflightContinue: false,
+  optionsSuccessStatus: 204,
+  credentials: true
+}
+
+app.use(cors(corsOptions))
 
 app.use(cookieParser())
 
