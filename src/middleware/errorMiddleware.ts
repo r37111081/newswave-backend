@@ -10,12 +10,12 @@ const errorHandler = (
 
   if (err instanceof AuthenticationError) {
     if (err.statusCode === 400) {
-      res.status(400).json({ message: err.message })
+      res.status(400).json({ status: false, message: err.message })
     } else {
-      res.status(401).json({ message: 'Unauthorized: ' + err.message })
+      res.status(401).json({ status: false, message: 'Unauthorized: ' + err.message })
     }
   } else {
-    res.status(500).json({ message: 'Internal Server Error' })
+    res.status(500).json({ status: false, message: 'Internal Server Error' })
   }
 }
 
