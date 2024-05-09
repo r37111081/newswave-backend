@@ -7,7 +7,7 @@ import { AuthenticationError } from './errorMiddleware'
 const authenticate = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      let token = req.cookies.jwt
+      let token = req.headers?.authorization?.split('Bearer ')?.[1]
 
       if (!token) {
         throw new AuthenticationError(401, 'Token not found')
