@@ -53,7 +53,7 @@ const registerUser = async (req: Request, res: Response, next: NextFunction) => 
       }
     })
   } else {
-    res.status(400).json({ message: '建立使用者發生錯誤' })
+    res.status(400).json({ status: false, message: '建立使用者發生錯誤' })
   }
 }
 
@@ -63,7 +63,7 @@ const authenticateUser = async (req: Request, res: Response) => {
 
   if (user && (await user.comparePassword(password))) {
     const token = generateToken(res, user._id)
-    res.status(201).json({
+    res.status(200).json({
       status: true,
       message: '登入成功',
       data: {
@@ -74,13 +74,13 @@ const authenticateUser = async (req: Request, res: Response) => {
       }
     })
   } else {
-    res.status(401).json({ message: '找不到使用者 / 密碼錯誤' })
+    res.status(401).json({ status: false, message: '找不到使用者 / 密碼錯誤' })
   }
 }
 
 const logoutUser = (req: Request, res: Response) => {
   clearToken(res)
-  res.status(200).json({ message: '使用者登出' })
+  res.status(200).json({ status: true, message: '登出成功' })
 }
 
 export { registerUser, authenticateUser, logoutUser }

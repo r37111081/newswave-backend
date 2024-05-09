@@ -16,8 +16,8 @@ const apiState = {
     message: '資料不存在'
   },
   SYNTAX_ERROR: {
-    message: 'Syntax Error，語法錯誤或非 JSON 格式',
-    statusCode: 400
+    statusCode: 400,
+    message: 'Syntax Error，語法錯誤或非 JSON 格式'
   },
   PAGE_NOT_FOUND: {
     statusCode: 404,
