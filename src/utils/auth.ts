@@ -7,16 +7,11 @@ const generateToken = (res: Response, userId: string) => {
     expiresIn: '1h'
   })
 
-  res.cookie('jwt', token, {
-    httpOnly: true,
-    secure: process.env.FRONT_END_URL?.includes('https://'),
-    sameSite: process.env.FRONT_END_URL?.includes('https://') ? 'none' : 'strict',
-    maxAge: 60 * 60 * 1000
-  })
+  return token
 }
 
 const clearToken = (res: Response) => {
-  res.cookie('jwt', '', {
+  res.cookie('token', '', {
     httpOnly: true,
     expires: new Date(0)
   })
