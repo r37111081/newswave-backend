@@ -214,7 +214,7 @@
         }
       }
     },
-    "/api/v1/member/magazine-category-list": {
+    "/magazine-category-list": {
       "get": {
         "tags": [
           "Magazine"
@@ -244,7 +244,7 @@
         }
       }
     },
-    "/api/v1/member/magazine-article-page": {
+    "/magazine-article-page": {
       "get": {
         "tags": [
           "Magazine"
@@ -281,7 +281,7 @@
         ]
       }
     },
-    "/api/v1/member/data/{id}": {
+    "/users/{id}": {
       "get": {
         "tags": [
           "Users"
