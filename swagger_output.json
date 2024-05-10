@@ -113,6 +113,7 @@
         ],
         "responses": {
           "200": {
+            "description": "OK",
             "schema": {
               "type": "object",
               "properties": {
@@ -128,11 +129,7 @@
               "xml": {
                 "name": "main"
               }
-            },
-            "description": "OK"
-          },
-          "201": {
-            "description": "Created"
+            }
           },
           "401": {
             "description": "Unauthorized"
@@ -215,6 +212,73 @@
             "description": "Not Found"
           }
         }
+      }
+    },
+    "/api/v1/member/magazine-category-list": {
+      "get": {
+        "tags": [
+          "Magazine"
+        ],
+        "description": "取得雜誌種類列表",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "data": {
+                  "type": "array",
+                  "example": [],
+                  "items": {}
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/member/magazine-article-page": {
+      "get": {
+        "tags": [
+          "Magazine"
+        ],
+        "description": "取得雜誌文章列表分頁",
+        "parameters": [
+          {
+            "name": "category",
+            "in": "query",
+            "type": "String",
+            "description": "雜誌種類"
+          },
+          {
+            "name": "pageIndex",
+            "in": "query",
+            "type": "String",
+            "description": "當前頁數"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "貼文資訊",
+            "schema": {
+              "$ref": "#/definitions/magazineInfo"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_key": [
+              "apiKeyAuth"
+            ]
+          }
+        ]
       }
     },
     "/api/v1/member/data/{id}": {
@@ -386,6 +450,91 @@
               }
             },
             "description": "Not Found"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "magazineInfo": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "boolean",
+          "example": true
+        },
+        "message": {
+          "type": "string",
+          "example": "取得雜誌文章列表成功"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "articles": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "articleId": {
+                    "type": "string",
+                    "example": "文章ID"
+                  },
+                  "title": {
+                    "type": "string",
+                    "example": "文章標題"
+                  },
+                  "tags": {
+                    "type": "string",
+                    "example": "文章標籤"
+                  },
+                  "publishedAt": {
+                    "type": "string",
+                    "example": "文章時間"
+                  },
+                  "image": {
+                    "type": "string",
+                    "example": "文章圖片"
+                  },
+                  "source": {
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "string",
+                        "example": "文章來源名稱"
+                      },
+                      "url": {
+                        "type": "string",
+                        "example": "文章來源網址"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "firstPage": {
+              "type": "string",
+              "example": "是否為第一頁"
+            },
+            "lastPage": {
+              "type": "string",
+              "example": "是否為最後頁"
+            },
+            "empty": {
+              "type": "string",
+              "example": "是否沒有資料"
+            },
+            "totalElements": {
+              "type": "string",
+              "example": "總共有幾筆資料"
+            },
+            "totalPages": {
+              "type": "string",
+              "example": "總共有幾頁"
+            },
+            "targetPage": {
+              "type": "string",
+              "example": "目前在第幾頁"
+            }
           }
         }
       }

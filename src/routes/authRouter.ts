@@ -3,7 +3,8 @@ import {
   registerUser,
   authenticateUser,
   logoutUser,
-  getAllMagazine
+  getAllMagazine,
+  getMagazineList
 } from '../controllers/authController'
 
 const router = express.Router()
@@ -84,15 +85,38 @@ router.post('/logout',
   logoutUser)
 router.get('/magazine-category-list',
 /**
- * #swagger.tags = ['Users']
+ * #swagger.tags = ['Magazine']
  * #swagger.description  = "取得雜誌種類列表"
  * #swagger.responses[200] = {
-        schema: {
+    schema: {
             "status": true,
             "data": [],
         }
         }
   */
   getAllMagazine)
+
+router.get('/magazine-article-page',
+/**
+ * #swagger.tags = ['Magazine']
+ * #swagger.description  = "取得雜誌文章列表分頁"
+ * #swagger.security = [{'api_key': ['apiKeyAuth']}]
+ * #swagger.parameters['category'] = {
+        in: 'query',
+        type: 'String',
+        description: '雜誌種類',
+    },
+* #swagger.parameters['pageIndex'] = {
+        in: 'query',
+        type: 'String',
+        description: '當前頁數',
+    },
+
+* #swagger.responses[200] = {
+        description: '貼文資訊',
+        schema: { $ref: '#/definitions/magazineInfo' }
+    }
+*/
+  getMagazineList)
 
 export default router
