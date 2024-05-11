@@ -8,7 +8,7 @@ const doc = {
     }
   ],
   schemes: ['http', 'https'],
-  host: 'localhost:3005',
+  host: 'newswave-backend.onrender.com',
   definitions: {
     magazinList: {
       status: true,
