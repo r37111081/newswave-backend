@@ -42,22 +42,38 @@ const userSchema = new Schema<IUser>({
     default: false
   },
   subscribeExpiredAt: {
-    type: Date
+    type: Date,
+    default: Date.now
   },
   collectElements: {
-    type: Number
+    type: Number,
+    default: 0
   },
   followElements: {
-    type: Number
+    type: Number,
+    default: 0
   },
   birthday: {
-    type: String
+    type: String,
+    default: ''
   },
   address: {
-    zipcode: Number,
-    detail: String,
-    country: String,
-    city: String
+    zipcode: {
+      type: Number,
+      default: 0
+    },
+    detail: {
+      type: String,
+      default: ''
+    },
+    country: {
+      type: String,
+      default: ''
+    },
+    city: {
+      type: String,
+      default: ''
+    }
   }
 })
 
