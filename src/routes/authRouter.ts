@@ -84,12 +84,12 @@ router.post('/logout',
   logoutUser)
 router.get('/magazine-category-list',
 /**
- * #swagger.tags = ['Magazine']
- * #swagger.description  = "取得雜誌文章列表分頁"
+    #swagger.tags = ['Magazine']
+    #swagger.description  = "取得雜誌種類列表"
 
-* #swagger.responses[200] = {
+    #swagger.responses[200] = {
         description: '雜誌種類列表資訊',
-        schema: { $ref: '#/definitions/magazinList' }
+        schema: { $ref: '#/definitions/magazineList' }
     }
 */
   getAllMagazine)

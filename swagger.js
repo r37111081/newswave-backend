@@ -18,7 +18,7 @@ const doc = {
     }
   },
   definitions: {
-    magazinList: {
+    magazineList: {
       status: true,
       message: '取得雜誌種類列表成功',
       data: [
@@ -30,6 +30,35 @@ const doc = {
           categoryImg: '雜誌圖片'
         }
       ]
+    },
+    magazineInfo: {
+      status: true,
+      message: '取得雜誌文章列表成功',
+      data: {
+        articles: [
+          {
+            _id: 'ID',
+            articleId: '文章ID',
+            title: '文章標題',
+            editor: '文章編輯',
+            topics: ['文章標籤'],
+            publishedAt: '文章發布時間',
+            image: '文章圖片',
+            imageDescription: '文章圖片描述',
+            content: '文章內容',
+            source: {
+              name: '文章來源名稱',
+              url: '文章來源網址'
+            }
+          }
+        ],
+        firstPage: '是否為第一頁',
+        lastPage: '是否為最後一頁',
+        empty: '是否沒有資料',
+        totalElement: '總共有幾筆資料',
+        totalPages: '總共有幾頁',
+        targetPage: '目前在第幾頁'
+      }
     }
   }
 }
