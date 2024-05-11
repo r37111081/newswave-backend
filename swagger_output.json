@@ -17,6 +17,14 @@
     "http",
     "https"
   ],
+  "securityDefinitions": {
+    "api_key": {
+      "type": "apiKey",
+      "in": "header",
+      "name": "Authorization",
+      "description": "請加上 API Token"
+    }
+  },
   "paths": {
     "/api/v1/member/register": {
       "post": {
@@ -425,7 +433,7 @@
         ],
         "responses": {
           "200": {
-            "description": "貼文資訊",
+            "description": "雜誌文章列表資訊",
             "schema": {
               "$ref": "#/definitions/magazineInfo"
             }

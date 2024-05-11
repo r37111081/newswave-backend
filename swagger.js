@@ -9,6 +9,14 @@ const doc = {
   ],
   schemes: ['http', 'https'],
   host: 'newswave-backend.onrender.com',
+  securityDefinitions: {
+    api_key: {
+      type: 'apiKey',
+      in: 'header',
+      name: 'Authorization',
+      description: '請加上 API Token'
+    }
+  },
   definitions: {
     magazinList: {
       status: true,

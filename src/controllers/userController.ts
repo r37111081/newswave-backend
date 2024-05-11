@@ -91,7 +91,9 @@ const getMagazineList = async (req: Request, res: Response) => {
     const query = req.query
     const articlesPerPage = 6
 
-    const category = query.category !== undefined ? { 'source.name': query.category } : {}
+    const category = query.category !== undefined && query.category !== ''
+      ? { 'source.name': query.category }
+      : { articleId: /M-/ }
     const pageIndex = query.pageIndex !== undefined && query.pageIndex !== ''
       ? parseInt(query.pageIndex as string)
       : 1
@@ -99,6 +101,7 @@ const getMagazineList = async (req: Request, res: Response) => {
     const [totalElements, articles] = await Promise.all([
       News.countDocuments({ ...category }),
       News.find({ ...category })
+        .sort({ publishedAt: -1 })
         .skip((pageIndex - 1) * articlesPerPage)
         .limit(articlesPerPage)
     ])
