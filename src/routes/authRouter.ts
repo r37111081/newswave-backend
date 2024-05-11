@@ -2,7 +2,8 @@ import express from 'express'
 import {
   registerUser,
   authenticateUser,
-  logoutUser
+  logoutUser,
+  getAllMagazine
 } from '../controllers/authController'
 
 const router = express.Router()
@@ -81,5 +82,16 @@ router.post('/logout',
         }
      */
   logoutUser)
+router.get('/magazine-category-list',
+/**
+ * #swagger.tags = ['Magazine']
+ * #swagger.description  = "取得雜誌文章列表分頁"
+
+* #swagger.responses[200] = {
+        description: '雜誌種類列表資訊',
+        schema: { $ref: '#/definitions/magazinList' }
+    }
+*/
+  getAllMagazine)
 
 export default router
