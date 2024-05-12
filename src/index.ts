@@ -13,6 +13,7 @@ import connectUserDB from './connections/userDB'
 // router
 import authRouter from './routes/authRouter'
 import userRouter from './routes/userRouter'
+import utilsRouter from './routes/utilsRouter'
 
 // middleware
 import { authenticate } from './middleware/authMiddleware'
@@ -58,7 +59,7 @@ app.use(bodyParser.urlencoded({ extended: true })) // To recognize the req obj a
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`)
 })
-
+app.use('/api/v1', utilsRouter)
 app.use('/api/v1/member', authRouter)
 app.use('/api/v1/member', authenticate, userRouter)
 app.use('/api-doc', swaggerUi.serve, swaggerUi.setup(swaggerFile, {
