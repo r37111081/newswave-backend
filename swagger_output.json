@@ -17,6 +17,14 @@
     "http",
     "https"
   ],
+  "securityDefinitions": {
+    "api_key": {
+      "type": "apiKey",
+      "in": "header",
+      "name": "Authorization",
+      "description": "請加上 API Token"
+    }
+  },
   "paths": {
     "/api/v1/member/register": {
       "post": {
@@ -219,12 +227,12 @@
         "tags": [
           "Magazine"
         ],
-        "description": "取得雜誌文章列表分頁",
+        "description": "取得雜誌種類列表",
         "responses": {
           "200": {
             "description": "雜誌種類列表資訊",
             "schema": {
-              "$ref": "#/definitions/magazinList"
+              "$ref": "#/definitions/magazineList"
             }
           }
         }
@@ -402,10 +410,47 @@
           }
         }
       }
+    },
+    "/api/v1/member/magazine-article-page": {
+      "get": {
+        "tags": [
+          "Magazine"
+        ],
+        "description": "取得雜誌文章列表分頁",
+        "parameters": [
+          {
+            "name": "category",
+            "in": "query",
+            "type": "String",
+            "description": "雜誌種類"
+          },
+          {
+            "name": "pageIndex",
+            "in": "query",
+            "type": "String",
+            "description": "當前頁數"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "雜誌文章列表資訊",
+            "schema": {
+              "$ref": "#/definitions/magazineInfo"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_key": [
+              "apiKeyAuth"
+            ]
+          }
+        ]
+      }
     }
   },
   "definitions": {
-    "magazinList": {
+    "magazineList": {
       "type": "object",
       "properties": {
         "status": {
@@ -441,6 +486,110 @@
                 "type": "string",
                 "example": "雜誌圖片"
               }
+            }
+          }
+        }
+      }
+    },
+    "magazineInfo": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "boolean",
+          "example": true
+        },
+        "message": {
+          "type": "string",
+          "example": "取得雜誌文章列表成功"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "articles": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "_id": {
+                    "type": "string",
+                    "example": "ID"
+                  },
+                  "articleId": {
+                    "type": "string",
+                    "example": "文章ID"
+                  },
+                  "title": {
+                    "type": "string",
+                    "example": "文章標題"
+                  },
+                  "editor": {
+                    "type": "string",
+                    "example": "文章編輯"
+                  },
+                  "topics": {
+                    "type": "array",
+                    "example": [
+                      "文章標籤"
+                    ],
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "publishedAt": {
+                    "type": "string",
+                    "example": "文章發布時間"
+                  },
+                  "image": {
+                    "type": "string",
+                    "example": "文章圖片"
+                  },
+                  "imageDescription": {
+                    "type": "string",
+                    "example": "文章圖片描述"
+                  },
+                  "content": {
+                    "type": "string",
+                    "example": "文章內容"
+                  },
+                  "source": {
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "string",
+                        "example": "文章來源名稱"
+                      },
+                      "url": {
+                        "type": "string",
+                        "example": "文章來源網址"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "firstPage": {
+              "type": "string",
+              "example": "是否為第一頁"
+            },
+            "lastPage": {
+              "type": "string",
+              "example": "是否為最後一頁"
+            },
+            "empty": {
+              "type": "string",
+              "example": "是否沒有資料"
+            },
+            "totalElement": {
+              "type": "string",
+              "example": "總共有幾筆資料"
+            },
+            "totalPages": {
+              "type": "string",
+              "example": "總共有幾頁"
+            },
+            "targetPage": {
+              "type": "string",
+              "example": "目前在第幾頁"
             }
           }
         }
