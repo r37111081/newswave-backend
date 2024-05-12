@@ -6,12 +6,11 @@ import { catchAsync } from '../utils/catchAsync'
 import { appSuccess } from '../utils/appSuccess'
 import { appError } from '../middleware/errorMiddleware'
 import { apiState } from '../utils/apiState'
-// import { AuthenticationError } from '../middleware/errorMiddleware'
 
 // 取得會員狀態資料
 const getUser = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
   const userId = req.user?._id
-  const user = await User.findById(userId, 'name email')
+  const user = await User.findById(userId, 'name avatar email isVip subscribeExpiredAt collectElements followElements')
 
   if (!user) {
     return appError({ statusCode: 401, message: '登入發生錯誤，請稍候再嘗試' }, next)
@@ -71,7 +70,7 @@ const updatePassword = catchAsync(async (req: Request, res: Response, next: Next
 // 取得會員基本資料
 const getUserInfo = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
   const userId = req.user?._id
-  const user = await User.findById(userId, 'name email')
+  const user = await User.findById(userId, 'name email birthday address zipcode detail country city')
 
   if (!user) {
     return appError({ statusCode: 400, message: '登入發生錯誤，請稍候再嘗試' }, next)

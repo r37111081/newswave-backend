@@ -5,6 +5,17 @@ export interface IUser extends Document {
   name: string;
   email: string;
   password: string;
+  avatar: String;
+  isVip: Boolean;
+  subscribeExpiredAt: Date;
+  collectElements: Number;
+  followElements: Number;
+  birthday: String;
+  address: Object;
+  zipcode: Number;
+  detail: String;
+  country: String;
+  city: String;
   comparePassword: (enteredPassword: string) => boolean;
 }
 
@@ -21,6 +32,48 @@ const userSchema = new Schema<IUser>({
   password: {
     type: String,
     required: true
+  },
+  avatar: {
+    type: String,
+    default: ''
+  },
+  isVip: {
+    type: Boolean,
+    default: false
+  },
+  subscribeExpiredAt: {
+    type: Date,
+    default: Date.now
+  },
+  collectElements: {
+    type: Number,
+    default: 0
+  },
+  followElements: {
+    type: Number,
+    default: 0
+  },
+  birthday: {
+    type: String,
+    default: ''
+  },
+  address: {
+    zipcode: {
+      type: Number,
+      default: 0
+    },
+    detail: {
+      type: String,
+      default: ''
+    },
+    country: {
+      type: String,
+      default: ''
+    },
+    city: {
+      type: String,
+      default: ''
+    }
   }
 })
 
