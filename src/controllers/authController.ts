@@ -85,6 +85,7 @@ const logoutUser = (req: Request, res: Response) => {
 }
 
 const getAllMagazine = async (req: Request, res: Response) => {
+  console.log(req.headers)
   try {
     const data = await Magazine.find()
 

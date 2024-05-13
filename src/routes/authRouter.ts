@@ -1,10 +1,5 @@
 import express from 'express'
-import {
-  registerUser,
-  authenticateUser,
-  logoutUser,
-  getAllMagazine
-} from '../controllers/authController'
+import { registerUser, authenticateUser, logoutUser, getAllMagazine } from '../controllers/authController'
 
 const router = express.Router()
 
@@ -44,12 +39,24 @@ router.post('/login',
      * #swagger.description  = "使用者登入"
      * #swagger.parameters['body'] = {
             in: 'body',
-            schema: {},
+            schema: {
+                "email":"user@gmail.com",
+                "password":"user1234"
+            },
         }
      * #swagger.responses[200] = {
             schema: {
                 "status": true,
-                "result": {},
+                "result": {
+                    "status": true,
+                    "message": "登入成功",
+                    "data": {
+                        "id": "6640aacaad9a2f2b....",
+                        "name": "user",
+                        "email": "user@gmail.com",
+                        "token": "eyJhbGci......"
+                    }
+                },
             }
         }
      * #swagger.responses[404] = {
@@ -63,6 +70,7 @@ router.post('/login',
 router.post('/logout',
 /**
      * #swagger.tags = ['Users']
+     * #swagger.ignore = true
      * #swagger.description  = "使用者登出"
      * #swagger.parameters['body'] = {
             in: 'body',
