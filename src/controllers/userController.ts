@@ -10,6 +10,7 @@ import { apiState } from '../utils/apiState'
 
 // 取得會員狀態資料
 const getUser = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+  console.log('this getUser', req.user)
   const userId = req.user?._id
   const user = await User.findById(userId, 'name avatar email isVip subscribeExpiredAt collectElements followElements')
 
@@ -87,6 +88,7 @@ const getUserInfo = catchAsync(async (req: Request, res: Response, next: NextFun
 // 取得雜誌文章列表
 const getMagazineList = async (req: Request, res: Response) => {
   try {
+    console.log(req.headers)
     const query = req.query
     const articlesPerPage = 6
 

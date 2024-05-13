@@ -61,11 +61,7 @@ app.listen(port, () => {
 
 app.use('/api/v1/member', authRouter)
 app.use('/api/v1/member', authenticate, userRouter)
-app.use('/api-doc', swaggerUi.serve, swaggerUi.setup(swaggerFile, {
-  swaggerOptions: {
-    host: 'newswave-backend.onrender.com'
-  }
-}))
+app.use('/api-doc', swaggerUi.serve, swaggerUi.setup(swaggerFile))
 
 app.use(errorHandler)
 
