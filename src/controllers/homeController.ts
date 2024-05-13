@@ -1,20 +1,22 @@
 import { Request, Response } from 'express'
-import News from '../models/News'
+import News, { INews } from '../models/News'
 const getHotNewsList = async (req: Request, res: Response) => {
   try {
     const data = await News.find()
+    const newsDataListSortByPublishedAt = data.sort((a:INews, b:INews) => Number(new Date(b.publishedAt)) - Number(new Date(a.publishedAt)))
+    const dataResult = newsDataListSortByPublishedAt.filter((item, index) => index < 6)
 
-    if (data) {
+    if (dataResult.length) {
       res.status(200).json({
         status: true,
         message: '取得成功',
-        data
+        dataResult
       })
     } else {
       res.status(200).json({
         status: true,
         message: '尚無熱門新聞',
-        data
+        dataResult
       })
     }
   } catch (error) {

@@ -26,6 +26,22 @@
     }
   },
   "paths": {
+    "/api/v1/hot-news-list": {
+      "get": {
+        "tags": [
+          "HotNewsList"
+        ],
+        "description": "取得熱門新聞列表",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
     "/api/v1/member/register": {
       "post": {
         "tags": [
