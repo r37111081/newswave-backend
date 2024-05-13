@@ -14,8 +14,7 @@
     }
   ],
   "schemes": [
-    "http",
-    "https"
+    "http"
   ],
   "securityDefinitions": {
     "api_key": {
@@ -115,7 +114,16 @@
             "in": "body",
             "schema": {
               "type": "object",
-              "properties": {}
+              "properties": {
+                "email": {
+                  "type": "string",
+                  "example": "user@gmail.com"
+                },
+                "password": {
+                  "type": "string",
+                  "example": "user1234"
+                }
+              }
             }
           }
         ],
@@ -131,7 +139,37 @@
                 },
                 "result": {
                   "type": "object",
-                  "properties": {}
+                  "properties": {
+                    "status": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "登入成功"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "example": "6640aacaad9a2f2b...."
+                        },
+                        "name": {
+                          "type": "string",
+                          "example": "user"
+                        },
+                        "email": {
+                          "type": "string",
+                          "example": "user@gmail.com"
+                        },
+                        "token": {
+                          "type": "string",
+                          "example": "eyJhbGci......"
+                        }
+                      }
+                    }
+                  }
                 }
               },
               "xml": {
@@ -141,64 +179,6 @@
           },
           "401": {
             "description": "Unauthorized"
-          },
-          "404": {
-            "schema": {
-              "type": "object",
-              "properties": {
-                "status": {
-                  "type": "boolean",
-                  "example": false
-                },
-                "message": {
-                  "type": "string",
-                  "example": "此最新消息不存在"
-                }
-              },
-              "xml": {
-                "name": "main"
-              }
-            },
-            "description": "Not Found"
-          }
-        }
-      }
-    },
-    "/api/v1/member/logout": {
-      "post": {
-        "tags": [
-          "Users"
-        ],
-        "description": "使用者登出",
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {}
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "status": {
-                  "type": "boolean",
-                  "example": true
-                },
-                "result": {
-                  "type": "object",
-                  "properties": {}
-                }
-              },
-              "xml": {
-                "name": "main"
-              }
-            }
           },
           "404": {
             "schema": {
@@ -441,7 +421,7 @@
         },
         "security": [
           {
-            "api_key": [
+            "Bearer": [
               "apiKeyAuth"
             ]
           }

@@ -88,7 +88,6 @@ const getUserInfo = catchAsync(async (req: Request, res: Response, next: NextFun
 // 取得雜誌文章列表
 const getMagazineList = async (req: Request, res: Response) => {
   try {
-    console.log(req.headers)
     const query = req.query
     const articlesPerPage = 6
 

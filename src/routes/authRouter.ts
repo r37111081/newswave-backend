@@ -1,10 +1,5 @@
 import express from 'express'
-import {
-  registerUser,
-  authenticateUser,
-  logoutUser,
-  getAllMagazine
-} from '../controllers/authController'
+import { registerUser, authenticateUser, logoutUser, getAllMagazine } from '../controllers/authController'
 
 const router = express.Router()
 
@@ -75,7 +70,7 @@ router.post('/login',
 router.post('/logout',
 /**
      * #swagger.tags = ['Users']
-     * #swagger.hidden = true
+     * #swagger.ignore = true
      * #swagger.description  = "使用者登出"
      * #swagger.parameters['body'] = {
             in: 'body',
