@@ -1,9 +1,44 @@
 import express from 'express'
-import { getUser, getUserInfo, getMagazineList } from '../controllers/userController'
+import {
+  getUser,
+  getUserInfo,
+  updatePassword,
+  getMagazineList
+} from '../controllers/userController'
+import { authenticate } from '../middleware/authMiddleware'
 
 export const router = express.Router()
 
-router.get('/data/:id'
+router.patch(
+  '/password',
+  authenticate,
+  /*
+    #swagger.tags = ['User - 會員']
+    #swagger.description = '更新密碼 API'
+    #swagger.security = [{'api_key': ['apiKeyAuth']}]
+    #swagger.parameters['body'] = {
+      in: 'body',
+      type: 'object',
+      required: true,
+      description: '資料格式',
+      schema: {
+        $oldPassword: '',
+        $newPassword: '',
+      }
+    }
+    #swagger.responses[200] = {
+      description: '更新密碼資訊',
+      schema: {
+        status: true,
+        message: '更新密碼成功'
+      }
+    }
+  */
+  updatePassword
+)
+
+router.get(
+  '/data/:id',
   /**
      * #swagger.tags = ['Users']
      * #swagger.description  = "取得會員狀態資料"
@@ -21,9 +56,11 @@ router.get('/data/:id'
             }
         }
      */
-  , getUser)
+  getUser
+)
 
-router.get('/info/:id'
+router.get(
+  '/info/:id',
   /**
      * #swagger.tags = ['User - 會員']
      * #swagger.description  = "取得會員基本資料"
@@ -41,10 +78,12 @@ router.get('/info/:id'
             }
         }
      */
-  , getUserInfo)
+  getUserInfo
+)
 
-router.get('/magazine-article-page',
-/**
+router.get(
+  '/magazine-article-page',
+  /**
   #swagger.tags = ['Magazine']
   #swagger.description  = "取得雜誌文章列表分頁"
   #swagger.security = [{'api_key': ['apiKeyAuth']}]
@@ -64,5 +103,7 @@ router.get('/magazine-article-page',
     schema: { $ref: '#/definitions/magazineInfo' }
   }
 */
-  getMagazineList)
+  getMagazineList
+)
+
 export default router
