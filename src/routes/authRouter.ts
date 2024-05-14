@@ -47,7 +47,10 @@ router.post(
          * #swagger.description  = "使用者登入"
          * #swagger.parameters['body'] = {
                 in: 'body',
-                schema: {},
+                schema: {
+                    "email":"user@gmail.com",
+                    "password":"user1234"
+                },
             }
          * #swagger.responses[200] = {
                 schema: {
