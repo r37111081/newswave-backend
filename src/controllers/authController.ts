@@ -7,8 +7,6 @@ import { appError } from '../middleware/errorMiddleware'
 
 const registerUser = async (req: Request, res: Response, next: NextFunction) => {
   const { name, email, password } = req.body
-  const userExists = await User.findOne({ email })
-
   if (email) {
     if (!validator.isEmail(email)) {
       return appError({ statusCode: 400, message: 'Email 格式不正確' }, next)
@@ -29,54 +27,39 @@ const registerUser = async (req: Request, res: Response, next: NextFunction) => 
   if (!name) {
     return appError({ statusCode: 400, message: '請輸入暱稱' }, next)
   }
+  const userExists = await User.findOne({ email })
 
   if (userExists) {
-    res.status(400).json({
-      status: false,
-      message: '使用者已存在'
-    })
-    return
+    return res.status(400).json({ status: false, message: '使用者已存在' })
   }
 
-  const user = await User.create({
-    name, email, password
-  })
-  if (user) {
-    const token = generateToken(res, user._id)
-    res.status(201).json({
-      status: true,
-      message: '註冊成功',
-      data: {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-        token
-      }
-    })
-  } else {
-    res.status(400).json({ status: false, message: '建立使用者發生錯誤' })
+  const user = await User.create({ name, email, password })
+
+  if (!user) {
+    return res.status(400).json({ status: false, message: '建立使用者發生錯誤' })
   }
+  const token = generateToken(res, user._id)
+
+  res.status(201).json({
+    status: true,
+    message: '註冊成功',
+    data: { id: user._id, name: user.name, email: user.email, token }
+  })
 }
 
 const authenticateUser = async (req: Request, res: Response) => {
   const { email, password } = req.body
   const user = await User.findOne({ email })
 
-  if (user && (await user.comparePassword(password))) {
-    const token = generateToken(res, user._id)
-    res.status(200).json({
-      status: true,
-      message: '登入成功',
-      data: {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-        token
-      }
-    })
-  } else {
-    res.status(401).json({ status: false, message: '找不到使用者 / 密碼錯誤' })
+  if (!user || !(await user.comparePassword(password))) {
+    return res.status(401).json({ status: false, message: '找不到使用者 / 密碼錯誤' })
   }
+  const token = generateToken(res, user._id)
+  res.status(200).json({
+    status: true,
+    message: '登入成功',
+    data: { id: user._id, name: user.name, email: user.email, token }
+  })
 }
 
 const logoutUser = (req: Request, res: Response) => {
@@ -87,14 +70,13 @@ const logoutUser = (req: Request, res: Response) => {
 const getAllMagazine = async (req: Request, res: Response) => {
   try {
     const data = await Magazine.find()
-
     res.status(200).json({
       status: true,
       message: '取得雜誌列表成功',
       data
     })
   } catch (error) {
-    console.error(error)
+    res.status(500).json({ status: false, message: '伺服器錯誤' })
   }
 }
 
