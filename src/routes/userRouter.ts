@@ -7,6 +7,7 @@ router.get('/data/:id'
   /**
      * #swagger.tags = ['Users']
      * #swagger.description  = "取得會員狀態資料"
+     * #swagger.security = [{'api_key': ['apiKeyAuth']}]
      * #swagger.responses[200] = {
             schema: {
                 "status": true,
@@ -26,6 +27,7 @@ router.get('/info/:id'
   /**
      * #swagger.tags = ['User - 會員']
      * #swagger.description  = "取得會員基本資料"
+     * #swagger.security = [{'api_key': ['apiKeyAuth']}]
      * #swagger.responses[200] = {
             schema: {
                 "status": true,

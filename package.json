@@ -6,8 +6,8 @@
   "scripts": {
     "dev": "nodemon src/index.ts",
     "build": "tsc",
-    "start": "cross-env NODE_ENV=production node dist/index.js",
-    "swagger-autogen": "node ./swagger.js"
+    "start": "node dist/index.js",
+    "swagger-dev": "cross-env NODE_ENV=development node ./swagger.js"
   },
   "keywords": [],
   "author": "",
