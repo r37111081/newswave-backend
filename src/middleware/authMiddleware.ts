@@ -8,8 +8,6 @@ const authenticate = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       let token = req.headers?.authorization?.split('Bearer ')?.[1]
-      console.log('req', req.headers)
-      console.log('token', token)
 
       if (!token) {
         throw new AuthenticationError(401, 'Token not found')

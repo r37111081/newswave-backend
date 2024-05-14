@@ -5,7 +5,7 @@
     "title": "REST API",
     "description": ""
   },
-  "host": "localhost:3000",
+  "host": "newswave-backend.onrender.com",
   "basePath": "/",
   "tags": [
     {
@@ -14,7 +14,7 @@
     }
   ],
   "schemes": [
-    "http"
+    "https"
   ],
   "securityDefinitions": {
     "api_key": {
@@ -274,67 +274,6 @@
         }
       }
     },
-    "/api/v1/member/password": {
-      "patch": {
-        "tags": [
-          "User - 會員"
-        ],
-        "description": "更新密碼 API",
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "description": "資料格式",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "oldPassword": {
-                  "type": "string",
-                  "example": ""
-                },
-                "newPassword": {
-                  "type": "string",
-                  "example": ""
-                }
-              },
-              "required": [
-                "oldPassword",
-                "newPassword"
-              ]
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "更新密碼資訊",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "status": {
-                  "type": "boolean",
-                  "example": true
-                },
-                "message": {
-                  "type": "string",
-                  "example": "更新密碼成功"
-                }
-              },
-              "xml": {
-                "name": "main"
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "api_key": [
-              "apiKeyAuth"
-            ]
-          }
-        ]
-      }
-    },
     "/api/v1/member/info/{id}": {
       "get": {
         "tags": [
@@ -421,7 +360,7 @@
         },
         "security": [
           {
-            "Bearer": [
+            "api_key": [
               "apiKeyAuth"
             ]
           }

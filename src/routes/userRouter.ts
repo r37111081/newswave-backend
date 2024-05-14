@@ -45,7 +45,7 @@ router.get('/magazine-article-page',
 /**
   #swagger.tags = ['Magazine']
   #swagger.description  = "取得雜誌文章列表分頁"
-  #swagger.security = [{'Bearer': ['apiKeyAuth']}]
+  #swagger.security = [{'api_key': ['apiKeyAuth']}]
   #swagger.parameters['category'] = {
     in: 'query',
     type: 'String',
