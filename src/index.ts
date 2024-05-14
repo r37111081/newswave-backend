@@ -10,21 +10,14 @@ import swaggerFile from '../swagger_output.json'
 // 遠端資料庫連線
 import connectUserDB from './connections/userDB'
 
-<<<<<<< HEAD
 // router
 import authRouter from './routes/authRouter'
 import userRouter from './routes/userRouter'
 import utilsRouter from './routes/utilsRouter'
 
-=======
->>>>>>> main
 // middleware
 import { authenticate } from './middleware/authMiddleware'
 import { errorHandler } from './middleware/errorMiddleware'
-
-// router
-import authRouter from './routes/authRouter'
-import userRouter from './routes/userRouter'
 
 // 載入環境變數
 dotenv.config()
