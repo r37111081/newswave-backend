@@ -7,7 +7,7 @@
     "dev": "nodemon src/index.ts",
     "build": "tsc",
     "start": "node dist/index.js",
-    "swagger-autogen": "node ./swagger.js"
+    "swagger-dev": "cross-env NODE_ENV=development node ./swagger.js"
   },
   "keywords": [],
   "author": "",
@@ -38,6 +38,7 @@
     "@types/validator": "^13.11.9",
     "@typescript-eslint/eslint-plugin": "^7.7.0",
     "@typescript-eslint/parser": "^7.7.0",
+    "cross-env": "^7.0.3",
     "eslint": "^8.57.0",
     "eslint-config-standard": "^17.1.0",
     "eslint-plugin-import": "^2.29.1",
@@ -46,5 +47,8 @@
     "nodemon": "^3.1.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.4.5"
+  },
+  "engines": {
+    "node": ">=19"
   }
 }

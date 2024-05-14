@@ -1,28 +1,17 @@
 import express from 'express'
-import { getUser, updatePassword, getUserInfo, getMagazineList } from '../controllers/userController'
+import {
+  getUser,
+  getUserInfo,
+  updatePassword,
+  getMagazineList
+} from '../controllers/userController'
 import { authenticate } from '../middleware/authMiddleware'
 
-const router = express.Router()
+export const router = express.Router()
 
-router.get('/data/:id'
-  /**
-     * #swagger.tags = ['Users']
-     * #swagger.description  = "取得會員狀態資料"
-     * #swagger.responses[200] = {
-            schema: {
-                "status": true,
-                "result": {},
-            }
-        }
-     * #swagger.responses[404] = {
-            schema: {
-                "status": false,
-                "message": "此最新消息不存在",
-            }
-        }
-     */
-  , getUser)
-router.patch('/password', authenticate,
+router.patch(
+  '/password',
+  authenticate,
   /*
     #swagger.tags = ['User - 會員']
     #swagger.description = '更新密碼 API'
@@ -47,10 +36,13 @@ router.patch('/password', authenticate,
   */
   updatePassword
 )
-router.get('/info/:id'
+
+router.get(
+  '/data/:id',
   /**
-     * #swagger.tags = ['User - 會員']
-     * #swagger.description  = "取得會員基本資料"
+     * #swagger.tags = ['Users']
+     * #swagger.description  = "取得會員狀態資料"
+     * #swagger.security = [{'api_key': ['apiKeyAuth']}]
      * #swagger.responses[200] = {
             schema: {
                 "status": true,
@@ -64,10 +56,34 @@ router.get('/info/:id'
             }
         }
      */
-  , getUserInfo)
+  getUser
+)
 
-router.get('/magazine-article-page',
-/**
+router.get(
+  '/info/:id',
+  /**
+     * #swagger.tags = ['User - 會員']
+     * #swagger.description  = "取得會員基本資料"
+     * #swagger.security = [{'api_key': ['apiKeyAuth']}]
+     * #swagger.responses[200] = {
+            schema: {
+                "status": true,
+                "result": {},
+            }
+        }
+     * #swagger.responses[404] = {
+            schema: {
+                "status": false,
+                "message": "此最新消息不存在",
+            }
+        }
+     */
+  getUserInfo
+)
+
+router.get(
+  '/magazine-article-page',
+  /**
   #swagger.tags = ['Magazine']
   #swagger.description  = "取得雜誌文章列表分頁"
   #swagger.security = [{'api_key': ['apiKeyAuth']}]
@@ -87,5 +103,7 @@ router.get('/magazine-article-page',
     schema: { $ref: '#/definitions/magazineInfo' }
   }
 */
-  getMagazineList)
+  getMagazineList
+)
+
 export default router

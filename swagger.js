@@ -1,14 +1,29 @@
+const dotenv = require('dotenv')
 const swaggerAutogen = require('swagger-autogen')()
 
+dotenv.config()
+
+// 根據執行環境決定主機位置
+let host
+let protocol
+
+if (process.env.NODE_ENV === 'production') {
+  protocol = 'https'
+  host = 'newswave-backend.onrender.com'
+} else {
+  protocol = 'http'
+  host = `localhost:${process.env.PORT || 3000}`
+}
+
 const doc = {
-  tags: [ // by default: empty Array
+  tags: [
     {
       name: 'Users',
       description: '使用者註冊登入'
     }
   ],
-  schemes: ['http', 'https'],
-  host: 'newswave-backend.onrender.com',
+  schemes: [protocol],
+  host,
   securityDefinitions: {
     api_key: {
       type: 'apiKey',

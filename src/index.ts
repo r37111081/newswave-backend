@@ -7,18 +7,26 @@ import cookieParser from 'cookie-parser'
 import swaggerUi from 'swagger-ui-express'
 import swaggerFile from '../swagger_output.json'
 
-// connections
+// 遠端資料庫連線
 import connectUserDB from './connections/userDB'
 
+<<<<<<< HEAD
 // router
 import authRouter from './routes/authRouter'
 import userRouter from './routes/userRouter'
 import utilsRouter from './routes/utilsRouter'
 
+=======
+>>>>>>> main
 // middleware
 import { authenticate } from './middleware/authMiddleware'
 import { errorHandler } from './middleware/errorMiddleware'
 
+// router
+import authRouter from './routes/authRouter'
+import userRouter from './routes/userRouter'
+
+// 載入環境變數
 dotenv.config()
 
 interface UserBasicInfo {
@@ -37,10 +45,16 @@ declare global {
   }
 }
 
+// 創建 Express 應用程式
 const app = express()
-const port = process.env.PORT || 8000
-app.use(helmet())
 
+// 設置 Express 應用程式
+app.use(helmet())
+app.use(cookieParser())
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: true }))
+
+// 設置 CORS 選項
 const corsOptions = {
   origin: process.env.FRONT_END_URL,
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
@@ -48,14 +62,21 @@ const corsOptions = {
   optionsSuccessStatus: 204,
   credentials: true
 }
-
 app.use(cors(corsOptions))
 
-app.use(cookieParser())
+// 設置路由
+app.use('/api/v1/member', authRouter) // 處理與身份驗證和授權相關的路由
+app.use('/api/v1/member', authenticate, userRouter) // 處理與用戶相關的路由,使用 authenticate 中間件進行身份驗證
+app.use('/api-doc', swaggerUi.serve, swaggerUi.setup(swaggerFile))
 
-app.use(bodyParser.json()) // To recognize the req obj as a json obj
-app.use(bodyParser.urlencoded({ extended: true })) // To recognize the req obj as strings or arrays. extended true to handle nested objects also
+// 錯誤處理相關
+app.use(errorHandler)
 
+// 連結mongodb altas 資料庫
+connectUserDB()
+
+// 啟動server
+const port = process.env.PORT || 3000
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`)
 })
