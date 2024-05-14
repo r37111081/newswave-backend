@@ -25,22 +25,6 @@
     }
   },
   "paths": {
-    "/api/v1/hot-news-list": {
-      "get": {
-        "tags": [
-          "HotNewsList"
-        ],
-        "description": "取得熱門新聞列表",
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "404": {
-            "description": "Not Found"
-          }
-        }
-      }
-    },
     "/api/v1/member/register": {
       "post": {
         "tags": [
@@ -155,37 +139,7 @@
                 },
                 "result": {
                   "type": "object",
-                  "properties": {
-                    "status": {
-                      "type": "boolean",
-                      "example": true
-                    },
-                    "message": {
-                      "type": "string",
-                      "example": "登入成功"
-                    },
-                    "data": {
-                      "type": "object",
-                      "properties": {
-                        "id": {
-                          "type": "string",
-                          "example": "6640aacaad9a2f2b...."
-                        },
-                        "name": {
-                          "type": "string",
-                          "example": "user"
-                        },
-                        "email": {
-                          "type": "string",
-                          "example": "user@gmail.com"
-                        },
-                        "token": {
-                          "type": "string",
-                          "example": "eyJhbGci......"
-                        }
-                      }
-                    }
-                  }
+                  "properties": {}
                 }
               },
               "xml": {
@@ -230,6 +184,9 @@
             "schema": {
               "$ref": "#/definitions/magazineList"
             }
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       }
@@ -456,6 +413,100 @@
             ]
           }
         ]
+      }
+    },
+    "/api/v1/hot-news-list": {
+      "get": {
+        "tags": [
+          "HotNewsList"
+        ],
+        "description": "取得熱門新聞列表",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "message": {
+                  "type": "string",
+                  "example": "取得成功"
+                },
+                "data": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "articleId": {
+                        "type": "string",
+                        "example": "N-1011"
+                      },
+                      "title": {
+                        "type": "string",
+                        "example": "MLB》大谷翔平太傻才被騙? 紐媒酸:他是棒球天才、理財傻瓜"
+                      },
+                      "topic": {
+                        "type": "array",
+                        "example": [
+                          "體育"
+                        ],
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "publishedAt": {
+                        "type": "number",
+                        "example": 1234567890123
+                      },
+                      "image": {
+                        "type": "string",
+                        "example": "https://pgw.udn.com.tw/gw/photo.png"
+                      },
+                      "source": {
+                        "type": "object",
+                        "properties": {
+                          "name": {
+                            "type": "string",
+                            "example": "聯合新聞網"
+                          },
+                          "url": {
+                            "type": "string",
+                            "example": "https://udn.com"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "發生錯誤"
+                },
+                "status": {
+                  "type": "boolean",
+                  "example": false
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        }
       }
     }
   },

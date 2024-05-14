@@ -26,7 +26,8 @@ router.get('/hot-news-list'
             }
           }
         ]
-      },
+      }
+    }
     * #swagger.responses[404] = {
         schema: {
           "message" : "發生錯誤",
