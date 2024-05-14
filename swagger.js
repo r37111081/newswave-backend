@@ -1,4 +1,7 @@
+const dotenv = require('dotenv')
 const swaggerAutogen = require('swagger-autogen')()
+
+dotenv.config()
 
 // 根據執行環境決定主機位置
 let host
