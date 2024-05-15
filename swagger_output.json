@@ -184,9 +184,6 @@
             "schema": {
               "$ref": "#/definitions/magazineList"
             }
-          },
-          "500": {
-            "description": "Internal Server Error"
           }
         }
       }
@@ -217,9 +214,6 @@
             "schema": {
               "$ref": "#/definitions/articleList"
             }
-          },
-          "500": {
-            "description": "Internal Server Error"
           }
         },
         "security": [
@@ -231,12 +225,12 @@
         ]
       }
     },
-    "/api/v1/guest/news-article-detail/{articleId}": {
+    "/api/v1/guest/article-detail/{articleId}": {
       "get": {
         "tags": [
           "Guset - 未登入使用者"
         ],
-        "description": "取得新聞文章詳情",
+        "description": "取得新聞、雜誌文章詳情",
         "parameters": [
           {
             "name": "articleId",
@@ -248,16 +242,10 @@
         ],
         "responses": {
           "200": {
-            "description": "新聞文章詳情資訊",
+            "description": "新聞、雜誌文章詳情資訊",
             "schema": {
               "$ref": "#/definitions/articleDetailInfo"
             }
-          },
-          "400": {
-            "description": "Bad Request"
-          },
-          "500": {
-            "description": "Internal Server Error"
           }
         }
       }
@@ -589,12 +577,6 @@
             "schema": {
               "$ref": "#/definitions/articleDetailInfo"
             }
-          },
-          "400": {
-            "description": "Bad Request"
-          },
-          "500": {
-            "description": "Internal Server Error"
           }
         }
       }

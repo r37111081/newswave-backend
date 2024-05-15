@@ -1,20 +1,20 @@
-import { Request, Response } from 'express'
-import { appSuccess } from '../utils/appSuccess'
+import { NextFunction, Request, Response } from 'express'
 import News from '../models/News'
+import { catchAsync } from '../utils/catchAsync'
+import { appSuccess } from '../utils/appSuccess'
+import { appError } from '../middleware/errorMiddleware'
+import { apiState } from '../utils/apiState'
 
 // 取得雜誌文章詳情
-const getMagazineArticleDetail = async (req: Request, res: Response) => {
-  try {
-    const { articleId } = req.params
-    if (!articleId.includes('M-')) return res.status(400).json({ status: false, message: '雜誌ID格式錯誤' })
+const getMagazineArticleDetail = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+  const { articleId } = req.params
+  const pattern = /^M-\d+$/
+  if (!pattern.test(articleId)) return appError(apiState.ID_ERROR, next)
 
-    const data = await News.findOne({ articleId }).select('-_id')
-    if (!data) return res.status(400).json({ status: false, message: '找不到雜誌文章' })
+  const data = await News.findOne({ articleId }).select('-_id')
+  if (!data) return appError(apiState.DATA_NOT_FOUND, next)
 
-    appSuccess({ res, data, message: '取得文章詳情成功' })
-  } catch (error) {
-    res.status(500).json({ status: false, message: '伺服器錯誤' })
-  }
-}
+  appSuccess({ res, data, message: '取得文章詳情成功' })
+})
 
 export { getMagazineArticleDetail }

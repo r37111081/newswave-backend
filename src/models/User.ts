@@ -16,6 +16,8 @@ export interface IUser extends Document {
   detail: String;
   country: String;
   city: String;
+  collects: string[];
+  follows: string[];
   comparePassword: (enteredPassword: string) => boolean;
 }
 
@@ -74,7 +76,15 @@ const userSchema = new Schema<IUser>({
       type: String,
       default: ''
     }
-  }
+  },
+  collects: [{
+    type: String,
+    ref: 'News'
+  }],
+  follows: [{
+    type: String,
+    ref: 'News'
+  }]
 })
 
 userSchema.pre('save', async function (next) {

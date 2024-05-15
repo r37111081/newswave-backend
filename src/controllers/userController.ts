@@ -94,19 +94,16 @@ const getUserCollectList = catchAsync(async (req: Request, res: Response, next: 
     ? parseInt(query.pageIndex as string)
     : 1
 
-  const [totalElements, articles] = await Promise.all([
-    News.countDocuments({
-      collects: { $in: [userId] }
-    }),
-    News.find({
-      collects: { $in: [userId] }
-    })
-      .select('-_id -content -collects')
-      .sort({ publishedAt: -1 })
-      .skip((pageIndex - 1) * articlesPerPage)
-      .limit(articlesPerPage)
-  ])
+  const user = await User.findById(userId)
+  if (!user) return appError(apiState.DATA_NOT_FOUND, next)
 
+  const articles = await News.find({ articleId: { $in: user.collects } })
+    .select('-_id -content -collects')
+    .sort({ publishedAt: -1 })
+    .skip((pageIndex - 1) * articlesPerPage)
+    .limit(articlesPerPage)
+
+  const totalElements = user.collects.length
   const firstPage = pageIndex === 1
   const lastPage = totalElements <= pageIndex * articlesPerPage
   const empty = totalElements === 0
@@ -128,8 +125,11 @@ const addArticleCollect = catchAsync(async (req: Request, res: Response, next: N
   const userId = req.user?._id
   const { articleId } = req.params
 
-  await News.findOneAndUpdate({ articleId }, {
-    $addToSet: { collects: userId }
+  const article = await News.findOne({ articleId })
+  if (!article) return appError(apiState.DATA_NOT_FOUND, next)
+
+  await User.findByIdAndUpdate({ _id: userId }, {
+    $addToSet: { collects: articleId }
   }, { runValidators: true })
 
   appSuccess({ res, message: '收藏文章成功' })
@@ -140,9 +140,12 @@ const deleteArticleCollect = catchAsync(async (req: Request, res: Response, next
   const userId = req.user?._id
   const { articleId } = req.params
 
-  await News.findOneAndUpdate({ articleId }, {
-    $pull: { collects: userId }
-  }, { runValidators: true }).exec()
+  const article = await News.findOne({ articleId })
+  if (!article) return appError(apiState.DATA_NOT_FOUND, next)
+
+  await User.findByIdAndUpdate({ _id: userId }, {
+    $pull: { collects: articleId }
+  }, { runValidators: true })
 
   appSuccess({ res, message: '取消收藏文章成功' })
 })

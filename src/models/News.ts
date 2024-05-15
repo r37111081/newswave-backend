@@ -13,7 +13,6 @@ export interface INews extends Document {
     name: string;
     url: string;
   };
-  collects: string[];
 }
 
 const newsSchema = new Schema<INews>(
@@ -61,13 +60,7 @@ const newsSchema = new Schema<INews>(
         default: '',
         required: true
       }
-    },
-    collects: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: 'User'
-      }
-    ]
+    }
   },
   {
     versionKey: false
