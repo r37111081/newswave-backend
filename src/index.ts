@@ -6,7 +6,7 @@ import bodyParser from 'body-parser'
 import cookieParser from 'cookie-parser'
 import swaggerUi from 'swagger-ui-express'
 import swaggerFile from '../swagger_output.json'
-import Routes from '../src/routes'
+import routes from '../src/routes'
 
 // 遠端資料庫連線
 import connectUserDB from './connections/userDB'
@@ -53,7 +53,7 @@ const corsOptions = {
 app.use(cors(corsOptions))
 
 // 設置路由
-app.use(Routes)
+app.use(routes)
 
 // swagger 路由
 app.use('/api-doc', swaggerUi.serve, swaggerUi.setup(swaggerFile))
