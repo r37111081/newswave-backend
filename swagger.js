@@ -45,9 +45,9 @@ const doc = {
         }
       ]
     },
-    magazineInfo: {
+    articleList: {
       status: true,
-      message: '取得雜誌文章列表成功',
+      message: '取得文章列表成功',
       data: {
         articles: [
           {

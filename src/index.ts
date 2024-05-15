@@ -59,10 +59,10 @@ const corsOptions = {
 app.use(cors(corsOptions))
 
 // 設置路由
-app.use('/api/v1/guest', guestRouter)
-app.use('/api/v1/member', authRouter) // 處理與身份驗證和授權相關的路由
-app.use('/api/v1/member', authenticate, memberRouter)
-app.use('/api/v1/member', authenticate, userRouter) // 處理與用戶相關的路由,使用 authenticate 中間件進行身份驗證
+app.use('/api/v1/auth', authRouter) // 註冊登入登出
+app.use('/api/v1/guest', guestRouter) // 一般使用者
+app.use('/api/v1/user', authenticate, userRouter) // 登入使用者
+app.use('/api/v1/member', authenticate, memberRouter) // 訂閱使用者
 app.use('/api-doc', swaggerUi.serve, swaggerUi.setup(swaggerFile))
 
 // 錯誤處理相關

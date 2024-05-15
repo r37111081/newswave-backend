@@ -5,7 +5,7 @@
     "title": "REST API",
     "description": ""
   },
-  "host": "localhost:3000",
+  "host": "localhost:3005",
   "basePath": "/",
   "tags": [
     {
@@ -25,7 +25,7 @@
     }
   },
   "paths": {
-    "/api/v1/member/register": {
+    "/api/v1/auth/register": {
       "post": {
         "tags": [
           "Users"
@@ -102,7 +102,7 @@
         }
       }
     },
-    "/api/v1/member/login": {
+    "/api/v1/auth/login": {
       "post": {
         "tags": [
           "Users"
@@ -139,37 +139,7 @@
                 },
                 "result": {
                   "type": "object",
-                  "properties": {
-                    "status": {
-                      "type": "boolean",
-                      "example": true
-                    },
-                    "message": {
-                      "type": "string",
-                      "example": "登入成功"
-                    },
-                    "data": {
-                      "type": "object",
-                      "properties": {
-                        "id": {
-                          "type": "string",
-                          "example": "6640aacaad9a2f2b...."
-                        },
-                        "name": {
-                          "type": "string",
-                          "example": "user"
-                        },
-                        "email": {
-                          "type": "string",
-                          "example": "user@gmail.com"
-                        },
-                        "token": {
-                          "type": "string",
-                          "example": "eyJhbGci......"
-                        }
-                      }
-                    }
-                  }
+                  "properties": {}
                 }
               },
               "xml": {
@@ -202,10 +172,10 @@
         }
       }
     },
-    "/api/v1/member/magazine-category-list": {
+    "/api/v1/guest/magazine-category-list": {
       "get": {
         "tags": [
-          "Magazine"
+          "Guset - 未登入使用者"
         ],
         "description": "取得雜誌種類列表",
         "responses": {
@@ -214,11 +184,85 @@
             "schema": {
               "$ref": "#/definitions/magazineList"
             }
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       }
     },
-    "/api/v1/member/password": {
+    "/api/v1/guest/magazine-article-page": {
+      "get": {
+        "tags": [
+          "Guset - 未登入使用者"
+        ],
+        "description": "取得雜誌文章列表分頁",
+        "parameters": [
+          {
+            "name": "category",
+            "in": "query",
+            "type": "String",
+            "description": "雜誌種類"
+          },
+          {
+            "name": "pageIndex",
+            "in": "query",
+            "type": "String",
+            "description": "當前頁數"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "雜誌文章列表資訊",
+            "schema": {
+              "$ref": "#/definitions/articleList"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "api_key": [
+              "apiKeyAuth"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/v1/guest/news-article-detail/{articleId}": {
+      "get": {
+        "tags": [
+          "Guset - 未登入使用者"
+        ],
+        "description": "取得新聞文章詳情",
+        "parameters": [
+          {
+            "name": "articleId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "文章ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "新聞文章詳情資訊",
+            "schema": {
+              "$ref": "#/definitions/articleDetailInfo"
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/v1/user/password": {
       "patch": {
         "tags": [
           "User - 會員"
@@ -279,7 +323,7 @@
         ]
       }
     },
-    "/api/v1/member/data/{id}": {
+    "/api/v1/user/data/{id}": {
       "get": {
         "tags": [
           "Users"
@@ -342,7 +386,7 @@
         ]
       }
     },
-    "/api/v1/member/info/{id}": {
+    "/api/v1/user/info/{id}": {
       "get": {
         "tags": [
           "User - 會員"
@@ -405,19 +449,13 @@
         ]
       }
     },
-    "/api/v1/member/magazine-article-page": {
+    "/api/v1/user/collect-page": {
       "get": {
         "tags": [
-          "Magazine"
+          "User - 登入使用者"
         ],
-        "description": "取得雜誌文章列表分頁",
+        "description": "取得收藏列表",
         "parameters": [
-          {
-            "name": "category",
-            "in": "query",
-            "type": "String",
-            "description": "雜誌種類"
-          },
           {
             "name": "pageIndex",
             "in": "query",
@@ -427,9 +465,9 @@
         ],
         "responses": {
           "200": {
-            "description": "雜誌文章列表資訊",
+            "description": "收藏列表資訊",
             "schema": {
-              "$ref": "#/definitions/magazineInfo"
+              "$ref": "#/definitions/articleList"
             }
           }
         },
@@ -440,6 +478,125 @@
             ]
           }
         ]
+      }
+    },
+    "/api/v1/user/collect-article/{articleId}": {
+      "post": {
+        "tags": [
+          "User - 登入使用者"
+        ],
+        "description": "新增收藏文章",
+        "parameters": [
+          {
+            "name": "articleId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "文章ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "收藏文章資訊",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "message": {
+                  "type": "string",
+                  "example": "收藏文章成功"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "api_key": [
+              "apiKeyAuth"
+            ]
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "User - 登入使用者"
+        ],
+        "description": "取消收藏文章",
+        "parameters": [
+          {
+            "name": "articleId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "文章ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "收藏文章資訊",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "message": {
+                  "type": "string",
+                  "example": "取消收藏文章成功"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "api_key": [
+              "apiKeyAuth"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/v1/member/magazine-article-detail/{articleId}": {
+      "get": {
+        "tags": [
+          "Member - 訂閱使用者"
+        ],
+        "description": "取得雜誌文章詳情",
+        "parameters": [
+          {
+            "name": "articleId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "文章ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "雜誌文章詳情資訊",
+            "schema": {
+              "$ref": "#/definitions/articleDetailInfo"
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
       }
     }
   },
@@ -460,10 +617,6 @@
           "items": {
             "type": "object",
             "properties": {
-              "_id": {
-                "type": "string",
-                "example": "ID"
-              },
               "categoryName": {
                 "type": "string",
                 "example": "雜誌名稱"
@@ -485,7 +638,7 @@
         }
       }
     },
-    "magazineInfo": {
+    "articleList": {
       "type": "object",
       "properties": {
         "status": {
@@ -494,7 +647,7 @@
         },
         "message": {
           "type": "string",
-          "example": "取得雜誌文章列表成功"
+          "example": "取得文章列表成功"
         },
         "data": {
           "type": "object",
@@ -504,10 +657,102 @@
               "items": {
                 "type": "object",
                 "properties": {
-                  "_id": {
+                  "articleId": {
                     "type": "string",
-                    "example": "ID"
+                    "example": "文章ID"
                   },
+                  "title": {
+                    "type": "string",
+                    "example": "文章標題"
+                  },
+                  "editor": {
+                    "type": "string",
+                    "example": "文章編輯"
+                  },
+                  "topics": {
+                    "type": "array",
+                    "example": [
+                      "文章標籤"
+                    ],
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "publishedAt": {
+                    "type": "string",
+                    "example": "文章發布時間"
+                  },
+                  "image": {
+                    "type": "string",
+                    "example": "文章圖片"
+                  },
+                  "imageDescription": {
+                    "type": "string",
+                    "example": "文章圖片描述"
+                  },
+                  "source": {
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "string",
+                        "example": "文章來源名稱"
+                      },
+                      "url": {
+                        "type": "string",
+                        "example": "文章來源網址"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "firstPage": {
+              "type": "string",
+              "example": "是否為第一頁"
+            },
+            "lastPage": {
+              "type": "string",
+              "example": "是否為最後一頁"
+            },
+            "empty": {
+              "type": "string",
+              "example": "是否沒有資料"
+            },
+            "totalElement": {
+              "type": "string",
+              "example": "總共有幾筆資料"
+            },
+            "totalPages": {
+              "type": "string",
+              "example": "總共有幾頁"
+            },
+            "targetPage": {
+              "type": "string",
+              "example": "目前在第幾頁"
+            }
+          }
+        }
+      }
+    },
+    "articleDetailInfo": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "boolean",
+          "example": true
+        },
+        "message": {
+          "type": "string",
+          "example": "取得文章詳情成功"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "articles": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
                   "articleId": {
                     "type": "string",
                     "example": "文章ID"

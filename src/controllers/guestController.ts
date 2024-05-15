@@ -48,7 +48,7 @@ const getMagazineList = async (req: Request, res: Response) => {
       totalPages,
       targetPage: pageIndex
     }
-    appSuccess({ res, data, message: '取得雜誌文章列表成功' })
+    appSuccess({ res, data, message: '取得文章列表成功' })
   } catch (error) {
     res.status(500).json({ status: false, message: '伺服器錯誤' })
   }
