@@ -17,6 +17,8 @@ import { errorHandler } from './middleware/errorMiddleware'
 // router
 import authRouter from './routes/authRouter'
 import userRouter from './routes/userRouter'
+import guestRouter from './routes/guestRouter'
+import memberRouter from './routes/memberRouter'
 
 // 載入環境變數
 dotenv.config()
@@ -57,7 +59,9 @@ const corsOptions = {
 app.use(cors(corsOptions))
 
 // 設置路由
+app.use('/api/v1/guest', guestRouter)
 app.use('/api/v1/member', authRouter) // 處理與身份驗證和授權相關的路由
+app.use('/api/v1/member', authenticate, memberRouter)
 app.use('/api/v1/member', authenticate, userRouter) // 處理與用戶相關的路由,使用 authenticate 中間件進行身份驗證
 app.use('/api-doc', swaggerUi.serve, swaggerUi.setup(swaggerFile))
 
