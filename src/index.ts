@@ -6,7 +6,7 @@ import bodyParser from 'body-parser'
 import cookieParser from 'cookie-parser'
 import swaggerUi from 'swagger-ui-express'
 import swaggerFile from '../swagger_output.json'
-import routes from '../src/routes'
+import routes from './routes'
 
 // 遠端資料庫連線
 import connectUserDB from './connections/userDB'
