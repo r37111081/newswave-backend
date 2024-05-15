@@ -139,37 +139,7 @@
                 },
                 "result": {
                   "type": "object",
-                  "properties": {
-                    "status": {
-                      "type": "boolean",
-                      "example": true
-                    },
-                    "message": {
-                      "type": "string",
-                      "example": "登入成功"
-                    },
-                    "data": {
-                      "type": "object",
-                      "properties": {
-                        "id": {
-                          "type": "string",
-                          "example": "6640aacaad9a2f2b...."
-                        },
-                        "name": {
-                          "type": "string",
-                          "example": "user"
-                        },
-                        "email": {
-                          "type": "string",
-                          "example": "user@gmail.com"
-                        },
-                        "token": {
-                          "type": "string",
-                          "example": "eyJhbGci......"
-                        }
-                      }
-                    }
-                  }
+                  "properties": {}
                 }
               },
               "xml": {
@@ -214,6 +184,9 @@
             "schema": {
               "$ref": "#/definitions/magazineList"
             }
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       }

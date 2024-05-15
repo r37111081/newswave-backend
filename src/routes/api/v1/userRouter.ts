@@ -4,8 +4,8 @@ import {
   getUserInfo,
   updatePassword,
   getMagazineList
-} from '../controllers/userController'
-import { authenticate } from '../middleware/authMiddleware'
+} from '../../../controllers/userController'
+import { authenticate } from '../../../middleware/authMiddleware'
 
 export const router = express.Router()
 
