@@ -10,7 +10,7 @@ const router = express.Router()
 router.get(
   '/magazine-category-list',
   /**
-    #swagger.tags = ['Guset - 未登入使用者']
+    #swagger.tags = ['Gusets']
     #swagger.description  = "取得雜誌種類列表"
     #swagger.responses[200] = {
       description: '雜誌種類列表資訊',
@@ -22,9 +22,8 @@ router.get(
 router.get(
   '/magazine-article-page',
   /**
-    #swagger.tags = ['Guset - 未登入使用者']
+    #swagger.tags = ['Gusets']
     #swagger.description  = "取得雜誌文章列表分頁"
-    #swagger.security = [{'api_key': ['apiKeyAuth']}]
     #swagger.parameters['category'] = {
       in: 'query',
       type: 'String',
@@ -44,7 +43,7 @@ router.get(
 )
 router.get('/article-detail/:articleId',
 /*
-  #swagger.tags= ['Guset - 未登入使用者']
+  #swagger.tags= ['Gusets']
   #swagger.description = '取得新聞、雜誌文章詳情'
   #swagger.parameters['articleId'] = {
     in: 'path',

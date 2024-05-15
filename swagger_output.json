@@ -5,12 +5,24 @@
     "title": "REST API",
     "description": ""
   },
-  "host": "localhost:3005",
+  "host": "localhost:3000",
   "basePath": "/",
   "tags": [
     {
+      "name": "Gusets",
+      "description": "未登入訪客"
+    },
+    {
       "name": "Users",
-      "description": "使用者註冊登入"
+      "description": "一般使用者"
+    },
+    {
+      "name": "Members",
+      "description": "訂閱使用者"
+    },
+    {
+      "name": "Admins",
+      "description": "後台管理者"
     }
   ],
   "schemes": [
@@ -25,7 +37,78 @@
     }
   },
   "paths": {
-    "/api/v1/auth/register": {
+    "/api/v1/guest/magazine-category-list": {
+      "get": {
+        "tags": [
+          "Gusets"
+        ],
+        "description": "取得雜誌種類列表",
+        "responses": {
+          "200": {
+            "description": "雜誌種類列表資訊",
+            "schema": {
+              "$ref": "#/definitions/magazineList"
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/guest/magazine-article-page": {
+      "get": {
+        "tags": [
+          "Gusets"
+        ],
+        "description": "取得雜誌文章列表分頁",
+        "parameters": [
+          {
+            "name": "category",
+            "in": "query",
+            "type": "String",
+            "description": "雜誌種類"
+          },
+          {
+            "name": "pageIndex",
+            "in": "query",
+            "type": "String",
+            "description": "當前頁數"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "雜誌文章列表資訊",
+            "schema": {
+              "$ref": "#/definitions/articleList"
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/guest/article-detail/{articleId}": {
+      "get": {
+        "tags": [
+          "Gusets"
+        ],
+        "description": "取得新聞、雜誌文章詳情",
+        "parameters": [
+          {
+            "name": "articleId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "文章ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "新聞、雜誌文章詳情資訊",
+            "schema": {
+              "$ref": "#/definitions/articleDetailInfo"
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/user/register": {
       "post": {
         "tags": [
           "Users"
@@ -102,7 +185,7 @@
         }
       }
     },
-    "/api/v1/auth/login": {
+    "/api/v1/user/login": {
       "post": {
         "tags": [
           "Users"
@@ -172,88 +255,10 @@
         }
       }
     },
-    "/api/v1/guest/magazine-category-list": {
-      "get": {
-        "tags": [
-          "Guset - 未登入使用者"
-        ],
-        "description": "取得雜誌種類列表",
-        "responses": {
-          "200": {
-            "description": "雜誌種類列表資訊",
-            "schema": {
-              "$ref": "#/definitions/magazineList"
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/guest/magazine-article-page": {
-      "get": {
-        "tags": [
-          "Guset - 未登入使用者"
-        ],
-        "description": "取得雜誌文章列表分頁",
-        "parameters": [
-          {
-            "name": "category",
-            "in": "query",
-            "type": "String",
-            "description": "雜誌種類"
-          },
-          {
-            "name": "pageIndex",
-            "in": "query",
-            "type": "String",
-            "description": "當前頁數"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "雜誌文章列表資訊",
-            "schema": {
-              "$ref": "#/definitions/articleList"
-            }
-          }
-        },
-        "security": [
-          {
-            "api_key": [
-              "apiKeyAuth"
-            ]
-          }
-        ]
-      }
-    },
-    "/api/v1/guest/article-detail/{articleId}": {
-      "get": {
-        "tags": [
-          "Guset - 未登入使用者"
-        ],
-        "description": "取得新聞、雜誌文章詳情",
-        "parameters": [
-          {
-            "name": "articleId",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "description": "文章ID"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "新聞、雜誌文章詳情資訊",
-            "schema": {
-              "$ref": "#/definitions/articleDetailInfo"
-            }
-          }
-        }
-      }
-    },
     "/api/v1/user/password": {
       "patch": {
         "tags": [
-          "User - 會員"
+          "Users"
         ],
         "description": "更新密碼 API",
         "parameters": [
@@ -377,7 +382,7 @@
     "/api/v1/user/info/{id}": {
       "get": {
         "tags": [
-          "User - 會員"
+          "Users"
         ],
         "description": "取得會員基本資料",
         "parameters": [
@@ -440,7 +445,7 @@
     "/api/v1/user/collect-page": {
       "get": {
         "tags": [
-          "User - 登入使用者"
+          "Users"
         ],
         "description": "取得收藏列表",
         "parameters": [
@@ -471,7 +476,7 @@
     "/api/v1/user/collect-article/{articleId}": {
       "post": {
         "tags": [
-          "User - 登入使用者"
+          "Users"
         ],
         "description": "新增收藏文章",
         "parameters": [
@@ -514,7 +519,7 @@
       },
       "delete": {
         "tags": [
-          "User - 登入使用者"
+          "Users"
         ],
         "description": "取消收藏文章",
         "parameters": [
@@ -559,7 +564,7 @@
     "/api/v1/member/magazine-article-detail/{articleId}": {
       "get": {
         "tags": [
-          "Member - 訂閱使用者"
+          "Members"
         ],
         "description": "取得雜誌文章詳情",
         "parameters": [
@@ -578,7 +583,14 @@
               "$ref": "#/definitions/articleDetailInfo"
             }
           }
-        }
+        },
+        "security": [
+          {
+            "api_key": [
+              "apiKeyAuth"
+            ]
+          }
+        ]
       }
     }
   },

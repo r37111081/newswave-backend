@@ -7,8 +7,9 @@ const router = express.Router()
 
 router.get('/magazine-article-detail/:articleId',
 /*
-  #swagger.tags= ['Member - 訂閱使用者']
+  #swagger.tags= ['Members']
   #swagger.description = '取得雜誌文章詳情'
+  #swagger.security = [{'api_key': ['apiKeyAuth']}]
   #swagger.parameters['articleId'] = {
     in: 'path',
     description: '文章ID',

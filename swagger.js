@@ -18,8 +18,20 @@ if (process.env.NODE_ENV === 'production') {
 const doc = {
   tags: [
     {
+      name: 'Gusets',
+      description: '未登入訪客'
+    },
+    {
       name: 'Users',
-      description: '使用者註冊登入'
+      description: '一般使用者'
+    },
+    {
+      name: 'Members',
+      description: '訂閱使用者'
+    },
+    {
+      name: 'Admins',
+      description: '後台管理者'
     }
   ],
   schemes: [protocol],
