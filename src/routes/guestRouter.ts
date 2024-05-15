@@ -37,7 +37,7 @@ router.get(
     },
     #swagger.responses[200] = {
       description: '雜誌文章列表資訊',
-      schema: { $ref: '#/definitions/magazineInfo' }
+      schema: { $ref: '#/definitions/articleList' }
     }
   */
   getMagazineList
@@ -46,6 +46,12 @@ router.get('/news-article-detail/:articleId',
 /*
   #swagger.tags= ['Guset - 未登入使用者']
   #swagger.description = '取得新聞文章詳情'
+  #swagger.parameters['articleId'] = {
+    in: 'path',
+    description: '文章ID',
+    required: true,
+    type: 'string'
+  }
   #swagger.responses[200] = {
     description: '新聞文章詳情資訊',
     schema: { $ref: '#/definitions/articleDetailInfo' }
