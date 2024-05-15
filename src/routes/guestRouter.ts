@@ -2,7 +2,7 @@ import express from 'express'
 import {
   getAllMagazine,
   getMagazineList,
-  getNewsArticleDetail
+  getArticleDetail
 } from '../controllers/guestController'
 
 const router = express.Router()
@@ -42,10 +42,10 @@ router.get(
   */
   getMagazineList
 )
-router.get('/news-article-detail/:articleId',
+router.get('/article-detail/:articleId',
 /*
   #swagger.tags= ['Guset - 未登入使用者']
-  #swagger.description = '取得新聞文章詳情'
+  #swagger.description = '取得新聞、雜誌文章詳情'
   #swagger.parameters['articleId'] = {
     in: 'path',
     description: '文章ID',
@@ -53,10 +53,10 @@ router.get('/news-article-detail/:articleId',
     type: 'string'
   }
   #swagger.responses[200] = {
-    description: '新聞文章詳情資訊',
+    description: '新聞、雜誌文章詳情資訊',
     schema: { $ref: '#/definitions/articleDetailInfo' }
   }
 */
-  getNewsArticleDetail)
+  getArticleDetail)
 
 export default router
