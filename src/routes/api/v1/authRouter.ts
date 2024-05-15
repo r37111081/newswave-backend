@@ -4,7 +4,7 @@ import {
   authenticateUser,
   logoutUser,
   getAllMagazine
-} from '../controllers/authController'
+} from '../../../controllers/authController'
 
 const router = express.Router()
 
@@ -64,9 +64,8 @@ router.post(
                     "message": "此最新消息不存在",
                 }
             }
-         */
-  authenticateUser
-)
+        */
+  authenticateUser)
 router.post(
   '/logout',
   /**

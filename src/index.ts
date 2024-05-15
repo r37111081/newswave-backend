@@ -6,17 +6,13 @@ import bodyParser from 'body-parser'
 import cookieParser from 'cookie-parser'
 import swaggerUi from 'swagger-ui-express'
 import swaggerFile from '../swagger_output.json'
+import Routes from '../src/routes'
 
 // 遠端資料庫連線
 import connectUserDB from './connections/userDB'
 
 // middleware
-import { authenticate } from './middleware/authMiddleware'
 import { errorHandler } from './middleware/errorMiddleware'
-
-// router
-import authRouter from './routes/authRouter'
-import userRouter from './routes/userRouter'
 
 // 載入環境變數
 dotenv.config()
@@ -57,8 +53,9 @@ const corsOptions = {
 app.use(cors(corsOptions))
 
 // 設置路由
-app.use('/api/v1/member', authRouter) // 處理與身份驗證和授權相關的路由
-app.use('/api/v1/member', authenticate, userRouter) // 處理與用戶相關的路由,使用 authenticate 中間件進行身份驗證
+app.use(Routes)
+
+// swagger 路由
 app.use('/api-doc', swaggerUi.serve, swaggerUi.setup(swaggerFile))
 
 // 錯誤處理相關
