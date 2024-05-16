@@ -6,7 +6,7 @@ export interface IUser extends Document {
   email: string;
   password: string;
   avatar: String;
-  isVip: Boolean;
+  isVip: boolean;
   subscribeExpiredAt: Date;
   collectElements: Number;
   followElements: Number;
