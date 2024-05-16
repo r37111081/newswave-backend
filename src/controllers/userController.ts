@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from 'express'
 import User from '../models/User'
+import News from '../models/News'
 import bcrypt from 'bcryptjs'
 import validator from 'validator'
-import News from '../models/News'
 import { catchAsync } from '../utils/catchAsync'
 import { appSuccess } from '../utils/appSuccess'
 import { appError } from '../middleware/errorMiddleware'
@@ -84,47 +84,70 @@ const getUserInfo = catchAsync(async (req: Request, res: Response, next: NextFun
   })
 })
 
-// 取得雜誌文章列表
-const getMagazineList = async (req: Request, res: Response) => {
-  try {
-    const query = req.query
-    const articlesPerPage = 6
+// 取得會員文章收藏列表
+const getUserCollectList = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+  const userId = req.user?._id
+  const query = req.query
+  const articlesPerPage = 6
 
-    const category = query.category !== undefined && query.category !== ''
-      ? { 'source.name': query.category }
-      : { articleId: /M-/ }
-    const pageIndex = query.pageIndex !== undefined && query.pageIndex !== ''
-      ? parseInt(query.pageIndex as string)
-      : 1
+  const pageIndex = query.pageIndex !== undefined && query.pageIndex !== ''
+    ? parseInt(query.pageIndex as string)
+    : 1
 
-    const [totalElements, articles] = await Promise.all([
-      News.countDocuments({ ...category }),
-      News.find({ ...category })
-        .sort({ publishedAt: -1 })
-        .skip((pageIndex - 1) * articlesPerPage)
-        .limit(articlesPerPage)
-    ])
+  const user = await User.findById(userId)
+  if (!user) return appError(apiState.DATA_NOT_FOUND, next)
 
-    const firstPage = pageIndex === 1
-    const lastPage = totalElements <= pageIndex * articlesPerPage
-    const empty = totalElements === 0
-    const totalPages = Math.ceil(totalElements / articlesPerPage)
-    res.status(200).json({
-      status: true,
-      message: '取得雜誌文章列表成功',
-      data: {
-        articles,
-        firstPage,
-        lastPage,
-        empty,
-        totalElements,
-        totalPages,
-        targetPage: pageIndex
-      }
-    })
-  } catch (error) {
-    console.error(error)
+  const articles = await News.find({ articleId: { $in: user.collects } })
+    .select('-_id -content -collects')
+    .sort({ publishedAt: -1 })
+    .skip((pageIndex - 1) * articlesPerPage)
+    .limit(articlesPerPage)
+
+  const totalElements = user.collects.length
+  const firstPage = pageIndex === 1
+  const lastPage = totalElements <= pageIndex * articlesPerPage
+  const empty = totalElements === 0
+  const totalPages = Math.ceil(totalElements / articlesPerPage)
+  let data = {
+    articles,
+    firstPage,
+    lastPage,
+    empty,
+    totalElements,
+    totalPages,
+    targetPage: pageIndex
   }
-}
+  appSuccess({ res, data, message: '取得文章列表成功' })
+})
 
-export { getUser, updatePassword, getUserInfo, getMagazineList }
+// 新增會員收藏文章
+const addArticleCollect = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+  const userId = req.user?._id
+  const { articleId } = req.params
+
+  const article = await News.findOne({ articleId })
+  if (!article) return appError(apiState.DATA_NOT_FOUND, next)
+
+  await User.findByIdAndUpdate({ _id: userId }, {
+    $addToSet: { collects: articleId }
+  }, { runValidators: true })
+
+  appSuccess({ res, message: '收藏文章成功' })
+})
+
+// 取消會員收藏文章
+const deleteArticleCollect = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+  const userId = req.user?._id
+  const { articleId } = req.params
+
+  const article = await News.findOne({ articleId })
+  if (!article) return appError(apiState.DATA_NOT_FOUND, next)
+
+  await User.findByIdAndUpdate({ _id: userId }, {
+    $pull: { collects: articleId }
+  }, { runValidators: true })
+
+  appSuccess({ res, message: '取消收藏文章成功' })
+})
+
+export { getUser, updatePassword, getUserInfo, getUserCollectList, addArticleCollect, deleteArticleCollect }

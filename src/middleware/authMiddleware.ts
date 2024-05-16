@@ -2,7 +2,8 @@ import { Request, Response, NextFunction } from 'express'
 import jwt, { JwtPayload } from 'jsonwebtoken'
 import User from '../models/User'
 import asyncHandler from 'express-async-handler'
-import { AuthenticationError } from './errorMiddleware'
+import { AuthenticationError, appError } from './errorMiddleware'
+import { catchAsync } from '../utils/catchAsync'
 
 const authenticate = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -20,7 +21,7 @@ const authenticate = asyncHandler(
         throw new AuthenticationError(401, 'UserId not found')
       }
 
-      const user = await User.findById(decoded.userId, '_id name email')
+      const user = await User.findById(decoded.userId, '_id name email isVip')
 
       if (!user) {
         throw new AuthenticationError(401, 'User not found')
@@ -34,4 +35,11 @@ const authenticate = asyncHandler(
   }
 )
 
-export { authenticate }
+const vipVerify = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+  if (!req.user?.isVip) {
+    return appError({ statusCode: 401, message: '非訂閱用戶' }, next)
+  }
+  next()
+})
+
+export { authenticate, vipVerify }

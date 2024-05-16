@@ -1,7 +1,6 @@
 import { Request, Response, NextFunction } from 'express'
 import User from '../models/User'
 import validator from 'validator'
-import Magazine from '../models/Magazine'
 import { generateToken, clearToken } from '../utils/auth'
 import { appError } from '../middleware/errorMiddleware'
 
@@ -67,17 +66,4 @@ const logoutUser = (req: Request, res: Response) => {
   res.status(200).json({ status: true, message: '登出成功' })
 }
 
-const getAllMagazine = async (req: Request, res: Response) => {
-  try {
-    const data = await Magazine.find()
-    res.status(200).json({
-      status: true,
-      message: '取得雜誌列表成功',
-      data
-    })
-  } catch (error) {
-    res.status(500).json({ status: false, message: '伺服器錯誤' })
-  }
-}
-
-export { registerUser, authenticateUser, logoutUser, getAllMagazine }
+export { registerUser, authenticateUser, logoutUser }

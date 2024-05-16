@@ -21,6 +21,7 @@ interface UserBasicInfo {
   _id: string;
   name: string;
   email: string;
+  isVip: boolean;
 }
 
 declare global {
