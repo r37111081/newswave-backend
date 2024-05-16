@@ -12,43 +12,41 @@ import {
   authenticateUser,
   logoutUser
 } from '../../../controllers/authController'
+import { authenticate } from '../../../middleware/authMiddleware'
 
 export const router = express.Router()
 
-router.post(
-  '/register',
+router.post('/register',
   /**
-         * #swagger.tags= ['Users']
-         * #swagger.parameters['obj'] = {
-                in: 'body',
-                required: true,
-                description: "使用者註冊",
-                schema: {
-                    "name":"user",
-                    "email":"user@gmail.com",
-                    "password":"user1234"
-                },
-            }
-         * #swagger.responses[201] = {
-                description: '註冊成功',
-                schema: {
-                    "status": true,
-                    "message": "註冊成功",
-                    "uid": "QZDQO0zh...."
-                }
-            }
-         * #swagger.responses[400] = {
-                description: '使用者已存在',
-                schema: {
-                    "status": false,
-                    "message": "使用者已存在",
-                }
-            }
-         */
-  registerUser
-)
-router.post(
-  '/login',
+   * #swagger.tags= ['Users']
+   * #swagger.parameters['obj'] = {
+          in: 'body',
+          required: true,
+          description: "使用者註冊",
+          schema: {
+              "name":"user",
+              "email":"user@gmail.com",
+              "password":"user1234"
+          },
+      }
+    * #swagger.responses[201] = {
+          description: '註冊成功',
+          schema: {
+              "status": true,
+              "message": "註冊成功",
+              "uid": "QZDQO0zh...."
+          }
+      }
+    * #swagger.responses[400] = {
+          description: '使用者已存在',
+          schema: {
+              "status": false,
+              "message": "使用者已存在",
+          }
+      }
+    */
+  registerUser)
+router.post('/login',
   /**
          * #swagger.tags= ['Users']
          * #swagger.description  = "使用者登入"
@@ -73,8 +71,7 @@ router.post(
             }
         */
   authenticateUser)
-router.post(
-  '/logout',
+router.post('/logout',
   /**
          * #swagger.tags= ['Users']
          * #swagger.ignore = true
@@ -96,10 +93,11 @@ router.post(
                 }
             }
          */
-  logoutUser
-)
-router.patch(
-  '/password',
+  logoutUser)
+
+// 以下放需要被驗證的路由
+router.use(authenticate)
+router.patch('/password',
   /*
     * #swagger.tags= ['Users']
     #swagger.description = '更新密碼 API'
@@ -122,10 +120,8 @@ router.patch(
       }
     }
   */
-  updatePassword
-)
-router.get(
-  '/data/:id',
+  updatePassword)
+router.get('/data/:id',
   /**
      * #swagger.tags= ['Users']
      * #swagger.description  = "取得會員狀態資料"
@@ -143,10 +139,8 @@ router.get(
             }
         }
      */
-  getUser
-)
-router.get(
-  '/info/:id',
+  getUser)
+router.get('/info/:id',
   /**
      * #swagger.tags= ['Users']
      * #swagger.description  = "取得會員基本資料"
@@ -164,8 +158,7 @@ router.get(
             }
         }
      */
-  getUserInfo
-)
+  getUserInfo)
 router.get('/collect-page',
 /*
   * #swagger.tags= ['Users']
