@@ -4,7 +4,41 @@ import { appSuccess } from '../utils/appSuccess'
 import { appError } from '../middleware/errorMiddleware'
 import { apiState } from '../utils/apiState'
 import Magazine from '../models/Magazine'
-import News from '../models/News'
+import News, { INews } from '../models/News'
+
+// 取得熱門新聞列表
+const getHotNewsList = catchAsync(async (req: Request<INews>, res: Response, next: NextFunction) => {
+  const limit = Number(req.query.limit)
+  const type = req.query.type
+
+  if (!limit || !type) {
+    return appError(apiState.DATA_MISSING, next)
+  }
+
+  let query:any = { articleId: { $regex: /^N-/ } }
+
+  let sort:any = {}
+  if (type === 'hot') {
+    query.tags = { $in: ['hot'] }
+  } else if (type === 'news') {
+    sort.publishedAt = -1
+  }
+  const data = await News.find(query)
+    .sort(sort)
+    .limit(limit)
+    .select('-_id')
+    .exec()
+
+  if (!data) {
+    return appError(apiState.DATA_NOT_FOUND, next)
+  }
+
+  if (data.length) {
+    appSuccess({ res, data, message: '取得熱門新聞列表' })
+  } else {
+    appSuccess({ res, data, message: '尚無熱門新聞' })
+  }
+})
 
 // 取得雜誌列表
 const getAllMagazine = catchAsync(async (req: Request, res: Response) => {
@@ -67,4 +101,4 @@ const getArticleDetail = catchAsync(async (req: Request, res: Response, next: Ne
   appSuccess({ res, data, message: '取得文章詳情成功' })
 })
 
-export { getAllMagazine, getMagazineList, getArticleDetail }
+export { getAllMagazine, getMagazineList, getArticleDetail, getHotNewsList }
