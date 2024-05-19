@@ -11,7 +11,7 @@ const router = express.Router()
 router.get(
   '/magazine-category-list',
   /**
-    #swagger.tags = ['Gusets']
+    #swagger.tags = ['Guests']
     #swagger.description  = "取得雜誌種類列表"
     #swagger.responses[200] = {
       description: '雜誌種類列表資訊',
@@ -23,7 +23,7 @@ router.get(
 router.get(
   '/magazine-article-page',
   /**
-    #swagger.tags = ['Gusets']
+    #swagger.tags = ['Guests']
     #swagger.description  = "取得雜誌文章列表分頁"
     #swagger.parameters['category'] = {
       in: 'query',
@@ -44,7 +44,7 @@ router.get(
 )
 router.get('/article-detail/:articleId',
 /*
-  #swagger.tags= ['Gusets']
+  #swagger.tags= ['Guests']
   #swagger.description = '取得新聞、雜誌文章詳情'
   #swagger.parameters['articleId'] = {
     in: 'path',

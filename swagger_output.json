@@ -9,7 +9,7 @@
   "basePath": "/",
   "tags": [
     {
-      "name": "Gusets",
+      "name": "Guests",
       "description": "未登入訪客"
     },
     {
@@ -44,7 +44,7 @@
     "/api/v1/guest/magazine-category-list": {
       "get": {
         "tags": [
-          "Gusets"
+          "Guests"
         ],
         "description": "取得雜誌種類列表",
         "responses": {
@@ -60,7 +60,7 @@
     "/api/v1/guest/magazine-article-page": {
       "get": {
         "tags": [
-          "Gusets"
+          "Guests"
         ],
         "description": "取得雜誌文章列表分頁",
         "parameters": [
@@ -90,7 +90,7 @@
     "/api/v1/guest/article-detail/{articleId}": {
       "get": {
         "tags": [
-          "Gusets"
+          "Guests"
         ],
         "description": "取得新聞、雜誌文章詳情",
         "parameters": [
@@ -652,6 +652,99 @@
         ]
       }
     },
+    "/api/v1/user/{userId}/subscription": {
+      "post": {
+        "tags": [
+          "Users"
+        ],
+        "description": "訂閱服務",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "userId"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "plan": {
+                  "example": "any"
+                },
+                "duration": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "訂閱成功",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "message": {
+                  "type": "string",
+                  "example": "訂閱成功"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "api_key": [
+              "apiKeyAuth"
+            ]
+          }
+        ]
+      },
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "description": "查詢用戶訂閱狀態",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "userId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功返回用戶的訂閱狀態",
+            "schema": {
+              "$ref": "#/definitions/articleDetailInfo"
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [
+          {
+            "api_key": [
+              "apiKeyAuth"
+            ]
+          }
+        ]
+      }
+    },
     "/api/v1/upload/image": {
       "post": {
         "tags": [
@@ -1069,6 +1162,119 @@
             "targetPage": {
               "type": "string",
               "example": "目前在第幾頁"
+            }
+          }
+        }
+      }
+    },
+    "subscriptionInfo": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "boolean",
+          "example": true
+        },
+        "message": {
+          "type": "string",
+          "example": "查詢用戶訂閱狀態成功"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "address": {
+              "type": "object",
+              "properties": {
+                "zipcode": {
+                  "type": "number",
+                  "example": 0
+                },
+                "detail": {
+                  "type": "string",
+                  "example": ""
+                },
+                "country": {
+                  "type": "string",
+                  "example": ""
+                },
+                "city": {
+                  "type": "string",
+                  "example": ""
+                }
+              }
+            },
+            "_id": {
+              "type": "string",
+              "example": "664a1666d5d571acf129f834"
+            },
+            "name": {
+              "type": "string",
+              "example": "user"
+            },
+            "email": {
+              "type": "string",
+              "example": "user@gmail.com"
+            },
+            "password": {
+              "type": "string",
+              "example": "$2a$10$IFnlnB6OZagYXNEcaujSp.oxZVDo7Sc3ry8vcMlKG6gliI0URQBsa"
+            },
+            "avatar": {
+              "type": "string",
+              "example": ""
+            },
+            "isVip": {
+              "type": "boolean",
+              "example": false
+            },
+            "collectElements": {
+              "type": "number",
+              "example": 0
+            },
+            "followElements": {
+              "type": "number",
+              "example": 0
+            },
+            "birthday": {
+              "type": "string",
+              "example": ""
+            },
+            "collects": {
+              "type": "array",
+              "example": [],
+              "items": {}
+            },
+            "follows": {
+              "type": "array",
+              "example": [],
+              "items": {}
+            },
+            "createdAt": {
+              "type": "string",
+              "example": "2024-05-19T15:39:33.581Z"
+            },
+            "subscriptions": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "_id": {
+                    "type": "string",
+                    "example": "664a1d357c47e702c9087b91"
+                  },
+                  "plan": {
+                    "type": "string",
+                    "example": "any"
+                  },
+                  "subscriptionDate": {
+                    "type": "string",
+                    "example": "Sun May 19 2024 23:39:33 GMT+0800 (台北標準時間)"
+                  },
+                  "expiryDate": {
+                    "type": "string",
+                    "example": "Wed Jun 19 2024 23:39:33 GMT+0800 (台北標準時間)"
+                  }
+                }
+              }
             }
           }
         }
