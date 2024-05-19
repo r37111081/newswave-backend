@@ -2,7 +2,8 @@ import express from 'express'
 import {
   getAllMagazine,
   getMagazineList,
-  getArticleDetail
+  getArticleDetail,
+  getHotNewsList
 } from '../../../controllers/guestController'
 
 const router = express.Router()
@@ -57,5 +58,29 @@ router.get('/article-detail/:articleId',
   }
 */
   getArticleDetail)
-
+router.get('/hot-news-list'
+  /**
+     * #swagger.tags = ['Gusets']
+     * #swagger.description  = "取得熱門新聞列表"
+     * #swagger.responses[200] = {
+        schema: {
+          "status": true,
+          "message": "取得成功",
+          "data": [
+            {
+              "articleId": "N-1011",
+              "title":"MLB》大谷翔平太傻才被騙? 紐媒酸:他是棒球天才、理財傻瓜",
+              "topic":["體育"],
+              "publishedAt":2024-01-09 15:39,
+              "image": "https://pgw.udn.com.tw/gw/photo.png",
+              "source": {
+                "name": "聯合新聞網",
+                "url": "https://udn.com"
+              }
+            }
+          ]
+        }
+      }
+  */
+  , getHotNewsList)
 export default router
