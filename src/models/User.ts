@@ -1,6 +1,13 @@
 import mongoose, { Document, Schema } from 'mongoose'
 import bcrypt from 'bcryptjs'
 
+interface Address {
+  detail: string;
+  city: string;
+  country: string;
+  zipcode: number;
+}
+
 export interface IUser extends Document {
   name: string;
   email: string;
@@ -11,80 +18,30 @@ export interface IUser extends Document {
   collectElements: Number;
   followElements: Number;
   birthday: String;
-  address: Object;
-  zipcode: Number;
-  detail: String;
-  country: String;
-  city: String;
+  address: Address;
   collects: string[];
   follows: string[];
+  createdAt: Date;
+  updatedAt: Date;
   comparePassword: (enteredPassword: string) => boolean;
 }
 
+
 const userSchema = new Schema<IUser>({
-  name: {
-    type: String,
-    required: true
-  },
-  email: {
-    type: String,
-    required: true,
-    unique: true
-  },
-  password: {
-    type: String,
-    required: true
-  },
-  avatar: {
-    type: String,
-    default: ''
-  },
-  isVip: {
-    type: Boolean,
-    default: false
-  },
-  subscribeExpiredAt: {
-    type: Date,
-    default: Date.now
-  },
-  collectElements: {
-    type: Number,
-    default: 0
-  },
-  followElements: {
-    type: Number,
-    default: 0
-  },
-  birthday: {
-    type: String,
-    default: ''
-  },
-  address: {
-    zipcode: {
-      type: Number,
-      default: 0
-    },
-    detail: {
-      type: String,
-      default: ''
-    },
-    country: {
-      type: String,
-      default: ''
-    },
-    city: {
-      type: String,
-      default: ''
-    }
-  },
-  collects: [{
-    type: String,
-    ref: 'News'
-  }],
-  follows: [{
-    type: String,
-    ref: 'News'
-  }]
+  name: { type: String, required: true },
+  email: { type: String, required: true, unique: true },
+  password: { type: String, required: true },
+  avatar: { type: String, default: '' },
+  isVip: { type: Boolean, default: false },
+  subscribeExpiredAt: { type: Date, default: Date.now },
+  collectElements: { type: Number, default: 0 },
+  followElements: { type: Number, default: 0 },
+  birthday: { type: String, default: '' },
+  address: Address,
+  collects: [{ type: String, ref: 'News' }],
+  follows: [{ type: String, ref: 'News' }],
+  createdAt: { type: Date, default: Date.now },
+  updatedAt: { type: Date, default: Date.now }
 })
 
 userSchema.pre('save', async function (next) {
