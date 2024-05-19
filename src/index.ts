@@ -6,17 +6,12 @@ import bodyParser from 'body-parser'
 import cookieParser from 'cookie-parser'
 import swaggerUi from 'swagger-ui-express'
 import swaggerFile from '../swagger_output.json'
+import routes from './routes'
 
 // 遠端資料庫連線
 import connectUserDB from './connections/userDB'
 
-// router
-import authRouter from './routes/authRouter'
-import userRouter from './routes/userRouter'
-import utilsRouter from './routes/utilsRouter'
-
 // middleware
-import { authenticate } from './middleware/authMiddleware'
 import { errorHandler } from './middleware/errorMiddleware'
 
 // 載入環境變數
@@ -26,6 +21,7 @@ interface UserBasicInfo {
   _id: string;
   name: string;
   email: string;
+  isVip: boolean;
 }
 
 declare global {
@@ -58,8 +54,9 @@ const corsOptions = {
 app.use(cors(corsOptions))
 
 // 設置路由
-app.use('/api/v1/member', authRouter) // 處理與身份驗證和授權相關的路由
-app.use('/api/v1/member', authenticate, userRouter) // 處理與用戶相關的路由,使用 authenticate 中間件進行身份驗證
+app.use(routes)
+
+// swagger 路由
 app.use('/api-doc', swaggerUi.serve, swaggerUi.setup(swaggerFile))
 
 // 錯誤處理相關
@@ -73,15 +70,3 @@ const port = process.env.PORT || 3000
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`)
 })
-app.use('/api/v1', utilsRouter)
-app.use('/api/v1/member', authRouter)
-app.use('/api/v1/member', authenticate, userRouter)
-app.use('/api-doc', swaggerUi.serve, swaggerUi.setup(swaggerFile, {
-  swaggerOptions: {
-    host: 'newswave-backend.onrender.com'
-  }
-}))
-
-app.use(errorHandler)
-
-connectUserDB()
