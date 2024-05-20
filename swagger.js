@@ -120,28 +120,10 @@ const doc = {
       status: true,
       message: '查詢用戶訂閱狀態成功',
       data: {
-        address: {
-          zipcode: 0,
-          detail: '',
-          country: '',
-          city: ''
-        },
-        _id: '664a1666d5d571acf129f834',
-        name: 'user',
-        email: 'user@gmail.com',
-        password: '$2a$10$IFnlnB6OZagYXNEcaujSp.oxZVDo7Sc3ry8vcMlKG6gliI0URQBsa',
-        avatar: '',
-        isVip: false,
-        collectElements: 0,
-        followElements: 0,
-        birthday: '',
-        collects: [],
-        follows: [],
-        createdAt: '2024-05-19T15:39:33.581Z',
         subscriptions: [
           {
-            _id: '664a1d357c47e702c9087b91',
-            plan: 'any',
+            item: 'NewsWave雜誌訂閱(年訂閱)',
+            plan: 'year',
             subscriptionDate: 'Sun May 19 2024 23:39:33 GMT+0800 (台北標準時間)',
             expiryDate: 'Wed Jun 19 2024 23:39:33 GMT+0800 (台北標準時間)'
           }

@@ -12,7 +12,7 @@ import {
   authenticateUser,
   logoutUser
 } from '../../../controllers/authController'
-import { addSubscription, getSubscription } from '../../../controllers/subscriptionController'
+import { addSubscription, getSubscription, toggleRenewal } from '../../../controllers/subscriptionController'
 import { authenticate } from '../../../middleware/authMiddleware'
 
 export const router = express.Router()
@@ -217,6 +217,23 @@ router.delete('/collect-article/:articleId',
   */
   deleteArticleCollect)
 // 訂閱服務
+router.get('/:userId/subscription',
+  /*
+    * #swagger.tags= ['Users']
+      #swagger.description = '查詢用戶訂閱狀態'
+      #swagger.security = [{'api_key': ['apiKeyAuth']}]
+      #swagger.parameters['userId'] = {
+        in: 'path',
+        description: 'userId',
+        required: true,
+        type: 'string'
+      }
+      #swagger.responses[200] = {
+        description: '成功返回用戶的訂閱狀態',
+        schema: {$ref: '#/definitions/subscriptionInfo'}
+      }
+    */
+  getSubscription)
 router.post('/:userId/subscription',
   /*
       * #swagger.tags= ['Users']
@@ -237,22 +254,25 @@ router.post('/:userId/subscription',
       }
     */
   addSubscription)
-router.get('/:userId/subscription',
+router.patch('/:subscriptionId/subscription/renew',
   /*
-      * #swagger.tags= ['Users']
-      #swagger.description = '查詢用戶訂閱狀態'
+    * #swagger.tags= ['Users']
+      #swagger.description = '更新訂閱的續訂狀態'
       #swagger.security = [{'api_key': ['apiKeyAuth']}]
-      #swagger.parameters['userId'] = {
+      #swagger.parameters['subscriptionId'] = {
         in: 'path',
-        description: 'userId',
+        description: 'subscriptionId',
         required: true,
         type: 'string'
       }
       #swagger.responses[200] = {
-        description: '成功返回用戶的訂閱狀態',
-        schema: {$ref: '#/definitions/subscriptionInfo'}
+        description: '狀態更新成功',
+        schema: {
+          status: true,
+          message: '狀態更新成功'
+        }
       }
     */
-  getSubscription)
+  toggleRenewal)
 
 export default router

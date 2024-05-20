@@ -36,7 +36,7 @@ const addSubscription = catchAsync(async (req: Request, res: Response, next: Nex
     return appError(apiState.DATA_NOT_FOUND, next)
   }
 
-  user.subscriptions.push(subscription._id)
+  user.subscriptions.unshift(subscription._id)
   await user.save()
 
   appSuccess({ res, message: '訂閱成功' })
@@ -44,13 +44,33 @@ const addSubscription = catchAsync(async (req: Request, res: Response, next: Nex
 
 const getSubscription = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
   const { userId } = req.params
-  // const data = await User.findById(userId).populate('subscriptions')
-  const data = await Subscription.findById(userId).select('-_id')
-  if (!data) {
-    return res.status(404).json({ message: 'User not found' })
-  }
+  const data = await User.findById(userId).populate('subscriptions')
 
-  appSuccess({ res, data, message: '查詢成功' })
+  if (!data) {
+    return appSuccess({ res, data, message: '查無使用者訂閱資訊' })
+  }
+  const subscriptions = data.subscriptions.map(subscription => ({
+    _id: subscription._id,
+    plan: subscription.plan,
+    subscriptionDate: subscription.subscriptionDate,
+    expiryDate: subscription.expiryDate,
+    autoRenew: subscription.autoRenew
+  }))
+
+  appSuccess({ res, data: subscriptions, message: '查詢成功' })
 })
 
-export { addSubscription, getSubscription }
+const toggleRenewal = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+  const { subscriptionId } = req.params
+  const data = await Subscription.findById(subscriptionId)
+  if (!data) {
+    return appSuccess({ res, data: null, message: '沒有找到此筆訂閱紀錄' })
+  }
+
+  data.autoRenew = !data.autoRenew
+  await data.save()
+
+  appSuccess({ res, data: data.autoRenew, message: '狀態更新成功' })
+})
+
+export { addSubscription, getSubscription, toggleRenewal }

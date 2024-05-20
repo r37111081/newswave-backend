@@ -42,7 +42,7 @@ const userSchema = new Schema<IUser>(
       city: { type: String, default: '' }
     },
     collects: [{ type: String, ref: 'News' }],
-    follows: [{ type: String, ref: 'News' }]
+    follows: [{ type: String, ref: 'News' }],
   },
   {
     versionKey: false

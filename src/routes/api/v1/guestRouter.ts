@@ -60,7 +60,7 @@ router.get('/article-detail/:articleId',
   getArticleDetail)
 router.get('/hot-news-list'
   /**
-     * #swagger.tags = ['Gusets']
+     * #swagger.tags = ['Guests']
      * #swagger.description  = "取得熱門新聞列表"
      * #swagger.responses[200] = {
         schema: {
