@@ -8,6 +8,8 @@ import { appSuccess } from '../utils/appSuccess'
 import { appError } from '../middleware/errorMiddleware'
 import { apiState } from '../utils/apiState'
 
+const topics = ['國際', '社會', '科技', '財經', '體育', '娛樂']
+
 // 取得會員狀態資料
 const getUser = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
   const userId = req.user?._id
@@ -150,4 +152,52 @@ const deleteArticleCollect = catchAsync(async (req: Request, res: Response, next
   appSuccess({ res, message: '取消收藏文章成功' })
 })
 
-export { getUser, updatePassword, getUserInfo, getUserCollectList, addArticleCollect, deleteArticleCollect }
+// 取得會員主題追蹤列表
+const getUserFollowList = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+  const userId = req.user?._id
+
+  const user = await User.findById(userId)
+  if (!user) return appError(apiState.DATA_NOT_FOUND, next)
+
+  let data = user.follows
+  appSuccess({ res, data, message: '取得追蹤主題列表成功' })
+})
+
+// 新增會員追蹤主題
+const addArticleFollow = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+  const userId = req.user?._id
+  const { topic } = req.query
+
+  if (!topics.includes(topic as string)) {
+    return appError({ statusCode: 400, message: '主題不存在' }, next)
+  }
+
+  await User.findByIdAndUpdate({ _id: userId }, {
+    $addToSet: { follows: topic }
+  }, { runValidators: true })
+
+  appSuccess({ res, message: '追蹤主題成功' })
+})
+
+// 取消會員追蹤主題
+const deleteArticleFollow = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+  const userId = req.user?._id
+  const { topic } = req.query
+
+  if (!topics.includes(topic as string)) {
+    return appError({ statusCode: 400, message: '主題不存在' }, next)
+  }
+
+  await User.findByIdAndUpdate({ _id: userId }, {
+    $pull: { follows: topic }
+  }, { runValidators: true })
+
+  appSuccess({ res, message: '取消追蹤主題成功' })
+})
+
+export {
+  getUser, updatePassword, getUserInfo,
+  getUserCollectList, addArticleCollect,
+  deleteArticleCollect, getUserFollowList,
+  addArticleFollow, deleteArticleFollow
+}
