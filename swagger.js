@@ -18,7 +18,7 @@ if (process.env.NODE_ENV === 'production') {
 const doc = {
   tags: [
     {
-      name: 'Gusets',
+      name: 'Guests',
       description: '未登入訪客'
     },
     {
@@ -114,6 +114,20 @@ const doc = {
         totalElement: '總共有幾筆資料',
         totalPages: '總共有幾頁',
         targetPage: '目前在第幾頁'
+      }
+    },
+    subscriptionInfo: {
+      status: true,
+      message: '查詢用戶訂閱狀態成功',
+      data: {
+        subscriptions: [
+          {
+            item: 'NewsWave雜誌訂閱(年訂閱)',
+            plan: 'year',
+            subscriptionDate: 'Sun May 19 2024 23:39:33 GMT+0800 (台北標準時間)',
+            expiryDate: 'Wed Jun 19 2024 23:39:33 GMT+0800 (台北標準時間)'
+          }
+        ]
       }
     }
   }

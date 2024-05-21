@@ -12,6 +12,7 @@ import {
   authenticateUser,
   logoutUser
 } from '../../../controllers/authController'
+import { addSubscription, getSubscription, toggleRenewal } from '../../../controllers/subscriptionController'
 import { authenticate } from '../../../middleware/authMiddleware'
 
 export const router = express.Router()
@@ -160,20 +161,20 @@ router.get('/info/:id',
      */
   getUserInfo)
 router.get('/collect-page',
-/*
-  * #swagger.tags= ['Users']
-  #swagger.description = '取得收藏列表'
-  #swagger.security = [{'api_key': ['apiKeyAuth']}]
-  #swagger.parameters['pageIndex'] = {
-    in: 'query',
-    type: 'String',
-    description: '當前頁數',
-  },
-  #swagger.responses[200] = {
-    description: '收藏列表資訊',
-    schema: { $ref: '#/definitions/articleList' }
-  }
-  */
+  /*
+    * #swagger.tags= ['Users']
+    #swagger.description = '取得收藏列表'
+    #swagger.security = [{'api_key': ['apiKeyAuth']}]
+    #swagger.parameters['pageIndex'] = {
+      in: 'query',
+      type: 'String',
+      description: '當前頁數',
+    },
+    #swagger.responses[200] = {
+      description: '收藏列表資訊',
+      schema: { $ref: '#/definitions/articleList' }
+    }
+    */
   getUserCollectList)
 router.post('/collect-article/:articleId',
   /*
@@ -215,5 +216,63 @@ router.delete('/collect-article/:articleId',
     }
   */
   deleteArticleCollect)
+// 訂閱服務
+router.get('/:userId/subscription',
+  /*
+    * #swagger.tags= ['Users']
+      #swagger.description = '查詢用戶訂閱狀態'
+      #swagger.security = [{'api_key': ['apiKeyAuth']}]
+      #swagger.parameters['userId'] = {
+        in: 'path',
+        description: 'userId',
+        required: true,
+        type: 'string'
+      }
+      #swagger.responses[200] = {
+        description: '成功返回用戶的訂閱狀態',
+        schema: {$ref: '#/definitions/subscriptionInfo'}
+      }
+    */
+  getSubscription)
+router.post('/:userId/subscription',
+  /*
+      * #swagger.tags= ['Users']
+      #swagger.description = '訂閱服務'
+      #swagger.security = [{'api_key': ['apiKeyAuth']}]
+      #swagger.parameters['userId'] = {
+        in: 'path',
+        description: 'userId',
+        required: true,
+        type: 'string'
+      }
+      #swagger.responses[200] = {
+        description: '訂閱成功',
+        schema: {
+          status: true,
+          message: '訂閱成功'
+        }
+      }
+    */
+  addSubscription)
+router.patch('/:subscriptionId/subscription/renew',
+  /*
+    * #swagger.tags= ['Users']
+      #swagger.description = '更新訂閱的續訂狀態'
+      #swagger.security = [{'api_key': ['apiKeyAuth']}]
+      #swagger.parameters['subscriptionId'] = {
+        in: 'path',
+        description: 'subscriptionId',
+        required: true,
+        type: 'string'
+      }
+      #swagger.responses[200] = {
+        description: '狀態更新成功',
+        schema: {
+          status: true,
+          message: '狀態更新成功'
+        }
+      }
+    */
+  toggleRenewal)
 
 export default router

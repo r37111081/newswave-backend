@@ -99,7 +99,7 @@ http://localhost:3000/
 產生 Swagger 文件
 
 ```bash
-npm run swagger-autogen
+npm run swagger-dev
 ```
 
 在瀏覽器網址列輸入以下即可看到畫面
@@ -158,7 +158,7 @@ npm run build
 npm run start
 
 # 產生 Swagger 文件指令 : 用來產生 Swagger 文件
-npm run swagger-autogen
+npm run swagger-dev
 ```
 <!--
 ## Docker

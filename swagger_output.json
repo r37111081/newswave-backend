@@ -9,7 +9,7 @@
   "basePath": "/",
   "tags": [
     {
-      "name": "Gusets",
+      "name": "Guests",
       "description": "未登入訪客"
     },
     {
@@ -44,7 +44,7 @@
     "/api/v1/guest/magazine-category-list": {
       "get": {
         "tags": [
-          "Gusets"
+          "Guests"
         ],
         "description": "取得雜誌種類列表",
         "responses": {
@@ -60,7 +60,7 @@
     "/api/v1/guest/magazine-article-page": {
       "get": {
         "tags": [
-          "Gusets"
+          "Guests"
         ],
         "description": "取得雜誌文章列表分頁",
         "parameters": [
@@ -90,7 +90,7 @@
     "/api/v1/guest/article-detail/{articleId}": {
       "get": {
         "tags": [
-          "Gusets"
+          "Guests"
         ],
         "description": "取得新聞、雜誌文章詳情",
         "parameters": [
@@ -115,7 +115,7 @@
     "/api/v1/guest/hot-news-list": {
       "get": {
         "tags": [
-          "Gusets"
+          "Guests"
         ],
         "description": "取得熱門新聞列表",
         "parameters": [
@@ -131,70 +131,8 @@
           }
         ],
         "responses": {
-          "200": {
-            "schema": {
-              "type": "object",
-              "properties": {
-                "status": {
-                  "type": "boolean",
-                  "example": true
-                },
-                "message": {
-                  "type": "string",
-                  "example": "取得成功"
-                },
-                "data": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "articleId": {
-                        "type": "string",
-                        "example": "N-1011"
-                      },
-                      "title": {
-                        "type": "string",
-                        "example": "MLB》大谷翔平太傻才被騙? 紐媒酸:他是棒球天才、理財傻瓜"
-                      },
-                      "topic": {
-                        "type": "array",
-                        "example": [
-                          "體育"
-                        ],
-                        "items": {
-                          "type": "string"
-                        }
-                      },
-                      "publishedAt": {
-                        "type": "number",
-                        "example": 1234567890123
-                      },
-                      "image": {
-                        "type": "string",
-                        "example": "https://pgw.udn.com.tw/gw/photo.png"
-                      },
-                      "source": {
-                        "type": "object",
-                        "properties": {
-                          "name": {
-                            "type": "string",
-                            "example": "聯合新聞網"
-                          },
-                          "url": {
-                            "type": "string",
-                            "example": "https://udn.com"
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              },
-              "xml": {
-                "name": "main"
-              }
-            },
-            "description": "OK"
+          "default": {
+            "description": ""
           }
         }
       }
@@ -652,6 +590,141 @@
         ]
       }
     },
+    "/api/v1/user/{userId}/subscription": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "description": "查詢用戶訂閱狀態",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "userId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功返回用戶的訂閱狀態",
+            "schema": {
+              "$ref": "#/definitions/subscriptionInfo"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_key": [
+              "apiKeyAuth"
+            ]
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Users"
+        ],
+        "description": "訂閱服務",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "userId"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "plan": {
+                  "example": "any"
+                },
+                "duration": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "訂閱成功",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "message": {
+                  "type": "string",
+                  "example": "訂閱成功"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "api_key": [
+              "apiKeyAuth"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/v1/user/{subscriptionId}/subscription/renew": {
+      "patch": {
+        "tags": [
+          "Users"
+        ],
+        "description": "更新訂閱的續訂狀態",
+        "parameters": [
+          {
+            "name": "subscriptionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "subscriptionId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "狀態更新成功",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "message": {
+                  "type": "string",
+                  "example": "狀態更新成功"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "api_key": [
+              "apiKeyAuth"
+            ]
+          }
+        ]
+      }
+    },
     "/api/v1/upload/image": {
       "post": {
         "tags": [
@@ -1069,6 +1142,48 @@
             "targetPage": {
               "type": "string",
               "example": "目前在第幾頁"
+            }
+          }
+        }
+      }
+    },
+    "subscriptionInfo": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "boolean",
+          "example": true
+        },
+        "message": {
+          "type": "string",
+          "example": "查詢用戶訂閱狀態成功"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "subscriptions": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "item": {
+                    "type": "string",
+                    "example": "NewsWave雜誌訂閱(年訂閱)"
+                  },
+                  "plan": {
+                    "type": "string",
+                    "example": "year"
+                  },
+                  "subscriptionDate": {
+                    "type": "string",
+                    "example": "Sun May 19 2024 23:39:33 GMT+0800 (台北標準時間)"
+                  },
+                  "expiryDate": {
+                    "type": "string",
+                    "example": "Wed Jun 19 2024 23:39:33 GMT+0800 (台北標準時間)"
+                  }
+                }
+              }
             }
           }
         }
