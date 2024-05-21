@@ -2,7 +2,7 @@ import { Router } from 'express'
 import userRouter from './api/v1/userRouter'
 import memberRouter from './api/v1/memberRouter'
 import guestRouter from './api/v1/guestRouter'
-// import uploadRouter from './api/v1/uploadRouter'
+import uploadRouter from './api/v1/uploadRouter'
 import { authenticate, vipVerify } from '../middleware/authMiddleware'
 
 const routes = Router()
