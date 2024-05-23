@@ -3,6 +3,7 @@ import {
   getUser,
   getUserInfo,
   updatePassword,
+  updateUserInfo,
   getUserCollectList,
   addArticleCollect,
   deleteArticleCollect,
@@ -163,6 +164,32 @@ router.get('/info/:id',
         }
      */
   getUserInfo)
+router.patch('/info',
+  /*
+    * #swagger.tags= ['Users']
+    #swagger.description = '更新會員基本資料'
+    #swagger.security = [{'api_key': ['apiKeyAuth']}]
+    #swagger.parameters['body'] = {
+      in: 'body',
+      type: 'object',
+      required: true,
+      description: '資料格式',
+      schema: {
+        name: '姓名',
+        birthday: '生日，格式為 YYYY-MM-DD',
+        gender: '性別，0 表示男性，1 表示女性',
+        avatar: '頭像網址'
+      }
+    }
+    #swagger.responses[200] = {
+      description: '主題追蹤資訊',
+      schema: {
+        status: true,
+        message: '主題追蹤成功'
+      }
+    }
+  */
+  updateUserInfo)
 router.get('/collect-page',
   /*
     * #swagger.tags= ['Users']

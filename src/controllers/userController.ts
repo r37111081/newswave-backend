@@ -86,6 +86,34 @@ const getUserInfo = catchAsync(async (req: Request, res: Response, next: NextFun
   })
 })
 
+// 更新會員基本資料
+const updateUserInfo = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+  const userId = req.user?._id
+  const { name, birthday, gender, avatar } = req.body
+  const verifyBirthday = (val:string) => /^(\d{4})-(\d{2})-(\d{2})$/.test(val)
+  const verifyGender = (val:string) => /^[01]$/.test(val)
+  let updateData = {}
+
+  if (name && birthday && gender) {
+    if (!verifyBirthday(birthday)) {
+      return appError({ statusCode: 400, message: '生日格式錯誤' }, next)
+    }
+    if (!verifyGender(gender)) {
+      return appError({ statusCode: 400, message: '性別格式錯誤' }, next)
+    }
+    updateData = { name, birthday, gender }
+  }
+
+  if (avatar) {
+    updateData = { ...updateData, avatar }
+  }
+
+  const data = await User.findByIdAndUpdate(userId, updateData, { new: true, runValidators: true })
+    .select('-_id name email birthday gender avatar')
+
+  appSuccess({ res, data, message: '更新會員基本資料成功' })
+})
+
 // 取得會員文章收藏列表
 const getUserCollectList = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
   const userId = req.user?._id
@@ -197,7 +225,8 @@ const deleteArticleFollow = catchAsync(async (req: Request, res: Response, next:
 
 export {
   getUser, updatePassword, getUserInfo,
-  getUserCollectList, addArticleCollect,
-  deleteArticleCollect, getUserFollowList,
-  addArticleFollow, deleteArticleFollow
+  updateUserInfo, getUserCollectList,
+  addArticleCollect, deleteArticleCollect,
+  getUserFollowList, addArticleFollow,
+  deleteArticleFollow
 }
