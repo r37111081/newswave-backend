@@ -13,11 +13,7 @@ export interface IUser extends Document {
   collectElements: number;
   followElements: number;
   birthday: string;
-  address: Object;
-  zipcode: number;
-  detail: string;
-  country: String;
-  city: string;
+  gender: string;
   collects: string[];
   follows: string[];
   comparePassword: (enteredPassword: string) => Promise<boolean>;
@@ -34,15 +30,10 @@ const userSchema = new Schema<IUser>(
     createdAt: { type: Date, default: Date.now },
     collectElements: { type: Number, default: 0 },
     followElements: { type: Number, default: 0 },
-    birthday: { type: String, default: '' },
-    address: {
-      zipcode: { type: Number, default: 0 },
-      detail: { type: String, default: '' },
-      country: { type: String, default: '' },
-      city: { type: String, default: '' }
-    },
+    birthday: { type: String, default: '2000-01-01' },
+    gender: { type: String, default: '1', enum: ['0', '1'] },
     collects: [{ type: String, ref: 'News' }],
-    follows: [{ type: String, ref: 'News' }],
+    follows: [{ type: String, ref: 'News' }]
   },
   {
     versionKey: false
