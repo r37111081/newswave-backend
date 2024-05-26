@@ -5,7 +5,10 @@ import {
   updatePassword,
   getUserCollectList,
   addArticleCollect,
-  deleteArticleCollect
+  deleteArticleCollect,
+  getUserFollowList,
+  addArticleFollow,
+  deleteArticleFollow
 } from '../../../controllers/userController'
 import {
   registerUser,
@@ -274,5 +277,60 @@ router.patch('/:subscriptionId/subscription/renew',
       }
     */
   toggleRenewal)
+router.get('/follow-topic',
+  /*
+    * #swagger.tags= ['Users']
+    #swagger.description = '取得主題追蹤列表'
+    #swagger.security = [{'api_key': ['apiKeyAuth']}]
+    #swagger.responses[200] = {
+      description: '主題列表資訊',
+      schema: {
+        status: true,
+        data: [],
+        message: '取得主題列表成功'
+      }
+    }
+  */
+  getUserFollowList)
+router.post('/follow-topic',
+  /*
+    * #swagger.tags= ['Users']
+    #swagger.description = '新增主題追蹤'
+    #swagger.security = [{'api_key': ['apiKeyAuth']}]
+    #swagger.parameters['topic'] = {
+      in: 'query',
+      description: '主題',
+      required: true,
+      type: 'string'
+    }
+    #swagger.responses[200] = {
+      description: '主題追蹤資訊',
+      schema: {
+        status: true,
+        message: '主題追蹤成功'
+      }
+    }
+  */
+  addArticleFollow)
+router.delete('/follow-topic',
+  /*
+    * #swagger.tags= ['Users']
+    #swagger.description = '取消主題追蹤'
+    #swagger.security = [{'api_key': ['apiKeyAuth']}]
+    #swagger.parameters['topic'] = {
+      in: 'query',
+      description: '主題',
+      required: true,
+      type: 'string'
+    }
+    #swagger.responses[200] = {
+      description: '主題追蹤資訊',
+      schema: {
+        status: true,
+        message: '取消主題追蹤成功'
+      }
+    }
+  */
+  deleteArticleFollow)
 
 export default router
