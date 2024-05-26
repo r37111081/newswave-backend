@@ -10,8 +10,6 @@ export interface IUser extends Document {
   isVip: boolean;
   subscriptions: ISubscription[];
   createdAt: Date;
-  collectElements: number;
-  followElements: number;
   birthday: string;
   address: Object;
   zipcode: number;
@@ -32,8 +30,6 @@ const userSchema = new Schema<IUser>(
     isVip: { type: Boolean, default: false },
     subscriptions: [{ type: Schema.Types.ObjectId, ref: 'Subscription' }],
     createdAt: { type: Date, default: Date.now },
-    collectElements: { type: Number, default: 0 },
-    followElements: { type: Number, default: 0 },
     birthday: { type: String, default: '' },
     address: {
       zipcode: { type: Number, default: 0 },
@@ -42,7 +38,7 @@ const userSchema = new Schema<IUser>(
       city: { type: String, default: '' }
     },
     collects: [{ type: String, ref: 'News' }],
-    follows: [{ type: String, ref: 'News' }],
+    follows: [{ type: String, ref: 'News' }]
   },
   {
     versionKey: false
