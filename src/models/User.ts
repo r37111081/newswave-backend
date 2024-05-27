@@ -11,11 +11,7 @@ export interface IUser extends Document {
   subscriptions: ISubscription[];
   createdAt: Date;
   birthday: string;
-  address: Object;
-  zipcode: number;
-  detail: string;
-  country: String;
-  city: string;
+  gender: string;
   collects: string[];
   follows: string[];
   comparePassword: (enteredPassword: string) => Promise<boolean>;
@@ -30,13 +26,8 @@ const userSchema = new Schema<IUser>(
     isVip: { type: Boolean, default: false },
     subscriptions: [{ type: Schema.Types.ObjectId, ref: 'Subscription' }],
     createdAt: { type: Date, default: Date.now },
-    birthday: { type: String, default: '' },
-    address: {
-      zipcode: { type: Number, default: 0 },
-      detail: { type: String, default: '' },
-      country: { type: String, default: '' },
-      city: { type: String, default: '' }
-    },
+    birthday: { type: String, default: '2000-01-01' },
+    gender: { type: String, default: '1', enum: ['0', '1'] },
     collects: [{ type: String, ref: 'News' }],
     follows: [{ type: String, ref: 'News' }]
   },
