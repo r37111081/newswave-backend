@@ -35,6 +35,7 @@ const getOrder = catchAsync(async (req:Request, res:Response, next:NextFunction)
     ReturnURL: process.env.PaymentReturnURL,
     ChoosePayment: 'Credit',
     EncryptType: 1,
+    ClientBackURL: 'https://newswave-frontend.onrender.com/',
     CustomField1: order.id
   }
 
@@ -50,6 +51,7 @@ const getOrder = catchAsync(async (req:Request, res:Response, next:NextFunction)
         <input name="ReturnURL" value="${baseParam.ReturnURL}" />
         <input name="ChoosePayment" value="${baseParam.ChoosePayment}" />
         <input name="EncryptType" value="${baseParam.EncryptType}" />
+        <input name="ClientBackURL" value="${baseParam.ClientBackURL}" />
         <input name="CheckMacValue" value="${generateCheckValue(baseParam)}" />
         <button type="submit">Submit</button>
       </form>
@@ -93,7 +95,7 @@ const getPaymentResults = catchAsync(async (req:Request, res:Response, next:Next
   }
 })
 
-function generateCheckValue (params: { [s: string]: unknown } | ArrayLike<unknown>) {
+function generateCheckValue (params) {
   // 將 params 從 Object 換成 Array
   const entries = Object.entries(params)
 
