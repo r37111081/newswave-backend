@@ -21,6 +21,10 @@
       "description": "訂閱使用者"
     },
     {
+      "name": "Orders",
+      "description": "訂閱管理-金流"
+    },
+    {
       "name": "Upload",
       "description": "上傳檔案"
     },
@@ -1093,6 +1097,130 @@
             "schema": {
               "$ref": "#/definitions/articleDetailInfo"
             }
+          }
+        },
+        "security": [
+          {
+            "api_key": [
+              "apiKeyAuth"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/v1/order/": {
+      "post": {
+        "tags": [
+          "Orders"
+        ],
+        "description": "串接綠界金流",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "description": "資料格式",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "itemName": {
+                  "type": "string",
+                  "example": "newswave 年訂閱"
+                },
+                "total": {
+                  "type": "number",
+                  "example": 1000
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "綠界回傳表單",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "message": {
+                  "type": "string",
+                  "example": "取得成功"
+                },
+                "data": {
+                  "type": "string",
+                  "example": "綠界回傳待前端submit表單"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "api_key": [
+              "apiKeyAuth"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/v1/order/payment-results": {
+      "post": {
+        "tags": [
+          "Orders"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "RtnCode": {
+                  "example": "any"
+                },
+                "PaymentDate": {
+                  "example": "any"
+                },
+                "CustomField1": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "綠界回傳表單",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "message": {
+                  "type": "string",
+                  "example": "取得成功"
+                },
+                "data": {
+                  "type": "string",
+                  "example": "綠界回傳待前端submit表單"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         },
         "security": [
