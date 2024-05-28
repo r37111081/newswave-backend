@@ -95,7 +95,7 @@ const getPaymentResults = catchAsync(async (req:Request, res:Response, next:Next
   }
 })
 
-function generateCheckValue (params) {
+function generateCheckValue (params: { [key: string]: any }):string {
   // 將 params 從 Object 換成 Array
   const entries = Object.entries(params)
 
