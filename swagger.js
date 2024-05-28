@@ -30,6 +30,10 @@ const doc = {
       description: '訂閱使用者'
     },
     {
+      name: 'Orders',
+      description: '訂閱管理-金流'
+    },
+    {
       name: 'Upload',
       description: '上傳檔案'
     },
