@@ -7,6 +7,7 @@ import cookieParser from 'cookie-parser'
 import swaggerUi from 'swagger-ui-express'
 import swaggerFile from '../swagger_output.json'
 import routes from './routes'
+import { connectSocketIo } from './connections/socket'
 
 // 遠端資料庫連線
 import connectUserDB from './connections/userDB'
@@ -67,6 +68,7 @@ connectUserDB()
 
 // 啟動server
 const port = process.env.PORT || 3000
-app.listen(port, () => {
+const server = app.listen(port, () => {
   console.log(`Server is running on port ${port}`)
 })
+connectSocketIo(server)
