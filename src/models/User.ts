@@ -14,6 +14,7 @@ export interface IUser extends Document {
   gender: string;
   collects: string[];
   follows: string[];
+  notices: string[];
   comparePassword: (enteredPassword: string) => Promise<boolean>;
 }
 
@@ -29,7 +30,13 @@ const userSchema = new Schema<IUser>(
     birthday: { type: String },
     gender: { type: String, default: '1', enum: ['0', '1'] },
     collects: [{ type: String, ref: 'News' }],
-    follows: [{ type: String, ref: 'News' }]
+    follows: [{ type: String, ref: 'News' }],
+    notices: [
+      {
+        notice: { type: String, ref: 'Notice' },
+        read: { type: Boolean, default: false }
+      }
+    ]
   },
   {
     versionKey: false

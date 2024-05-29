@@ -6,6 +6,7 @@ import { apiState } from '../utils/apiState'
 import { getSocektIo } from '../connections/socket'
 import News from '../models/News'
 import Notice from '../models/Notice'
+import User from '../models/User'
 
 // 新增文章
 const createNewsArticle = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
@@ -34,13 +35,23 @@ const createNewsArticle = catchAsync(async (req: Request, res: Response, next: N
 // 新增通知訊息
 const createNotice = async (data: any) => {
   try {
-    await Notice.create({
+    const newNotice = await Notice.create({
       articleId: data.articleId,
       title: data.title,
       topic: data.topic,
       image: data.image,
       publishedAt: data.publishedAt
     })
+
+    const users = await User.find({ follows: { $in: data.topic } })
+
+    const updates = users.map(user => user._id)
+
+    await User.updateMany(
+      { _id: { $in: updates } },
+      { $addToSet: { notices: { notice: newNotice._id } } }
+    )
+
     getSocektIo().emit('notice', {
       action: 'create',
       receive: true
