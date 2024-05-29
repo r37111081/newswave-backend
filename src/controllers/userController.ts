@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from 'express'
 import User from '../models/User'
 import News from '../models/News'
 import Comment from '../models/Comment'
+import Notice from '../models/Notice'
 import bcrypt from 'bcryptjs'
 import validator from 'validator'
 import { catchAsync } from '../utils/catchAsync'
@@ -326,6 +327,12 @@ const getMagazineArticleDetail = catchAsync(async (req: Request, res: Response, 
   appSuccess({ res, data, message: '取得文章詳情成功' })
 })
 
+// 取得通知訊息列表
+const getNoticeList = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+  const data = await Notice.find().sort({ publishedAt: -1 })
+  appSuccess({ res, data, message: '取得通知訊息列表成功' })
+})
+
 export {
   getUser, updatePassword, getUserInfo,
   updateUserInfo, getUserCollectList,
@@ -333,5 +340,5 @@ export {
   getUserFollowList, addArticleFollow,
   deleteArticleFollow, getUserCommentList,
   createUserComment, deleteUserComment,
-  getMagazineArticleDetail
+  getMagazineArticleDetail, getNoticeList
 }

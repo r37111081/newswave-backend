@@ -13,7 +13,8 @@ import {
   getUserCommentList,
   createUserComment,
   deleteUserComment,
-  getMagazineArticleDetail
+  getMagazineArticleDetail,
+  getNoticeList
 } from '../../../controllers/userController'
 import {
   registerUser,
@@ -336,6 +337,8 @@ router.delete('/article-comment/:id',
     }
   */
   deleteUserComment)
+
+router.get('/notice-list', getNoticeList)
 
 // 訂閱服務
 router.get('/subscription',

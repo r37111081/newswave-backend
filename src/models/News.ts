@@ -40,7 +40,7 @@ const newsSchema = new Schema<INews>(
     },
     imageDescribe: {
       type: String,
-      required: true
+      default: ''
     },
     image: {
       type: String,
@@ -53,12 +53,11 @@ const newsSchema = new Schema<INews>(
     source: {
       name: {
         type: String,
-        required: true
+        default: ''
       },
       url: {
         type: String,
-        default: '',
-        required: true
+        default: ''
       }
     }
   },
