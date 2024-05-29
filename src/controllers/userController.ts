@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express'
 import User from '../models/User'
 import News from '../models/News'
+import Notice from '../models/Notice'
 import bcrypt from 'bcryptjs'
 import validator from 'validator'
 import { catchAsync } from '../utils/catchAsync'
@@ -223,10 +224,16 @@ const deleteArticleFollow = catchAsync(async (req: Request, res: Response, next:
   appSuccess({ res, message: '取消追蹤主題成功' })
 })
 
+// 取得通知訊息列表
+const getNoticeList = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+  const data = await Notice.find().sort({ publishedAt: -1 })
+  appSuccess({ res, data, message: '取得通知訊息列表成功' })
+})
+
 export {
   getUser, updatePassword, getUserInfo,
   updateUserInfo, getUserCollectList,
   addArticleCollect, deleteArticleCollect,
   getUserFollowList, addArticleFollow,
-  deleteArticleFollow
+  deleteArticleFollow, getNoticeList
 }

@@ -3,8 +3,14 @@ import { Server } from 'socket.io'
 
 let io: any
 export function connectSocketIo (server: HttpServer) {
-  io = new Server(server)
-  io.on('connection', socket => {
+  io = new Server(server, {
+    cors: {
+      origin: 'http://localhost:4000',
+      methods: ['GET', 'POST'],
+      credentials: true
+    }
+  })
+  io.on('connection', (socket: any) => {
     console.log('Client connected')
   })
 }
