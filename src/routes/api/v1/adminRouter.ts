@@ -1,6 +1,6 @@
 import express from 'express'
 import { authenticateAdmin } from '../../../controllers/authController'
-import { createNewsArticle } from '../../../controllers/adminController'
+import { getNoticeList, createNewsArticle } from '../../../controllers/adminController'
 
 const router = express.Router()
 
@@ -30,6 +30,7 @@ router.post('/login',
     */
   authenticateAdmin)
 
+router.get('/notice-list', getNoticeList)
 router.post('/create-news-article', createNewsArticle)
 
 export default router

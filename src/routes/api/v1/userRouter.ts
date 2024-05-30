@@ -14,7 +14,9 @@ import {
   createUserComment,
   deleteUserComment,
   getMagazineArticleDetail,
-  getNoticeList
+  getUserNoticeList,
+  updateUserNoticeRead,
+  deleteUserAllNotice
 } from '../../../controllers/userController'
 import {
   registerUser,
@@ -338,8 +340,9 @@ router.delete('/article-comment/:id',
   */
   deleteUserComment)
 
-router.get('/notice-list', getNoticeList)
-
+router.get('/notice-list', getUserNoticeList)
+router.patch('/notice/:noticeId', updateUserNoticeRead)
+router.delete('/notice', deleteUserAllNotice)
 // 訂閱服務
 router.get('/subscription',
   /*

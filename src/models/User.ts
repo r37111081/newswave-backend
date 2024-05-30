@@ -15,7 +15,10 @@ export interface IUser extends Document {
   follows: string[];
   autoRenew: boolean;
   numberOfReads: number;
-  notices: string[];
+  notices: {
+    noticeId: string;
+    read: boolean;
+  }[];
   comparePassword: (enteredPassword: string) => Promise<boolean>;
 }
 
@@ -36,7 +39,7 @@ const userSchema = new Schema<IUser>(
     numberOfReads: { type: Number, default: 3 },
     notices: [
       {
-        notice: { type: String, ref: 'Notice' },
+        noticeId: { type: String, ref: 'Notice' },
         read: { type: Boolean, default: false }
       }
     ]

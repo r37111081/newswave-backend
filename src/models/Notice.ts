@@ -4,16 +4,16 @@ export interface INotice extends Document {
   articleId: string,
   topic: string[],
   title: string,
-  publishedAt: string,
-  image: string
+  content: string,
+  publishedAt: string
 }
 
 const noticeSchema = new Schema<INotice>(
   {
-    articleId: { type: String, required: true, unique: true },
+    articleId: { type: String, default: '' },
+    topic: { type: [String], default: [] },
     title: { type: String, required: true },
-    topic: { type: [String], required: true },
-    image: { type: String, default: '' },
+    content: { type: String, required: true },
     publishedAt: { type: String, required: true }
   },
   {
