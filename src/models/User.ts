@@ -14,7 +14,10 @@ export interface IUser extends Document {
   gender: string;
   collects: string[];
   follows: string[];
-  notices: string[];
+  notices: {
+    noticeId: string;
+    read: boolean;
+  }[];
   comparePassword: (enteredPassword: string) => Promise<boolean>;
 }
 
@@ -33,7 +36,7 @@ const userSchema = new Schema<IUser>(
     follows: [{ type: String, ref: 'News' }],
     notices: [
       {
-        notice: { type: String, ref: 'Notice' },
+        noticeId: { type: String, ref: 'Notice' },
         read: { type: Boolean, default: false }
       }
     ]

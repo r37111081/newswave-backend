@@ -159,7 +159,7 @@ const addArticleCollect = catchAsync(async (req: Request, res: Response, next: N
   const article = await News.findOne({ articleId })
   if (!article) return appError(apiState.DATA_NOT_FOUND, next)
 
-  await User.findByIdAndUpdate({ _id: userId }, {
+  await User.findByIdAndUpdate(userId, {
     $addToSet: { collects: articleId }
   }, { runValidators: true })
 
@@ -174,7 +174,7 @@ const deleteArticleCollect = catchAsync(async (req: Request, res: Response, next
   const article = await News.findOne({ articleId })
   if (!article) return appError(apiState.DATA_NOT_FOUND, next)
 
-  await User.findByIdAndUpdate({ _id: userId }, {
+  await User.findByIdAndUpdate(userId, {
     $pull: { collects: articleId }
   }, { runValidators: true })
 
@@ -201,7 +201,7 @@ const addArticleFollow = catchAsync(async (req: Request, res: Response, next: Ne
     return appError({ statusCode: 400, message: '主題不存在' }, next)
   }
 
-  await User.findByIdAndUpdate({ _id: userId }, {
+  await User.findByIdAndUpdate(userId, {
     $addToSet: { follows: topic }
   }, { runValidators: true })
 
@@ -217,17 +217,86 @@ const deleteArticleFollow = catchAsync(async (req: Request, res: Response, next:
     return appError({ statusCode: 400, message: '主題不存在' }, next)
   }
 
-  await User.findByIdAndUpdate({ _id: userId }, {
+  await User.findByIdAndUpdate(userId, {
     $pull: { follows: topic }
   }, { runValidators: true })
 
   appSuccess({ res, message: '取消追蹤主題成功' })
 })
 
-// 取得通知訊息列表
-const getNoticeList = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-  const data = await Notice.find().sort({ publishedAt: -1 })
+// 取得會員通知訊息列表
+const getUserNoticeList = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+  const userId = req.user?._id
+  const { pageIndex, pageSize } = req.query
+
+  const pageIndexNumber = pageIndex !== undefined && pageIndex !== ''
+    ? parseInt(pageIndex as string)
+    : 1
+
+  const pageSizeNumber = pageSize !== undefined && pageSize !== ''
+    ? parseInt(pageSize as string)
+    : 10
+
+  const user = await User.findById(userId)
+  if (!user) return appError(apiState.DATA_NOT_FOUND, next)
+
+  const noticeIds = user.notices.map(n => n.noticeId)
+  const notices = await Notice.find({ _id: { $in: noticeIds } })
+    .sort({ publishedAt: -1 })
+    .skip((pageIndexNumber - 1) * pageSizeNumber)
+    .limit(pageSizeNumber)
+    .lean()
+    .then(notices =>
+      notices.map(notice => {
+        const noticeInfo = user.notices.find(n => n.noticeId.toString() === notice._id.toString())
+        return {
+          ...notice,
+          id: notice._id,
+          read: noticeInfo ? noticeInfo.read : false,
+          _id: undefined
+        }
+      })
+    )
+
+  const totalElements = noticeIds.length
+  const firstPage = pageIndexNumber === 1
+  const lastPage = totalElements <= pageIndexNumber * pageSizeNumber
+  const empty = totalElements === 0
+  const totalPages = Math.ceil(totalElements / pageSizeNumber)
+  let data = {
+    notices,
+    firstPage,
+    lastPage,
+    empty,
+    totalElements,
+    totalPages,
+    targetPage: pageIndexNumber
+  }
   appSuccess({ res, data, message: '取得通知訊息列表成功' })
+})
+
+// 會員已閱讀此通知訊息
+const updateUserNoticeRead = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+  const userId = req.user?._id
+  const { noticeId } = req.params
+
+  await User.updateOne(
+    { _id: userId, 'notices.noticeId': noticeId },
+    { $set: { 'notices.$.read': true } }
+  )
+
+  appSuccess({ res, message: '已閱讀通知訊息成功' })
+})
+
+// 刪除會員所有通知訊息
+const deleteUserAllNotice = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+  const userId = req.user?._id
+
+  const data = await User.findByIdAndUpdate(userId, {
+    notices: []
+  }, { new: true, runValidators: true }).select('-_id notices')
+
+  appSuccess({ res, data, message: '刪除所有通知訊息成功' })
 })
 
 export {
@@ -235,5 +304,6 @@ export {
   updateUserInfo, getUserCollectList,
   addArticleCollect, deleteArticleCollect,
   getUserFollowList, addArticleFollow,
-  deleteArticleFollow, getNoticeList
+  deleteArticleFollow, getUserNoticeList,
+  deleteUserAllNotice, updateUserNoticeRead
 }

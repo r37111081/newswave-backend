@@ -10,7 +10,9 @@ import {
   getUserFollowList,
   addArticleFollow,
   deleteArticleFollow,
-  getNoticeList
+  getUserNoticeList,
+  updateUserNoticeRead,
+  deleteUserAllNotice
 } from '../../../controllers/userController'
 import {
   registerUser,
@@ -247,7 +249,9 @@ router.delete('/collect-article/:articleId',
     }
   */
   deleteArticleCollect)
-router.get('/notice-list', getNoticeList)
+router.get('/notice-list', getUserNoticeList)
+router.patch('/notice/:noticeId', updateUserNoticeRead)
+router.delete('/notice', deleteUserAllNotice)
 // 訂閱服務
 router.get('/:userId/subscription',
   /*
