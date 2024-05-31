@@ -909,7 +909,7 @@
           "200": {
             "description": "通知訊息列表資訊",
             "schema": {
-              "$ref": "#/definitions/noticeList"
+              "$ref": "#/definitions/userNoticeList"
             }
           }
         },
@@ -1614,7 +1614,7 @@
           "200": {
             "description": "通知訊息列表資訊",
             "schema": {
-              "$ref": "#/definitions/noticeList"
+              "$ref": "#/definitions/allNoticeList"
             }
           }
         },
@@ -2243,7 +2243,7 @@
         }
       }
     },
-    "noticeList": {
+    "allNoticeList": {
       "type": "object",
       "properties": {
         "status": {
@@ -2293,6 +2293,89 @@
                   }
                 }
               }
+            },
+            "firstPage": {
+              "type": "string",
+              "example": "是否為第一頁"
+            },
+            "lastPage": {
+              "type": "string",
+              "example": "是否為最後一頁"
+            },
+            "empty": {
+              "type": "string",
+              "example": "是否沒有資料"
+            },
+            "totalElement": {
+              "type": "string",
+              "example": "總共有幾筆資料"
+            },
+            "totalPages": {
+              "type": "string",
+              "example": "總共有幾頁"
+            },
+            "targetPage": {
+              "type": "string",
+              "example": "目前在第幾頁"
+            }
+          }
+        }
+      }
+    },
+    "userNoticeList": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "boolean",
+          "example": true
+        },
+        "message": {
+          "type": "string",
+          "example": "取得通知訊息列表成功"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "notices": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "example": "通知ID"
+                  },
+                  "articleId": {
+                    "type": "string",
+                    "example": "文章ID"
+                  },
+                  "title": {
+                    "type": "string",
+                    "example": "文章標題"
+                  },
+                  "editor": {
+                    "type": "string",
+                    "example": "文章編輯"
+                  },
+                  "topics": {
+                    "type": "array",
+                    "example": [
+                      "文章標籤"
+                    ],
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "publishedAt": {
+                    "type": "string",
+                    "example": "文章發布時間"
+                  }
+                }
+              }
+            },
+            "unreadElements": {
+              "type": "string",
+              "example": "未讀通知數量"
             },
             "firstPage": {
               "type": "string",

@@ -362,7 +362,7 @@ router.get('/notice-list',
   },
   #swagger.responses[200] = {
     description: '通知訊息列表資訊',
-    schema: { $ref: '#/definitions/noticeList' }
+    schema: { $ref: '#/definitions/userNoticeList' }
   }
 */
   getUserNoticeList)
