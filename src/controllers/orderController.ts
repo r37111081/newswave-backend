@@ -13,9 +13,8 @@ const getOrder = catchAsync(async (req:Request, res:Response, next:NextFunction)
 
   if (!itemName || !total) return appError(apiState.DATA_MISSING, next)
 
-  // 產出綠界需要的交易編號 20碼 uid
-  const uid = `newswav${Date.now().toString()}`
-  const MerchantTradeNo = uid
+  // 產出綠界需要的交易編號 20碼
+  const MerchantTradeNo = `nwv${moment().format('YYYYMMDDHHmmssSSS')}`
 
   const order = await Order.create({
     itemName,
@@ -30,13 +29,12 @@ const getOrder = catchAsync(async (req:Request, res:Response, next:NextFunction)
     MerchantTradeDate: moment().format('YYYY/MM/DD HH:mm:ss'),
     PaymentType: 'aio',
     TotalAmount: total,
-    TradeDesc: 'ecpay test',
+    TradeDesc: '方案訂閱',
     ItemName: itemName,
     ReturnURL: process.env.PaymentReturnURL,
-    ChoosePayment: 'Credit',
+    ChoosePayment: 'ALL',
     EncryptType: 1,
-    ClientBackURL: 'https://newswave-frontend.onrender.com/',
-    CustomField1: order.id
+    ClientBackURL: 'https://newswave-frontend.onrender.com/'
   }
 
   const form = `
@@ -60,38 +58,34 @@ const getOrder = catchAsync(async (req:Request, res:Response, next:NextFunction)
 })
 
 const getPaymentResults = catchAsync(async (req:Request, res:Response, next:NextFunction) => {
-  try {
-    // CustomField1 這個是orderId
-    const { RtnCode, PaymentDate, CustomField1 } = req.body
-    if (RtnCode === '1') {
-      // 付款成功
-      await Order.findByIdAndUpdate(
-        CustomField1,
-        {
-          $set: {
-            payStatus: 'paid',
-            paidAt: new Date(PaymentDate).toISOString()
-          }
-        },
-        { new: true, runValidators: true }
-      )
-      res.send('1|OK')
-    } else {
-      // 付款失敗
-      await Order.findByIdAndUpdate(
-        CustomField1,
-        {
-          $set: {
-            payStatus: 'failed'
-          }
-        },
-        { new: true, runValidators: true }
-      )
-    }
-    res.status(200)
-  } catch (error) {
-    console.log(error)
-    res.status(500)
+  // CustomField1 這個是orderId
+  const { RtnCode, PaymentDate, CustomField1 } = req.body
+  if (!PaymentDate || !CustomField1) return appError(apiState.DATA_MISSING, next)
+  if (RtnCode === '1') {
+    // 付款成功
+    await Order.findByIdAndUpdate(
+      CustomField1,
+      {
+        $set: {
+          payStatus: 'paid',
+          paidAt: new Date(PaymentDate).toISOString()
+        }
+      },
+      { new: true, runValidators: true }
+    )
+    res.send('1|OK')
+  } else {
+    // 付款失敗
+    await Order.findByIdAndUpdate(
+      CustomField1,
+      {
+        $set: {
+          payStatus: 'failed'
+        }
+      },
+      { new: true, runValidators: true }
+    )
+    res.send('付款失敗')
   }
 })
 

@@ -8,6 +8,7 @@ export interface IUser extends Document {
   password: string;
   avatar: string;
   isVip: boolean;
+  planType: string;
   subscriptions: ISubscription[];
   createdAt: Date;
   birthday: string;
@@ -24,6 +25,7 @@ const userSchema = new Schema<IUser>(
     password: { type: String, required: true },
     avatar: { type: String, default: '' },
     isVip: { type: Boolean, default: false },
+    planType: { type: String, default: '' },
     subscriptions: [{ type: Schema.Types.ObjectId, ref: 'Subscription' }],
     createdAt: { type: Date, default: Date.now },
     birthday: { type: String, default: '2000-01-01' },
