@@ -3,61 +3,9 @@ import { catchAsync } from '../utils/catchAsync'
 import { appSuccess } from '../utils/appSuccess'
 import { appError } from '../middleware/errorMiddleware'
 import { apiState } from '../utils/apiState'
-import { getSocektIo, getOnlineUsers } from '../connections/socket'
-import User, { IUser } from '../models/User'
-import News, { INews } from '../models/News'
-import Notice, { INotice } from '../models/Notice'
-
-// ! fixed: users 只接收 userId 的陣列
-// 發布通知
-const postNotice = async (users: IUser[], title?: string) => {
-  users.forEach((user: IUser) => {
-    const socketId = getOnlineUsers()[user._id]
-    if (socketId) {
-      getSocektIo().emit('notice', {
-        action: 'create',
-        receive: true,
-        title
-      })
-    }
-  })
-}
-
-// 使用者系統通知
-const createSystemNotice = async (data: INotice, userId: string) => {
-  const newNotice = await Notice.create({
-    articleId: data.articleId,
-    title: data.title,
-    content: data.content,
-    publishedAt: data.publishedAt
-  })
-
-  await User.findByIdAndUpdate(userId, {
-    $addToSet: { notices: { noticeId: newNotice._id } }
-  })
-  // postNotice(users, newNotice.title)
-}
-
-// 使用者追蹤通知
-const postFollowNotice = async (data: INews) => {
-  const newNotice = await Notice.create({
-    articleId: data.articleId,
-    topic: data.topic,
-    title: data.title,
-    content: data.content,
-    publishedAt: data.publishedAt
-  })
-
-  const users = await User.find({ follows: { $in: data.topic } })
-
-  const updates = users.map((user: IUser) => user._id)
-
-  await User.updateMany(
-    { _id: { $in: updates } },
-    { $addToSet: { notices: { noticeId: newNotice._id } } }
-  )
-  postNotice(users, newNotice.title)
-}
+import { postFollowNotice, postSystemNotice } from '../utils/notice'
+import News from '../models/News'
+import Notice from '../models/Notice'
 
 // 新增新聞文章
 const createNewsArticle = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
@@ -68,6 +16,11 @@ const createNewsArticle = catchAsync(async (req: Request, res: Response, next: N
     !datePattern.test(publishedAt) || !idPattern.test(articleId)) {
     return appError(apiState.DATA_MISSING, next)
   }
+  const newsId = await News.findOne({ articleId })
+  if (newsId) {
+    return appError({ statusCode: 400, message: '文章編號已存在' }, next)
+  }
+
   const data = await News.create({
     articleId,
     topic,
@@ -127,4 +80,4 @@ const getNoticeList = catchAsync(async (req: Request, res: Response, next: NextF
   appSuccess({ res, data, message: '取得通知訊息列表成功' })
 })
 
-export { createNewsArticle, getNoticeList }
+export { createNewsArticle, getNoticeList, postSystemNotice }

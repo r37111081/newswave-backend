@@ -14,7 +14,7 @@ const noticeSchema = new Schema<INotice>(
     topic: { type: [String], default: [] },
     title: { type: String, required: true },
     content: { type: String, required: true },
-    publishedAt: { type: String, required: true }
+    publishedAt: { type: String, default: '' }
   },
   {
     versionKey: false
