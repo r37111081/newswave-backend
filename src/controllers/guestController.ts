@@ -49,29 +49,33 @@ const getAllMagazine = catchAsync(async (req: Request, res: Response) => {
 
 // 取得雜誌文章列表
 const getMagazineList = catchAsync(async (req: Request, res: Response) => {
-  const query = req.query
-  const articlesPerPage = 6
+  const { pageIndex, pageSize, category } = req.query
 
-  const category = query.category !== undefined && query.category !== ''
-    ? { 'source.name': query.category }
+  const categoryType = category !== undefined && category !== ''
+    ? { 'source.name': category }
     : { articleId: /M-/ }
-  const pageIndex = query.pageIndex !== undefined && query.pageIndex !== ''
-    ? parseInt(query.pageIndex as string)
+
+  const pageIndexNumber = pageIndex !== undefined && pageIndex !== ''
+    ? parseInt(pageIndex as string)
     : 1
 
+  const pageSizeNumber = pageSize !== undefined && pageSize !== ''
+    ? parseInt(pageSize as string)
+    : 10
+
   const [totalElements, articles] = await Promise.all([
-    News.countDocuments({ ...category }),
-    News.find({ ...category })
+    News.countDocuments({ ...categoryType }),
+    News.find({ ...categoryType })
       .select('-_id -content')
       .sort({ publishedAt: -1 })
-      .skip((pageIndex - 1) * articlesPerPage)
-      .limit(articlesPerPage)
+      .skip((pageIndexNumber - 1) * pageSizeNumber)
+      .limit(pageSizeNumber)
   ])
 
-  const firstPage = pageIndex === 1
-  const lastPage = totalElements <= pageIndex * articlesPerPage
+  const firstPage = pageIndexNumber === 1
+  const lastPage = totalElements <= pageIndexNumber * pageSizeNumber
   const empty = totalElements === 0
-  const totalPages = Math.ceil(totalElements / articlesPerPage)
+  const totalPages = Math.ceil(totalElements / pageSizeNumber)
   let data = {
     articles,
     firstPage,
@@ -79,7 +83,7 @@ const getMagazineList = catchAsync(async (req: Request, res: Response) => {
     empty,
     totalElements,
     totalPages,
-    targetPage: pageIndex
+    targetPage: pageIndexNumber
   }
   appSuccess({ res, data, message: '取得文章列表成功' })
 })

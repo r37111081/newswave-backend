@@ -69,16 +69,22 @@
         "description": "取得雜誌文章列表分頁",
         "parameters": [
           {
-            "name": "category",
+            "name": "pageSize",
             "in": "query",
             "type": "String",
-            "description": "雜誌種類"
+            "description": "每頁數量"
           },
           {
             "name": "pageIndex",
             "in": "query",
             "type": "String",
             "description": "當前頁數"
+          },
+          {
+            "name": "category",
+            "in": "query",
+            "type": "String",
+            "description": "雜誌種類"
           }
         ],
         "responses": {
@@ -139,6 +145,50 @@
             "description": ""
           }
         }
+      }
+    },
+    "/api/v1/guest/article-comment-page/{id}": {
+      "get": {
+        "tags": [
+          "Guests"
+        ],
+        "description": "取得文章留言列表",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "文章UID"
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "type": "String",
+            "description": "每頁數量"
+          },
+          {
+            "name": "pageIndex",
+            "in": "query",
+            "type": "String",
+            "description": "當前頁數"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "留言列表資訊",
+            "schema": {
+              "$ref": "#/definitions/guestCommentList"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_key": [
+              "apiKeyAuth"
+            ]
+          }
+        ]
       }
     },
     "/api/v1/user/register": {
@@ -548,6 +598,12 @@
         "description": "取得收藏列表",
         "parameters": [
           {
+            "name": "pageSize",
+            "in": "query",
+            "type": "String",
+            "description": "每頁數量"
+          },
+          {
             "name": "pageIndex",
             "in": "query",
             "type": "String",
@@ -679,6 +735,272 @@
             "description": "雜誌文章詳情資訊",
             "schema": {
               "$ref": "#/definitions/magazineDetailInfo"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_key": [
+              "apiKeyAuth"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/v1/user/article-comment-page": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "description": "取得會員留言列表",
+        "parameters": [
+          {
+            "name": "pageSize",
+            "in": "query",
+            "type": "String",
+            "description": "每頁數量"
+          },
+          {
+            "name": "pageIndex",
+            "in": "query",
+            "type": "String",
+            "description": "當前頁數"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "留言列表資訊",
+            "schema": {
+              "$ref": "#/definitions/userCommentList"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_key": [
+              "apiKeyAuth"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/v1/user/article-comment/{id}": {
+      "post": {
+        "tags": [
+          "Users"
+        ],
+        "description": "新增會員留言",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "文章UID"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "content": {
+                  "type": "string",
+                  "example": "留言內容"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "留言資訊",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "message": {
+                  "type": "string",
+                  "example": "新增留言成功"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "api_key": [
+              "apiKeyAuth"
+            ]
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Users"
+        ],
+        "description": "新增會員留言",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "文章UID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "留言資訊",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "message": {
+                  "type": "string",
+                  "example": "刪除留言成功"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "api_key": [
+              "apiKeyAuth"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/v1/user/notice-list": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "description": "取得會員通知訊息列表",
+        "parameters": [
+          {
+            "name": "pageSize",
+            "in": "query",
+            "type": "String",
+            "description": "每頁數量"
+          },
+          {
+            "name": "pageIndex",
+            "in": "query",
+            "type": "String",
+            "description": "當前頁數"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "通知訊息列表資訊",
+            "schema": {
+              "$ref": "#/definitions/noticeList"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_key": [
+              "apiKeyAuth"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/v1/user/notice/{noticeId}": {
+      "patch": {
+        "tags": [
+          "Users"
+        ],
+        "description": "會員已閱讀此通知訊息",
+        "parameters": [
+          {
+            "name": "noticeId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "noticeId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "通知訊息資訊",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "message": {
+                  "type": "string",
+                  "example": "已閱讀通知訊息成功"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "api_key": [
+              "apiKeyAuth"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/v1/user/notice": {
+      "delete": {
+        "tags": [
+          "Users"
+        ],
+        "description": "會員刪除所有通知訊息",
+        "responses": {
+          "200": {
+            "description": "通知訊息資訊",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "notices": {
+                      "type": "array",
+                      "example": [],
+                      "items": {}
+                    }
+                  }
+                },
+                "message": {
+                  "type": "string",
+                  "example": "刪除所有通知訊息成功"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
             }
           }
         },
@@ -1267,6 +1589,142 @@
           }
         }
       }
+    },
+    "/api/v1/admin/notice-list": {
+      "get": {
+        "tags": [
+          "Admins"
+        ],
+        "description": "取得所有通知訊息列表",
+        "parameters": [
+          {
+            "name": "pageSize",
+            "in": "query",
+            "type": "String",
+            "description": "每頁數量"
+          },
+          {
+            "name": "pageIndex",
+            "in": "query",
+            "type": "String",
+            "description": "當前頁數"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "通知訊息列表資訊",
+            "schema": {
+              "$ref": "#/definitions/noticeList"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_key": [
+              "apiKeyAuth"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/v1/admin/create-news-article": {
+      "post": {
+        "tags": [
+          "Admins"
+        ],
+        "description": "新增新聞文章",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "description": "資料格式",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "articleId": {
+                  "type": "string",
+                  "example": "文章ID"
+                },
+                "title": {
+                  "type": "string",
+                  "example": "文章標題"
+                },
+                "editor": {
+                  "type": "string",
+                  "example": "文章編輯"
+                },
+                "topics": {
+                  "type": "array",
+                  "example": [
+                    "文章標籤"
+                  ],
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "publishedAt": {
+                  "type": "string",
+                  "example": "文章發布時間"
+                },
+                "image": {
+                  "type": "string",
+                  "example": "文章圖片"
+                },
+                "imageDescription": {
+                  "type": "string",
+                  "example": "文章圖片描述"
+                },
+                "content": {
+                  "type": "string",
+                  "example": "文章內容"
+                },
+                "source": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "example": "文章來源名稱"
+                    },
+                    "url": {
+                      "type": "string",
+                      "example": "文章來源網址"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "新聞文章資訊",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "message": {
+                  "type": "string",
+                  "example": "新增新聞文章成功"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "api_key": [
+              "apiKeyAuth"
+            ]
+          }
+        ]
+      }
     }
   },
   "definitions": {
@@ -1589,6 +2047,276 @@
                   }
                 }
               }
+            }
+          }
+        }
+      }
+    },
+    "userCommentList": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "boolean",
+          "example": true
+        },
+        "message": {
+          "type": "string",
+          "example": "取得留言列表成功"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "comments": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "articles": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "articleId": {
+                          "type": "string",
+                          "example": "文章ID"
+                        },
+                        "title": {
+                          "type": "string",
+                          "example": "文章標題"
+                        },
+                        "editor": {
+                          "type": "string",
+                          "example": "文章編輯"
+                        },
+                        "topics": {
+                          "type": "array",
+                          "example": [
+                            "文章標籤"
+                          ],
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "publishedAt": {
+                          "type": "string",
+                          "example": "文章發布時間"
+                        },
+                        "image": {
+                          "type": "string",
+                          "example": "文章圖片"
+                        },
+                        "imageDescription": {
+                          "type": "string",
+                          "example": "文章圖片描述"
+                        },
+                        "source": {
+                          "type": "object",
+                          "properties": {
+                            "name": {
+                              "type": "string",
+                              "example": "文章來源名稱"
+                            },
+                            "url": {
+                              "type": "string",
+                              "example": "文章來源網址"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "content": {
+                    "type": "string",
+                    "example": "留言內容"
+                  },
+                  "publishedAt": {
+                    "type": "string",
+                    "example": "留言發布時間"
+                  },
+                  "id": {
+                    "type": "string",
+                    "example": "留言id"
+                  }
+                }
+              }
+            },
+            "firstPage": {
+              "type": "string",
+              "example": "是否為第一頁"
+            },
+            "lastPage": {
+              "type": "string",
+              "example": "是否為最後一頁"
+            },
+            "empty": {
+              "type": "string",
+              "example": "是否沒有資料"
+            },
+            "totalElement": {
+              "type": "string",
+              "example": "總共有幾筆資料"
+            },
+            "totalPages": {
+              "type": "string",
+              "example": "總共有幾頁"
+            },
+            "targetPage": {
+              "type": "string",
+              "example": "目前在第幾頁"
+            }
+          }
+        }
+      }
+    },
+    "guestCommentList": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "boolean",
+          "example": true
+        },
+        "message": {
+          "type": "string",
+          "example": "取得留言列表成功"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "comments": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "user": {
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "string",
+                        "example": "使用者名稱"
+                      },
+                      "avatar": {
+                        "type": "string",
+                        "example": "使用者頭像"
+                      }
+                    }
+                  },
+                  "content": {
+                    "type": "string",
+                    "example": "留言內容"
+                  },
+                  "publishedAt": {
+                    "type": "string",
+                    "example": "留言發布時間"
+                  },
+                  "id": {
+                    "type": "string",
+                    "example": "留言id"
+                  }
+                }
+              }
+            },
+            "firstPage": {
+              "type": "string",
+              "example": "是否為第一頁"
+            },
+            "lastPage": {
+              "type": "string",
+              "example": "是否為最後一頁"
+            },
+            "empty": {
+              "type": "string",
+              "example": "是否沒有資料"
+            },
+            "totalElement": {
+              "type": "string",
+              "example": "總共有幾筆資料"
+            },
+            "totalPages": {
+              "type": "string",
+              "example": "總共有幾頁"
+            },
+            "targetPage": {
+              "type": "string",
+              "example": "目前在第幾頁"
+            }
+          }
+        }
+      }
+    },
+    "noticeList": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "boolean",
+          "example": true
+        },
+        "message": {
+          "type": "string",
+          "example": "取得通知訊息列表成功"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "notices": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "example": "通知ID"
+                  },
+                  "articleId": {
+                    "type": "string",
+                    "example": "文章ID"
+                  },
+                  "title": {
+                    "type": "string",
+                    "example": "文章標題"
+                  },
+                  "editor": {
+                    "type": "string",
+                    "example": "文章編輯"
+                  },
+                  "topics": {
+                    "type": "array",
+                    "example": [
+                      "文章標籤"
+                    ],
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "publishedAt": {
+                    "type": "string",
+                    "example": "文章發布時間"
+                  }
+                }
+              }
+            },
+            "firstPage": {
+              "type": "string",
+              "example": "是否為第一頁"
+            },
+            "lastPage": {
+              "type": "string",
+              "example": "是否為最後一頁"
+            },
+            "empty": {
+              "type": "string",
+              "example": "是否沒有資料"
+            },
+            "totalElement": {
+              "type": "string",
+              "example": "總共有幾筆資料"
+            },
+            "totalPages": {
+              "type": "string",
+              "example": "總共有幾頁"
+            },
+            "targetPage": {
+              "type": "string",
+              "example": "目前在第幾頁"
             }
           }
         }
