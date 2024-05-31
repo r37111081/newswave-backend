@@ -261,6 +261,7 @@ const getUserNoticeList = catchAsync(async (req: Request, res: Response, next: N
       })
     )
 
+  const unreadElements = notices.filter(n => !n.read).length
   const totalElements = noticeIds.length
   const firstPage = pageIndexNumber === 1
   const lastPage = totalElements <= pageIndexNumber * pageSizeNumber
@@ -268,6 +269,7 @@ const getUserNoticeList = catchAsync(async (req: Request, res: Response, next: N
   const totalPages = Math.ceil(totalElements / pageSizeNumber)
   let data = {
     notices,
+    unreadElements,
     firstPage,
     lastPage,
     empty,
