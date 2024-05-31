@@ -25,15 +25,20 @@ router.get(
   /**
     #swagger.tags = ['Guests']
     #swagger.description  = "取得雜誌文章列表分頁"
-    #swagger.parameters['category'] = {
+    #swagger.parameters['pageSize'] = {
       in: 'query',
       type: 'String',
-      description: '雜誌種類',
+      description: '每頁數量',
     },
     #swagger.parameters['pageIndex'] = {
       in: 'query',
       type: 'String',
       description: '當前頁數',
+    },
+    #swagger.parameters['category'] = {
+      in: 'query',
+      type: 'String',
+      description: '雜誌種類',
     },
     #swagger.responses[200] = {
       description: '雜誌文章列表資訊',

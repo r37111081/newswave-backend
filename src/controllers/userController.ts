@@ -118,12 +118,15 @@ const updateUserInfo = catchAsync(async (req: Request, res: Response, next: Next
 // 取得會員文章收藏列表
 const getUserCollectList = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
   const userId = req.user?._id
-  const query = req.query
-  const articlesPerPage = 6
+  const { pageIndex, pageSize } = req.query
 
-  const pageIndex = query.pageIndex !== undefined && query.pageIndex !== ''
-    ? parseInt(query.pageIndex as string)
+  const pageIndexNumber = pageIndex !== undefined && pageIndex !== ''
+    ? parseInt(pageIndex as string)
     : 1
+
+  const pageSizeNumber = pageSize !== undefined && pageSize !== ''
+    ? parseInt(pageSize as string)
+    : 10
 
   const user = await User.findById(userId)
   if (!user) return appError(apiState.DATA_NOT_FOUND, next)
@@ -131,14 +134,14 @@ const getUserCollectList = catchAsync(async (req: Request, res: Response, next: 
   const articles = await News.find({ articleId: { $in: user.collects } })
     .select('-_id -content -collects')
     .sort({ publishedAt: -1 })
-    .skip((pageIndex - 1) * articlesPerPage)
-    .limit(articlesPerPage)
+    .skip((pageIndexNumber - 1) * pageSizeNumber)
+    .limit(pageSizeNumber)
 
   const totalElements = user.collects.length
-  const firstPage = pageIndex === 1
-  const lastPage = totalElements <= pageIndex * articlesPerPage
+  const firstPage = pageIndexNumber === 1
+  const lastPage = totalElements <= pageIndexNumber * pageSizeNumber
   const empty = totalElements === 0
-  const totalPages = Math.ceil(totalElements / articlesPerPage)
+  const totalPages = Math.ceil(totalElements / pageSizeNumber)
   let data = {
     articles,
     firstPage,
@@ -146,7 +149,7 @@ const getUserCollectList = catchAsync(async (req: Request, res: Response, next: 
     empty,
     totalElements,
     totalPages,
-    targetPage: pageIndex
+    targetPage: pageIndexNumber
   }
   appSuccess({ res, data, message: '取得文章列表成功' })
 })
@@ -288,7 +291,7 @@ const updateUserNoticeRead = catchAsync(async (req: Request, res: Response, next
   appSuccess({ res, message: '已閱讀通知訊息成功' })
 })
 
-// 刪除會員所有通知訊息
+// 會員刪除所有通知訊息
 const deleteUserAllNotice = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
   const userId = req.user?._id
 
