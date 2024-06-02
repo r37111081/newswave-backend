@@ -20,6 +20,7 @@
     "cors": "^2.8.5",
     "crypto-js": "^4.2.0",
     "dotenv": "^16.4.5",
+    "ecpay_aio_nodejs": "^1.2.2",
     "express": "^4.19.2",
     "express-async-handler": "^1.2.0",
     "firebase-admin": "^12.1.0",
