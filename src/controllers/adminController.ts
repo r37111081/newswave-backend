@@ -9,17 +9,14 @@ import Notice from '../models/Notice'
 
 // 新增新聞文章
 const createNewsArticle = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-  const { articleId, topic, editor, title, publishedAt, image, imageDescribe, content, source } = req.body
-  const idPattern = /^N-\d+$/
+  const { topic, editor, title, publishedAt, image, imageDescribe, content, source } = req.body
   const datePattern = /^(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2})$/
-  if (!topic || !editor || !title || !content ||
-    !datePattern.test(publishedAt) || !idPattern.test(articleId)) {
+  let articleId
+  if (!topic || !editor || !title || !content || !datePattern.test(publishedAt)) {
     return appError(apiState.DATA_MISSING, next)
   }
-  const newsId = await News.findOne({ articleId })
-  if (newsId) {
-    return appError({ statusCode: 400, message: '文章編號已存在' }, next)
-  }
+  // !用數字最大的articleId+1
+  // const latestNews = await News.findOne()
 
   const data = await News.create({
     articleId,

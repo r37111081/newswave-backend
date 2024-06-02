@@ -333,7 +333,7 @@ const getMagazineArticleDetail = catchAsync(async (req: Request, res: Response, 
 // 取得會員通知訊息列表
 const getUserNoticeList = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
   const userId = req.user?._id
-  const { pageIndex, pageSize } = req.query
+  const { pageIndex, pageSize, readState } = req.query
 
   const pageIndexNumber = pageIndex !== undefined && pageIndex !== ''
     ? parseInt(pageIndex as string)
@@ -343,10 +343,21 @@ const getUserNoticeList = catchAsync(async (req: Request, res: Response, next: N
     ? parseInt(pageSize as string)
     : 10
 
+  const readStateType = readState !== undefined && readState !== ''
+    ? readState as string
+    : 'all'
+
   const user = await User.findById(userId)
   if (!user) return appError(apiState.DATA_NOT_FOUND, next)
 
-  const noticeIds = user.notices.map(n => n.noticeId)
+  let userNotices = user.notices
+  if (readStateType === 'unread') {
+    userNotices = userNotices.filter(n => !n.read)
+  } else if (readStateType === 'read') {
+    userNotices = userNotices.filter(n => n.read)
+  }
+
+  const noticeIds = userNotices.map(n => n.noticeId)
   const notices = await Notice.find({ _id: { $in: noticeIds } })
     .sort({ publishedAt: -1 })
     .skip((pageIndexNumber - 1) * pageSizeNumber)
@@ -354,17 +365,16 @@ const getUserNoticeList = catchAsync(async (req: Request, res: Response, next: N
     .lean()
     .then(notices =>
       notices.map(notice => {
-        const noticeInfo = user.notices.find(n => n.noticeId.toString() === notice._id.toString())
+        const noticeInfo = userNotices.find(n => n.noticeId.toString() === notice._id.toString())
         return {
           ...notice,
-          id: notice._id,
+          noticeId: notice._id,
           read: noticeInfo ? noticeInfo.read : false,
           _id: undefined
         }
       })
     )
 
-  const unreadElements = notices.filter(n => !n.read).length
   const totalElements = noticeIds.length
   const firstPage = pageIndexNumber === 1
   const lastPage = totalElements <= pageIndexNumber * pageSizeNumber
@@ -372,7 +382,6 @@ const getUserNoticeList = catchAsync(async (req: Request, res: Response, next: N
   const totalPages = Math.ceil(totalElements / pageSizeNumber)
   let data = {
     notices,
-    unreadElements,
     firstPage,
     lastPage,
     empty,

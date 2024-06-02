@@ -45,9 +45,14 @@ router.get('/notice-list',
       type: 'String',
       description: '當前頁數',
     },
+    #swagger.parameters['readState'] = {
+      in: 'query',
+      type: 'String',
+      description: 'all: 全部, read: 已讀, unread: 未讀',
+    },
     #swagger.responses[200] = {
       description: '通知訊息列表資訊',
-      schema: { $ref: '#/definitions/allNoticeList' }
+      schema: { $ref: '#/definitions/noticeList' }
     }
   */
   getNoticeList)
