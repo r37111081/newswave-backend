@@ -65,61 +65,53 @@ const getOrder = catchAsync(async (req:Request, res:Response, next:NextFunction)
   const create = new ecpay_payment(options)
 
   const form = create.payment_client.aio_check_out_all(baseParam)
-  console.log(form)
+
   return appSuccess({ res, message: '取得成功', data: form })
 })
 
 const getPaymentResults = catchAsync(async (req:Request, res:Response, next:NextFunction) => {
-  // const { CheckMacValue, PaymentDate, TradeDate, MerchantTradeNo, RtnCode, CustomField1 } = req.body
-  // const data = { ...req.body } // 原始資料
-  // delete data.CheckMacValue
-  // const create = new ecpay_payment(options)
-  // const checkValue = create.payment_client.helper.gen_chk_mac_value(data)
-  // await Order.create({
-  //   userId: CustomField1,
-  //   planType: `RtnCode: ${RtnCode}, typeof RtnCode: ${typeof RtnCode}, PaymentDate: ${PaymentDate}, TradeDate: ${TradeDate}, MerchantTradeNo:${MerchantTradeNo}`,
-  //   itemName: `CheckMacValue: ${CheckMacValue}, checkValue: ${checkValue}, checkBool: ${CheckMacValue === checkValue} `,
-  //   transactionId: `returnUrl: ${PaymentReturnURL}`,
-  //   total: 0,
-  //   payStatus: `check variable req:${req.body}`
-  // })
+  const { CheckMacValue, PaymentDate, TradeDate, MerchantTradeNo, RtnCode, CustomField1 } = req.body
+  const data = { ...req.body } // 原始資料
+  delete data.CheckMacValue
+  const create = new ecpay_payment(options)
+  const checkValue = create.payment_client.helper.gen_chk_mac_value(data)
 
   await Order.create({
-    userId: '123123',
-    planType: `RtnCode: ${req.body?.RtnCode || '-'}, typeof RtnCode: ${typeof req.body?.RtnCode}, PaymentDate: ${req.body?.PaymentDate || '-'}, TradeDate: ${req.body?.TradeDate || '-'}, MerchantTradeNo:${req.body?.MerchantTradeNo || '-'}`,
-    itemName: `CheckMacValue: ${req.body?.CheckMacValue || '-'}, checkValue: {checkValue}, checkBool: {CheckMacValue === checkValue} `,
-    transactionId: `returnUrl: ${req.body?.PaymentReturnURL || '-'}`,
+    userId: `user-${CustomField1 || '-'}`,
+    planType: `RtnCode: ${RtnCode || '-'}, typeof RtnCode: ${typeof RtnCode}, PaymentDate: ${PaymentDate || '-'}, TradeDate: ${TradeDate || '-'}, MerchantTradeNo:${MerchantTradeNo || '-'}`,
+    itemName: `CheckMacValue: ${CheckMacValue || '-'}, checkValue: ${checkValue}, checkBool: ${CheckMacValue === checkValue} `,
+    transactionId: `returnUrl: ${PaymentReturnURL}`,
     total: 0,
     payStatus: 'unpaid'
   })
 
   // 比對綠界回傳的檢查碼是否一致，若綠界未收到 1|OK ，隔5~15分鐘後重發訊息，共四次
-  // if (CheckMacValue === checkValue) {
-  //   // 付款成功: '1'
-  //   const updateDate = Number(RtnCode) === 1
-  //     ? {
-  //         payStatus: 'paid',
-  //         createdAt: new Date(TradeDate).toISOString(),
-  //         paidAt: new Date(PaymentDate).toISOString()
-  //       }
-  //     : {
-  //         payStatus: 'failed'
-  //       }
+  if (CheckMacValue === checkValue) {
+    // 付款成功: '1'
+    const updateDate = RtnCode === '1'
+      ? {
+          payStatus: 'paid',
+          createdAt: new Date(TradeDate).toISOString(),
+          paidAt: new Date(PaymentDate).toISOString()
+        }
+      : {
+          payStatus: 'failed'
+        }
 
-  //   const data = await Order.updateOne(
-  //     {
-  //       userId: CustomField1,
-  //       transactionId: MerchantTradeNo
-  //     },
-  //     updateDate,
-  //     { runValidators: true }
-  //   )
+    await Order.updateOne(
+      {
+        userId: CustomField1,
+        transactionId: MerchantTradeNo
+      },
+      updateDate,
+      { runValidators: true }
+    )
 
-  res.send('1|OK')
-  //   appSuccess({ res, data, message: '付款結果' })
-  // } else {
-  //   appError(apiState.FAIL, next)
-  // }
+    res.send('1|OK')
+    // return appSuccess({ res, data, message: '付款結果' })
+  } else {
+    return appError(apiState.FAIL, next)
+  }
 })
 
 export { getOrder, getPaymentResults }
