@@ -11,6 +11,7 @@ export interface IUser extends Document {
   planType: string;
   subscriptions: ISubscription[];
   createdAt: Date;
+  subscribeExpiredAt: Date;
   birthday: string;
   gender: string;
   collects: string[];
@@ -28,6 +29,7 @@ const userSchema = new Schema<IUser>(
     planType: { type: String, default: '' },
     subscriptions: [{ type: Schema.Types.ObjectId, ref: 'Subscription' }],
     createdAt: { type: Date, default: Date.now },
+    subscribeExpiredAt: { type: Date, default: Date.now },
     birthday: { type: String, default: '2000-01-01' },
     gender: { type: String, default: '1', enum: ['0', '1'] },
     collects: [{ type: String, ref: 'News' }],
