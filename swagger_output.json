@@ -689,64 +689,6 @@
             ]
           }
         ]
-      },
-      "post": {
-        "tags": [
-          "Users"
-        ],
-        "description": "訂閱服務",
-        "parameters": [
-          {
-            "name": "userId",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "description": "userId"
-          },
-          {
-            "name": "body",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "plan": {
-                  "example": "any"
-                },
-                "duration": {
-                  "example": "any"
-                }
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "訂閱成功",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "status": {
-                  "type": "boolean",
-                  "example": true
-                },
-                "message": {
-                  "type": "string",
-                  "example": "訂閱成功"
-                }
-              },
-              "xml": {
-                "name": "main"
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "api_key": [
-              "apiKeyAuth"
-            ]
-          }
-        ]
       }
     },
     "/api/v1/user/{subscriptionId}/subscription/renew": {
@@ -1199,6 +1141,12 @@
                   "example": "any"
                 },
                 "RtnCode": {
+                  "example": "any"
+                },
+                "CustomField1": {
+                  "example": "any"
+                },
+                "CustomField2": {
                   "example": "any"
                 }
               }
