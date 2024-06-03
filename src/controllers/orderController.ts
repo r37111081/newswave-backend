@@ -74,6 +74,15 @@ const getPaymentResults = catchAsync(async (req:Request, res:Response, next:Next
   const create = new ecpay_payment(options)
   const checkValue = create.payment_client.helper.gen_chk_mac_value(data)
 
+  await Order.create({
+    userId,
+    planType: `RtnCode: ${RtnCode}, typeof RtnCode: ${typeof RtnCode}, PaymentDate: ${PaymentDate}, TradeDate: ${TradeDate}, MerchantTradeNo:${MerchantTradeNo}`,
+    itemName: `CheckMacValue: ${CheckMacValue}, checkValue: ${checkValue}, checkBool: ${CheckMacValue === checkValue} `,
+    transactionId: `returnUrl: ${PaymentReturnURL}`,
+    total: 0,
+    payStatus: 'check variable'
+  })
+
   // 比對綠界回傳的檢查碼是否一致，若綠界未收到 1|OK ，隔5~15分鐘後重發訊息，共四次
   if (CheckMacValue === checkValue) {
     // 付款成功: '1'
