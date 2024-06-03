@@ -71,10 +71,10 @@ const getOrder = catchAsync(async (req:Request, res:Response, next:NextFunction)
 
 const getPaymentResults = catchAsync(async (req:Request, res:Response, next:NextFunction) => {
   // const { CheckMacValue, PaymentDate, TradeDate, MerchantTradeNo, RtnCode, CustomField1 } = req.body
-  const data = { ...req.body } // 原始資料
-  delete data.CheckMacValue
-  const create = new ecpay_payment(options)
-  const checkValue = create.payment_client.helper.gen_chk_mac_value(data)
+  // const data = { ...req.body } // 原始資料
+  // delete data.CheckMacValue
+  // const create = new ecpay_payment(options)
+  // const checkValue = create.payment_client.helper.gen_chk_mac_value(data)
   // await Order.create({
   //   userId: CustomField1,
   //   planType: `RtnCode: ${RtnCode}, typeof RtnCode: ${typeof RtnCode}, PaymentDate: ${PaymentDate}, TradeDate: ${TradeDate}, MerchantTradeNo:${MerchantTradeNo}`,
@@ -83,11 +83,12 @@ const getPaymentResults = catchAsync(async (req:Request, res:Response, next:Next
   //   total: 0,
   //   payStatus: `check variable req:${req.body}`
   // })
+
   await Order.create({
-    userId: `user-${req.body?.CustomField1 || '-'}`,
+    userId: '123123',
     planType: `RtnCode: ${req.body?.RtnCode || '-'}, typeof RtnCode: ${typeof req.body?.RtnCode}, PaymentDate: ${req.body?.PaymentDate || '-'}, TradeDate: ${req.body?.TradeDate || '-'}, MerchantTradeNo:${req.body?.MerchantTradeNo || '-'}`,
-    itemName: `CheckMacValue: ${req.body?.CheckMacValue || '-'}, checkValue: ${checkValue}, checkBool: ${req.body?.CheckMacValue === checkValue} `,
-    transactionId: `returnUrl: ${PaymentReturnURL}`,
+    itemName: `CheckMacValue: ${req.body?.CheckMacValue || '-'}, checkValue: {checkValue}, checkBool: {CheckMacValue === checkValue} `,
+    transactionId: `returnUrl: ${req.body?.PaymentReturnURL || '-'}`,
     total: 0,
     payStatus: 'unpaid'
   })
