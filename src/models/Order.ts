@@ -9,6 +9,7 @@ export interface IOrder extends Document {
   payStatus: string;
   orderAt: Date;
   paidAt: Date;
+  subscribeExpiredAt: Date;
 }
 
 const orderSchema = new Schema<IOrder>(
@@ -46,6 +47,9 @@ const orderSchema = new Schema<IOrder>(
     orderAt: { type: Date },
     paidAt: {
       // 付款時間
+      type: Date
+    },
+    subscribeExpiredAt: {
       type: Date
     }
   },

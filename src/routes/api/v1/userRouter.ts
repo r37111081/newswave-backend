@@ -247,17 +247,16 @@ router.delete('/collect-article/:articleId',
   */
   deleteArticleCollect)
 // 訂閱服務
-router.get('/:userId/subscription',
+router.get('/subscription',
   /*
     * #swagger.tags= ['Users']
-      #swagger.description = '查詢用戶訂閱狀態'
+      #swagger.description = '查詢用戶訂單記錄'
       #swagger.security = [{'api_key': ['apiKeyAuth']}]
-      #swagger.parameters['userId'] = {
-        in: 'path',
-        description: 'userId',
-        required: true,
-        type: 'string'
-      }
+      #swagger.parameters['transactionId'] = {
+        in: 'query',
+        type: 'String',
+        description: '訂單編號',
+      },
       #swagger.responses[200] = {
         description: '成功返回用戶的訂閱狀態',
         schema: {$ref: '#/definitions/subscriptionInfo'}

@@ -81,18 +81,20 @@ const getPaymentResults = catchAsync(async (req:Request, res:Response, next:Next
 
   // 比對綠界回傳的檢查碼是否一致，若綠界未收到 1|OK ，隔5~15分鐘後重發訊息，共四次
   if (CheckMacValue === checkValue) {
-    const isPaidSuccess = RtnCode === '1'
     // 付款成功: '1'
+    const isPaidSuccess = RtnCode === '1'
+    // 到期日
+    const subscribeExpiredAt = CustomField2 === 'month' ? moment(PaymentDate).add(30, 'days') : moment(PaymentDate).add(365, 'days')
     const updateDate = isPaidSuccess
       ? {
           payStatus: 'paid',
           orderAt: moment(TradeDate),
-          paidAt: moment(PaymentDate)
+          paidAt: moment(PaymentDate),
+          subscribeExpiredAt
         }
       : {
           payStatus: 'failed'
         }
-
     await Order.updateOne(
       {
         userId: CustomField1,
@@ -107,7 +109,7 @@ const getPaymentResults = catchAsync(async (req:Request, res:Response, next:Next
         {
           isVip: true,
           planType: CustomField2,
-          subscribeExpiredAt: CustomField2 === 'month' ? moment(PaymentDate).add(30, 'days') : moment(PaymentDate).add(365, 'days')
+          subscribeExpiredAt
         }
       )
     }
