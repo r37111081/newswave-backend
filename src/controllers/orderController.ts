@@ -70,13 +70,14 @@ const getPaymentResults = catchAsync(async (req:Request, res:Response, next:Next
 
   const data = { ...req.body } // 原始資料
   delete data.CheckMacValue
+  const userId = req.user?._id
   const create = new ecpay_payment(options)
   const checkValue = create.payment_client.helper.gen_chk_mac_value(data)
 
   // 比對綠界回傳的檢查碼是否一致，若綠界未收到 1|OK ，隔5~15分鐘後重發訊息，共四次
   if (CheckMacValue === checkValue) {
     // 付款成功: '1'
-    const updateDate = RtnCode === '1'
+    const updateDate = Number(RtnCode) === 1
       ? {
           payStatus: 'paid',
           createdAt: new Date(TradeDate).toISOString(),
@@ -86,12 +87,13 @@ const getPaymentResults = catchAsync(async (req:Request, res:Response, next:Next
           payStatus: 'failed'
         }
 
-    await Order.findByIdAndUpdate(
-      { transactionId: MerchantTradeNo },
+    await Order.updateOne(
       {
-        $set: updateDate
+        userId,
+        transactionId: MerchantTradeNo
       },
-      { new: true, runValidators: true }
+      updateDate,
+      { runValidators: true }
     )
     res.send('1|OK')
   }
