@@ -34,6 +34,7 @@ const getOrder = catchAsync(async (req:Request, res:Response, next:NextFunction)
   const { itemName, total, planType } = req.body
 
   if (!itemName || !total || !planType) return appError(apiState.DATA_MISSING, next)
+
   // 產出綠界需要的交易編號 20碼
   const MerchantTradeNo = `nwv${moment().format('YYYYMMDDHHmmssSSS')}`
 
@@ -57,22 +58,31 @@ const getOrder = catchAsync(async (req:Request, res:Response, next:NextFunction)
     ReturnURL: PaymentReturnURL,
     ChoosePayment: 'ALL',
     EncryptType: 1,
-    ClientBackURL: `${FRONT_END_URL}/subscription-plan/checkout/orderResult`
+    ClientBackURL: `${FRONT_END_URL}/subscription-plan/checkout/orderResult`,
+    CustomField1: userId?.valueOf()
   }
 
   const create = new ecpay_payment(options)
+
   const form = create.payment_client.aio_check_out_all(baseParam)
-  appSuccess({ res, message: '取得成功', data: form })
+  console.log(form)
+  return appSuccess({ res, message: '取得成功', data: form })
 })
 
 const getPaymentResults = catchAsync(async (req:Request, res:Response, next:NextFunction) => {
-  const { CheckMacValue, PaymentDate, TradeDate, MerchantTradeNo, RtnCode } = req.body
-
+  const { CheckMacValue, PaymentDate, TradeDate, MerchantTradeNo, RtnCode, CustomField1 } = req.body
   const data = { ...req.body } // 原始資料
   delete data.CheckMacValue
-  const userId = req.user?._id
   const create = new ecpay_payment(options)
   const checkValue = create.payment_client.helper.gen_chk_mac_value(data)
+  await Order.create({
+    userId: CustomField1,
+    planType: `RtnCode: ${RtnCode}, typeof RtnCode: ${typeof RtnCode}, PaymentDate: ${PaymentDate}, TradeDate: ${TradeDate}, MerchantTradeNo:${MerchantTradeNo}`,
+    itemName: `CheckMacValue: ${CheckMacValue}, checkValue: ${checkValue}, checkBool: ${CheckMacValue === checkValue} `,
+    transactionId: `returnUrl: ${PaymentReturnURL}`,
+    total: 0,
+    payStatus: `check variable req:${req.body}`
+  })
 
   // 比對綠界回傳的檢查碼是否一致，若綠界未收到 1|OK ，隔5~15分鐘後重發訊息，共四次
   if (CheckMacValue === checkValue) {
@@ -87,9 +97,9 @@ const getPaymentResults = catchAsync(async (req:Request, res:Response, next:Next
           payStatus: 'failed'
         }
 
-    await Order.updateOne(
+    const data = await Order.updateOne(
       {
-        userId,
+        userId: CustomField1,
         transactionId: MerchantTradeNo
       },
       updateDate,
@@ -97,6 +107,9 @@ const getPaymentResults = catchAsync(async (req:Request, res:Response, next:Next
     )
 
     res.send('1|OK')
+    appSuccess({ res, data, message: '付款結果' })
+  } else {
+    appError(apiState.FAIL, next)
   }
 })
 
