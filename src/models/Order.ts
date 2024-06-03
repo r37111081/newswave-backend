@@ -1,15 +1,25 @@
 import mongoose, { Document, Schema } from 'mongoose'
 
 export interface IOrder extends Document {
-    itemName: string;
-    transactionId: string;
-    total: number;
-    payStatus: string;
-    paidAt: Date;
+  userId: string,
+  planType: string,
+  itemName: string;
+  transactionId: string;
+  total: number;
+  payStatus: string;
+  paidAt: Date;
 }
 
 const orderSchema = new Schema<IOrder>(
   {
+    userId: {
+      type: String,
+      required: true
+    },
+    planType: {
+      type: String,
+      required: true
+    },
     itemName: {
       // 商品名稱
       type: String,
