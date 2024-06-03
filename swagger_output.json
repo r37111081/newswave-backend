@@ -1130,6 +1130,10 @@
                 "total": {
                   "type": "number",
                   "example": 1000
+                },
+                "planType": {
+                  "type": "string",
+                  "example": "month"
                 }
               }
             }
@@ -1183,13 +1187,24 @@
               "type": "object",
               "properties": {
                 "RtnCode": {
-                  "example": "any"
+                  "type": "number",
+                  "example": "1"
                 },
                 "PaymentDate": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "yyyy/MM/dd HH:mm:ss"
                 },
-                "CustomField1": {
-                  "example": "any"
+                "TradeDate": {
+                  "type": "string",
+                  "example": "yyyy/MM/dd HH:mm:ss"
+                },
+                "CheckMacValue:": {
+                  "type": "string",
+                  "example": "6C51C9E6888DE861FD62FB1DD17029FC742634498FD813DC43D4243B5685B840"
+                },
+                "MerchantTradeNo": {
+                  "type": "string",
+                  "example": "nwv20121225214506666"
                 }
               }
             }
