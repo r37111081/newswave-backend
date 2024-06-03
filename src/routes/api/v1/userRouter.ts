@@ -16,7 +16,7 @@ import {
   authenticateUser,
   logoutUser
 } from '../../../controllers/authController'
-import { addSubscription, getSubscription, toggleRenewal } from '../../../controllers/subscriptionController'
+import { getSubscription, toggleRenewal } from '../../../controllers/subscriptionController'
 import { authenticate } from '../../../middleware/authMiddleware'
 
 export const router = express.Router()
@@ -264,26 +264,7 @@ router.get('/:userId/subscription',
       }
     */
   getSubscription)
-router.post('/:userId/subscription',
-  /*
-      * #swagger.tags= ['Users']
-      #swagger.description = '訂閱服務'
-      #swagger.security = [{'api_key': ['apiKeyAuth']}]
-      #swagger.parameters['userId'] = {
-        in: 'path',
-        description: 'userId',
-        required: true,
-        type: 'string'
-      }
-      #swagger.responses[200] = {
-        description: '訂閱成功',
-        schema: {
-          status: true,
-          message: '訂閱成功'
-        }
-      }
-    */
-  addSubscription)
+
 router.patch('/:subscriptionId/subscription/renew',
   /*
     * #swagger.tags= ['Users']

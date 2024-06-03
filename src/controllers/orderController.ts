@@ -6,8 +6,10 @@ import { appSuccess } from '../utils/appSuccess'
 import { appError } from '../middleware/errorMiddleware'
 import { apiState } from '../utils/apiState'
 import Order from '../models/Order'
+import User from '../models/User'
 const ecpay_payment = require('ecpay_aio_nodejs')
 const { MerchantID, HashKey, HashIV, PaymentReturnURL, FRONT_END_URL } = process.env
+const ObjectId = require('mongodb').ObjectId
 
 // 設定檔
 const options = {
@@ -58,8 +60,9 @@ const getOrder = catchAsync(async (req:Request, res:Response, next:NextFunction)
     ReturnURL: PaymentReturnURL,
     ChoosePayment: 'ALL',
     EncryptType: 1,
-    ClientBackURL: `${FRONT_END_URL}/subscription-plan/checkout/orderResult`,
-    CustomField1: userId?.valueOf()
+    ClientBackURL: `${FRONT_END_URL}/subscription-plan/checkout/orderResult?order=${MerchantTradeNo}`,
+    CustomField1: userId?.valueOf(),
+    CustomField2: planType
   }
 
   const create = new ecpay_payment(options)
@@ -70,29 +73,21 @@ const getOrder = catchAsync(async (req:Request, res:Response, next:NextFunction)
 })
 
 const getPaymentResults = catchAsync(async (req:Request, res:Response, next:NextFunction) => {
-  const { CheckMacValue, PaymentDate, TradeDate, MerchantTradeNo, RtnCode, CustomField1 } = req.body
+  const { CheckMacValue, PaymentDate, TradeDate, MerchantTradeNo, RtnCode, CustomField1, CustomField2 } = req.body
   const data = { ...req.body } // 原始資料
   delete data.CheckMacValue
   const create = new ecpay_payment(options)
   const checkValue = create.payment_client.helper.gen_chk_mac_value(data)
 
-  await Order.create({
-    userId: `user-${CustomField1 || '-'}`,
-    planType: `RtnCode: ${RtnCode || '-'}, typeof RtnCode: ${typeof RtnCode}, PaymentDate: ${PaymentDate || '-'}, TradeDate: ${TradeDate || '-'}, MerchantTradeNo:${MerchantTradeNo || '-'}`,
-    itemName: `CheckMacValue: ${CheckMacValue || '-'}, checkValue: ${checkValue}, checkBool: ${CheckMacValue === checkValue} `,
-    transactionId: `returnUrl: ${PaymentReturnURL}`,
-    total: 0,
-    payStatus: 'unpaid'
-  })
-
   // 比對綠界回傳的檢查碼是否一致，若綠界未收到 1|OK ，隔5~15分鐘後重發訊息，共四次
   if (CheckMacValue === checkValue) {
+    const isPaidSuccess = RtnCode === '1'
     // 付款成功: '1'
-    const updateDate = RtnCode === '1'
+    const updateDate = isPaidSuccess
       ? {
           payStatus: 'paid',
-          createdAt: new Date(TradeDate).toISOString(),
-          paidAt: new Date(PaymentDate).toISOString()
+          orderAt: moment(TradeDate),
+          paidAt: moment(PaymentDate)
         }
       : {
           payStatus: 'failed'
@@ -107,8 +102,17 @@ const getPaymentResults = catchAsync(async (req:Request, res:Response, next:Next
       { runValidators: true }
     )
 
+    if (isPaidSuccess) {
+      await User.findByIdAndUpdate(new ObjectId(CustomField1),
+        {
+          isVip: true,
+          planType: CustomField2,
+          subscribeExpiredAt: CustomField2 === 'month' ? moment(PaymentDate).add(30, 'days') : moment(PaymentDate).add(365, 'days')
+        }
+      )
+    }
+
     res.send('1|OK')
-    // return appSuccess({ res, data, message: '付款結果' })
   } else {
     return appError(apiState.FAIL, next)
   }

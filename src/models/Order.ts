@@ -7,6 +7,7 @@ export interface IOrder extends Document {
   transactionId: string;
   total: number;
   payStatus: string;
+  orderAt: Date;
   paidAt: Date;
 }
 
@@ -42,6 +43,7 @@ const orderSchema = new Schema<IOrder>(
       required: true,
       default: 'unpaid'
     },
+    orderAt: { type: Date },
     paidAt: {
       // 付款時間
       type: Date
