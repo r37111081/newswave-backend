@@ -1,27 +1,36 @@
 import { NextFunction, Request, Response } from 'express'
-import User from '../models/User'
+// import User from '../models/User'
+import Order from '../models/Order'
 import Subscription from '../models/Subscription'
 import { catchAsync } from '../utils/catchAsync'
 import { appSuccess } from '../utils/appSuccess'
-// import { appError } from '../middleware/errorMiddleware'
-// import { apiState } from '../utils/apiState'
+import { appError } from '../middleware/errorMiddleware'
+import { apiState } from '../utils/apiState'
 
 const getSubscription = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-  const { userId } = req.params
-  const data = await User.findById(userId).populate('subscriptions')
+  const userId = req.user?._id
+  const { transactionId = '' } = req.query
+
+  const filter = transactionId
+    ? {
+        userId: userId?.valueOf(),
+        transactionId
+      }
+    : { userId: userId?.valueOf() }
+
+  const data = await Order.find(
+    filter,
+    {
+      _id: 0,
+      userId: 0,
+      updatedAt: 0
+    }).sort({ createdAt: -1 })
 
   if (!data) {
-    return appSuccess({ res, data, message: '查無使用者訂閱資訊' })
+    return appError(apiState.DATA_NOT_FOUND, next)
   }
-  const subscriptions = data.subscriptions.map(subscription => ({
-    _id: subscription._id,
-    plan: subscription.plan,
-    subscriptionDate: subscription.subscriptionDate,
-    expiryDate: subscription.expiryDate,
-    autoRenew: subscription.autoRenew
-  }))
 
-  appSuccess({ res, data: subscriptions, message: '查詢成功' })
+  appSuccess({ res, data, message: '查詢成功' })
 })
 
 const toggleRenewal = catchAsync(async (req: Request, res: Response, next: NextFunction) => {

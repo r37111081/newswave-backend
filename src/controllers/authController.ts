@@ -51,7 +51,7 @@ const authenticateUser = async (req: Request, res: Response) => {
   const user = await User.findOne({ email })
 
   if (!user || !(await user.comparePassword(password))) {
-    return res.status(401).json({ status: false, message: '找不到使用者 / 密碼錯誤' })
+    return res.status(400).json({ status: false, message: '找不到使用者 / 密碼錯誤' })
   }
   const token = generateToken(res, user._id)
   res.status(200).json({
