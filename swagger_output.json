@@ -1186,25 +1186,20 @@
             "schema": {
               "type": "object",
               "properties": {
-                "RtnCode": {
-                  "type": "number",
-                  "example": "1"
+                "CheckMacValue": {
+                  "example": "any"
                 },
                 "PaymentDate": {
-                  "type": "string",
-                  "example": "yyyy/MM/dd HH:mm:ss"
+                  "example": "any"
                 },
                 "TradeDate": {
-                  "type": "string",
-                  "example": "yyyy/MM/dd HH:mm:ss"
-                },
-                "CheckMacValue:": {
-                  "type": "string",
-                  "example": "6C51C9E6888DE861FD62FB1DD17029FC742634498FD813DC43D4243B5685B840"
+                  "example": "any"
                 },
                 "MerchantTradeNo": {
-                  "type": "string",
-                  "example": "nwv20121225214506666"
+                  "example": "any"
+                },
+                "RtnCode": {
+                  "example": "any"
                 }
               }
             }
@@ -1233,9 +1228,6 @@
                 "name": "main"
               }
             }
-          },
-          "500": {
-            "description": "Internal Server Error"
           }
         },
         "security": [
