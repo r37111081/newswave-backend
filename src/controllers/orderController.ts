@@ -95,6 +95,7 @@ const getPaymentResults = catchAsync(async (req:Request, res:Response, next:Next
       updateDate,
       { runValidators: true }
     )
+
     res.send('1|OK')
   }
 })

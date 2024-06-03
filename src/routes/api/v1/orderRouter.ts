@@ -1,9 +1,10 @@
 import express from 'express'
+import { authenticate } from '../../../middleware/authMiddleware'
 import { getOrder, getPaymentResults } from '../../../controllers/orderController'
 
 const router = express.Router()
 
-router.post('/',
+router.post('/', authenticate,
 /*
     * #swagger.tags= ['Orders']
     #swagger.description = '串接綠界金流'
@@ -15,7 +16,8 @@ router.post('/',
       description: '資料格式',
       schema: {
             "itemName":"newswave 年訂閱",
-            "total":1000
+            "total":1000,
+            "planType":"month"
         }
     }
     #swagger.responses[200] = {
@@ -40,6 +42,11 @@ router.post('/payment-results',
       required: true,
       description: '資料格式',
       schema: {
+            "RtnCode":"1",
+            "PaymentDate":"yyyy/MM/dd HH:mm:ss",
+            "TradeDate":"yyyy/MM/dd HH:mm:ss",
+            "CheckMacValue":"6C51C9E6888DE861FD62FB1DD17029FC742634498FD813DC43D4243B5685B840",
+            "MerchantTradeNo":"nwv20121225214506666",
         }
     }
     #swagger.responses[200] = {
