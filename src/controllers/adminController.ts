@@ -4,26 +4,32 @@ import { appSuccess } from '../utils/appSuccess'
 import { appError } from '../middleware/errorMiddleware'
 import { apiState } from '../utils/apiState'
 import { postFollowNotice, postSystemNotice } from '../utils/notice'
+import { formatToDate } from '../utils/helper'
 import News from '../models/News'
 import Notice from '../models/Notice'
 
 // 新增新聞文章
 const createNewsArticle = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-  const { topic, editor, title, publishedAt, image, imageDescribe, content, source } = req.body
-  const datePattern = /^(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2})$/
+  const { topic, editor, title, image, imageDescribe, content, source } = req.body
   let articleId
-  if (!topic || !editor || !title || !content || !datePattern.test(publishedAt)) {
+  if (!topic || !editor || !title || !content || !source) {
     return appError(apiState.DATA_MISSING, next)
   }
-  // !用數字最大的articleId+1
-  // const latestNews = await News.findOne()
+
+  const latestNews = await News.findOne({ articleId: { $regex: /^N-/ } }).sort({ articleId: -1 })
+  if (latestNews) {
+    const nextIdNumber = parseInt(latestNews.articleId.split('-')[1]) + 1
+    articleId = `N-${String(nextIdNumber).padStart(2, '0')}`
+  } else {
+    articleId = 'N-01'
+  }
 
   const data = await News.create({
     articleId,
     topic,
     editor,
     title,
-    publishedAt,
+    publishedAt: formatToDate(),
     imageDescribe,
     image,
     content,
@@ -51,14 +57,6 @@ const getNoticeList = catchAsync(async (req: Request, res: Response, next: NextF
       .sort({ publishedAt: -1 })
       .skip((pageIndexNumber - 1) * pageSizeNumber)
       .limit(pageSizeNumber)
-      .lean()
-      .then(notices =>
-        notices.map(notice => ({
-          ...notice,
-          id: notice._id,
-          _id: undefined
-        }))
-      )
   ])
 
   const firstPage = pageIndexNumber === 1

@@ -362,18 +362,6 @@ const getUserNoticeList = catchAsync(async (req: Request, res: Response, next: N
     .sort({ publishedAt: -1 })
     .skip((pageIndexNumber - 1) * pageSizeNumber)
     .limit(pageSizeNumber)
-    .lean()
-    .then(notices =>
-      notices.map(notice => {
-        const noticeInfo = userNotices.find(n => n.noticeId.toString() === notice._id.toString())
-        return {
-          ...notice,
-          noticeId: notice._id,
-          read: noticeInfo ? noticeInfo.read : false,
-          _id: undefined
-        }
-      })
-    )
 
   const totalElements = noticeIds.length
   const firstPage = pageIndexNumber === 1

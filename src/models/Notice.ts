@@ -14,12 +14,20 @@ const noticeSchema = new Schema<INotice>(
     topic: { type: [String], default: [] },
     title: { type: String, required: true },
     content: { type: String, required: true },
-    publishedAt: { type: String, required: true }
+    publishedAt: { type: String, default: '' }
   },
   {
     versionKey: false
   }
 )
+
+noticeSchema.set('toJSON', {
+  virtuals: true,
+  transform: (doc, ret) => {
+    delete ret._id
+    return ret
+  }
+})
 
 const Notice = mongoose.model('Notice', noticeSchema)
 

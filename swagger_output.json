@@ -903,13 +903,19 @@
             "in": "query",
             "type": "String",
             "description": "當前頁數"
+          },
+          {
+            "name": "readState",
+            "in": "query",
+            "type": "String",
+            "description": "all: 全部, read: 已讀, unread: 未讀"
           }
         ],
         "responses": {
           "200": {
             "description": "通知訊息列表資訊",
             "schema": {
-              "$ref": "#/definitions/userNoticeList"
+              "$ref": "#/definitions/noticeList"
             }
           }
         },
@@ -1614,7 +1620,7 @@
           "200": {
             "description": "通知訊息列表資訊",
             "schema": {
-              "$ref": "#/definitions/allNoticeList"
+              "$ref": "#/definitions/noticeList"
             }
           }
         },
@@ -1642,10 +1648,6 @@
             "schema": {
               "type": "object",
               "properties": {
-                "articleId": {
-                  "type": "string",
-                  "example": "文章ID"
-                },
                 "title": {
                   "type": "string",
                   "example": "文章標題"
@@ -1662,10 +1664,6 @@
                   "items": {
                     "type": "string"
                   }
-                },
-                "publishedAt": {
-                  "type": "string",
-                  "example": "文章發布時間"
                 },
                 "image": {
                   "type": "string",
