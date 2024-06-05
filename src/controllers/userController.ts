@@ -73,7 +73,7 @@ const updatePassword = catchAsync(async (req: Request, res: Response, next: Next
 // 取得會員基本資料
 const getUserInfo = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
   const userId = req.user?._id
-  const user = await User.findById(userId, 'name email birthday address zipcode detail country city')
+  const user = await User.findById(userId, 'name email birthday gender zipcode detail country city')
 
   if (!user) {
     return appError({ statusCode: 400, message: '登入發生錯誤，請稍候再嘗試' }, next)
