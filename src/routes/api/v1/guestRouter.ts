@@ -3,7 +3,8 @@ import {
   getAllMagazine,
   getMagazineList,
   getArticleDetail,
-  getHotNewsList
+  getHotNewsList,
+  getArticleCommentList
 } from '../../../controllers/guestController'
 
 const router = express.Router()
@@ -83,4 +84,5 @@ router.get('/hot-news-list'
       }
   */
   , getHotNewsList)
+router.get('/article-comment-page/:id', getArticleCommentList)
 export default router

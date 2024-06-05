@@ -145,6 +145,40 @@ const doc = {
           }
         ]
       }
+    },
+    userCommentList: {
+      status: true,
+      message: '取得文章列表成功',
+      data: {
+        comments: [
+          {
+            articles: [
+              {
+                articleId: '文章ID',
+                title: '文章標題',
+                editor: '文章編輯',
+                topics: ['文章標籤'],
+                publishedAt: '文章發布時間',
+                image: '文章圖片',
+                imageDescription: '文章圖片描述',
+                source: {
+                  name: '文章來源名稱',
+                  url: '文章來源網址'
+                }
+              }
+            ],
+            content: '留言內容',
+            publishedAt: '留言發布時間',
+            id: '留言id'
+          }
+        ],
+        firstPage: '是否為第一頁',
+        lastPage: '是否為最後一頁',
+        empty: '是否沒有資料',
+        totalElement: '總共有幾筆資料',
+        totalPages: '總共有幾頁',
+        targetPage: '目前在第幾頁'
+      }
     }
   }
 }

@@ -4,6 +4,7 @@ import { appSuccess } from '../utils/appSuccess'
 import { appError } from '../middleware/errorMiddleware'
 import { apiState } from '../utils/apiState'
 import Magazine from '../models/Magazine'
+import Comment from '../models/Comment'
 import News, { INews } from '../models/News'
 
 // 取得熱門新聞列表
@@ -89,7 +90,7 @@ const getArticleDetail = catchAsync(async (req: Request, res: Response, next: Ne
   const pattern = /^N-\d+$|^M-\d+$/
   if (!pattern.test(articleId)) return appError(apiState.ID_ERROR, next)
 
-  const data = await News.findOne({ articleId }).select('-_id')
+  const data = await News.findOne({ articleId })
   if (!data) return appError(apiState.DATA_NOT_FOUND, next)
 
   if (articleId.startsWith('M-')) {
@@ -101,4 +102,46 @@ const getArticleDetail = catchAsync(async (req: Request, res: Response, next: Ne
   appSuccess({ res, data, message: '取得文章詳情成功' })
 })
 
-export { getAllMagazine, getMagazineList, getArticleDetail, getHotNewsList }
+// 取得文章留言列表
+const getArticleCommentList = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+  const { id } = req.params
+  const { pageIndex, pageSize } = req.query
+
+  const pageIndexNumber = pageIndex !== undefined && pageIndex !== ''
+    ? parseInt(pageIndex as string)
+    : 1
+
+  const pageSizeNumber = pageSize !== undefined && pageSize !== ''
+    ? parseInt(pageSize as string)
+    : 10
+
+  const [totalElements, comments] = await Promise.all([
+    Comment.countDocuments({ article: id }),
+    Comment.find({ article: id })
+      .populate({
+        path: 'user',
+        select: '-_id name avatar'
+      })
+      .sort({ publishedAt: -1 })
+      .skip((pageIndexNumber - 1) * pageSizeNumber)
+      .limit(pageSizeNumber)
+      .select('-article')
+  ])
+
+  const firstPage = pageIndexNumber === 1
+  const lastPage = totalElements <= pageIndexNumber * pageSizeNumber
+  const empty = totalElements === 0
+  const totalPages = Math.ceil(totalElements / pageSizeNumber)
+  const data = {
+    comments,
+    firstPage,
+    lastPage,
+    empty,
+    totalElements,
+    totalPages,
+    targetPage: pageIndexNumber
+  }
+  appSuccess({ res, data, message: '取得文章留言列表成功' })
+})
+
+export { getAllMagazine, getMagazineList, getArticleDetail, getHotNewsList, getArticleCommentList }

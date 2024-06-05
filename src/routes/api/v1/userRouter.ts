@@ -10,6 +10,9 @@ import {
   getUserFollowList,
   addArticleFollow,
   deleteArticleFollow,
+  getUserCommentList,
+  createUserComment,
+  deleteUserComment,
   getMagazineArticleDetail
 } from '../../../controllers/userController'
 import {
@@ -264,6 +267,32 @@ router.get('/magazine-article-detail/:articleId',
   }
 */
   getMagazineArticleDetail)
+
+// 留言
+router.get('/article-comment-page',
+  /*
+    * #swagger.tags= ['Users']
+    #swagger.description = '取得會員留言列表'
+    #swagger.security = [{'api_key': ['apiKeyAuth']}]
+    #swagger.parameters['pageSize'] = {
+      in: 'query',
+      type: 'String',
+      description: '每頁數量',
+    },
+    #swagger.parameters['pageIndex'] = {
+      in: 'query',
+      type: 'String',
+      description: '當前頁數',
+    },
+    #swagger.responses[200] = {
+      description: '留言列表資訊',
+      schema: { $ref: '#/definitions/userCommentList' }
+    }
+    */
+  getUserCommentList)
+router.post('/article-comment/:id', createUserComment)
+router.delete('/article-comment/:id', deleteUserComment)
+
 // 訂閱服務
 router.get('/subscription',
   /*
@@ -281,7 +310,6 @@ router.get('/subscription',
       }
     */
   getSubscription)
-
 router.get('/follow-topic',
   /*
     * #swagger.tags= ['Users']
