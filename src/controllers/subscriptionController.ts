@@ -1,7 +1,5 @@
 import { NextFunction, Request, Response } from 'express'
-// import User from '../models/User'
 import Order from '../models/Order'
-import Subscription from '../models/Subscription'
 import { catchAsync } from '../utils/catchAsync'
 import { appSuccess } from '../utils/appSuccess'
 import { appError } from '../middleware/errorMiddleware'
@@ -33,17 +31,4 @@ const getSubscription = catchAsync(async (req: Request, res: Response, next: Nex
   appSuccess({ res, data, message: '查詢成功' })
 })
 
-const toggleRenewal = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-  const { subscriptionId } = req.params
-  const data = await Subscription.findById(subscriptionId)
-  if (!data) {
-    return appSuccess({ res, data: null, message: '沒有找到此筆訂閱紀錄' })
-  }
-
-  data.autoRenew = !data.autoRenew
-  await data.save()
-
-  appSuccess({ res, data: data.autoRenew, message: '狀態更新成功' })
-})
-
-export { getSubscription, toggleRenewal }
+export { getSubscription }
