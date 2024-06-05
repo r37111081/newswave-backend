@@ -16,7 +16,7 @@ import {
   authenticateUser,
   logoutUser
 } from '../../../controllers/authController'
-import { getSubscription, toggleRenewal } from '../../../controllers/subscriptionController'
+import { getSubscription } from '../../../controllers/subscriptionController'
 import { authenticate } from '../../../middleware/authMiddleware'
 
 export const router = express.Router()
@@ -264,26 +264,6 @@ router.get('/subscription',
     */
   getSubscription)
 
-router.patch('/:subscriptionId/subscription/renew',
-  /*
-    * #swagger.tags= ['Users']
-      #swagger.description = '更新訂閱的續訂狀態'
-      #swagger.security = [{'api_key': ['apiKeyAuth']}]
-      #swagger.parameters['subscriptionId'] = {
-        in: 'path',
-        description: 'subscriptionId',
-        required: true,
-        type: 'string'
-      }
-      #swagger.responses[200] = {
-        description: '狀態更新成功',
-        schema: {
-          status: true,
-          message: '狀態更新成功'
-        }
-      }
-    */
-  toggleRenewal)
 router.get('/follow-topic',
   /*
     * #swagger.tags= ['Users']
@@ -299,6 +279,7 @@ router.get('/follow-topic',
     }
   */
   getUserFollowList)
+
 router.post('/follow-topic',
   /*
     * #swagger.tags= ['Users']

@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from 'express'
 import News from '../models/News'
+import User from '../models/User'
 import { catchAsync } from '../utils/catchAsync'
 import { appSuccess } from '../utils/appSuccess'
 import { appError } from '../middleware/errorMiddleware'
@@ -17,4 +18,19 @@ const getMagazineArticleDetail = catchAsync(async (req: Request, res: Response, 
   appSuccess({ res, data, message: '取得文章詳情成功' })
 })
 
-export { getMagazineArticleDetail }
+const updateSubscriptionRenew = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+  const userId = req.user?._id
+  const { autoRenew } = req.body
+
+  if (typeof autoRenew !== 'boolean') {
+    return appError(apiState.DATA_MISSING, next)
+  }
+
+  await User.findByIdAndUpdate(userId, {
+    autoRenew
+  })
+
+  return appSuccess({ res, data: { autoRenew }, message: '續訂狀態更新成功' })
+})
+
+export { getMagazineArticleDetail, updateSubscriptionRenew }

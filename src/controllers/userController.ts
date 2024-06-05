@@ -13,7 +13,7 @@ const topics = ['國際', '社會', '科技', '財經', '體育', '娛樂']
 // 取得會員狀態資料
 const getUser = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
   const userId = req.user?._id
-  const user = await User.findById(userId, 'name avatar email isVip subscribeExpiredAt collects follows planType')
+  const user = await User.findById(userId, 'name avatar email isVip subscribeExpiredAt collects follows planType autoRenew')
 
   if (!user) {
     return appError({ statusCode: 401, message: '登入發生錯誤，請稍候再嘗試' }, next)

@@ -690,51 +690,6 @@
         ]
       }
     },
-    "/api/v1/user/{subscriptionId}/subscription/renew": {
-      "patch": {
-        "tags": [
-          "Users"
-        ],
-        "description": "更新訂閱的續訂狀態",
-        "parameters": [
-          {
-            "name": "subscriptionId",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "description": "subscriptionId"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "狀態更新成功",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "status": {
-                  "type": "boolean",
-                  "example": true
-                },
-                "message": {
-                  "type": "string",
-                  "example": "狀態更新成功"
-                }
-              },
-              "xml": {
-                "name": "main"
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "api_key": [
-              "apiKeyAuth"
-            ]
-          }
-        ]
-      }
-    },
     "/api/v1/user/follow-topic": {
       "get": {
         "tags": [
@@ -1037,6 +992,63 @@
             "description": "雜誌文章詳情資訊",
             "schema": {
               "$ref": "#/definitions/articleDetailInfo"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_key": [
+              "apiKeyAuth"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/v1/member/auto-renew": {
+      "patch": {
+        "tags": [
+          "Members"
+        ],
+        "description": "更新訂閱續訂狀態",
+        "parameters": [
+          {
+            "name": "autoRenew",
+            "in": "path",
+            "description": "autoRenew",
+            "required": true,
+            "type": "boolean"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "autoRenew": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "狀態更新成功",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "message": {
+                  "type": "string",
+                  "example": "狀態更新成功"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
             }
           }
         },

@@ -1,6 +1,5 @@
 import mongoose, { Document, Schema } from 'mongoose'
 import bcrypt from 'bcryptjs'
-import { ISubscription } from './Subscription'
 
 export interface IUser extends Document {
   name: string;
@@ -9,13 +8,13 @@ export interface IUser extends Document {
   avatar: string;
   isVip: boolean;
   planType: string;
-  subscriptions: ISubscription[];
   createdAt: Date;
   subscribeExpiredAt: Date;
   birthday: string;
   gender: string;
   collects: string[];
   follows: string[];
+  autoRenew: boolean;
   comparePassword: (enteredPassword: string) => Promise<boolean>;
 }
 
@@ -27,13 +26,13 @@ const userSchema = new Schema<IUser>(
     avatar: { type: String, default: '' },
     isVip: { type: Boolean, default: false },
     planType: { type: String, default: '' },
-    subscriptions: [{ type: Schema.Types.ObjectId, ref: 'Subscription' }],
     createdAt: { type: Date, default: Date.now },
     subscribeExpiredAt: { type: Date, default: Date.now },
     birthday: { type: String, default: '2000-01-01' },
     gender: { type: String, default: '1', enum: ['0', '1'] },
     collects: [{ type: String, ref: 'News' }],
-    follows: [{ type: String, ref: 'News' }]
+    follows: [{ type: String, ref: 'News' }],
+    autoRenew: { type: Boolean, default: true }
   },
   {
     versionKey: false
