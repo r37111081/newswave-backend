@@ -148,7 +148,7 @@ const doc = {
     },
     userCommentList: {
       status: true,
-      message: '取得文章列表成功',
+      message: '取得留言列表成功',
       data: {
         comments: [
           {
@@ -167,6 +167,29 @@ const doc = {
                 }
               }
             ],
+            content: '留言內容',
+            publishedAt: '留言發布時間',
+            id: '留言id'
+          }
+        ],
+        firstPage: '是否為第一頁',
+        lastPage: '是否為最後一頁',
+        empty: '是否沒有資料',
+        totalElement: '總共有幾筆資料',
+        totalPages: '總共有幾頁',
+        targetPage: '目前在第幾頁'
+      }
+    },
+    guestCommentList: {
+      status: true,
+      message: '取得留言列表成功',
+      data: {
+        comments: [
+          {
+            user: {
+              name: '使用者名稱',
+              avatar: '使用者頭像'
+            },
             content: '留言內容',
             publishedAt: '留言發布時間',
             id: '留言id'

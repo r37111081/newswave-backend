@@ -141,7 +141,7 @@ const getArticleCommentList = catchAsync(async (req: Request, res: Response, nex
     totalPages,
     targetPage: pageIndexNumber
   }
-  appSuccess({ res, data, message: '取得文章留言列表成功' })
+  appSuccess({ res, data, message: '取得留言列表成功' })
 })
 
 export { getAllMagazine, getMagazineList, getArticleDetail, getHotNewsList, getArticleCommentList }
