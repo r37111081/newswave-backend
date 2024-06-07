@@ -22,6 +22,7 @@ interface UserBasicInfo {
   name: string;
   email: string;
   planType: string;
+  numberOfReads: number;
 }
 
 declare global {
