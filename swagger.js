@@ -247,6 +247,26 @@ const doc = {
         totalPages: '總共有幾頁',
         targetPage: '目前在第幾頁'
       }
+    },
+    allOrderList: {
+      status: true,
+      message: '取得訂閱記錄列表成功',
+      data: {
+        orders: [
+          {
+            _id: '訂單ID',
+            userId: '用戶ID',
+            planType: '訂閱方案',
+            itemName: '商品名稱'
+          }
+        ],
+        firstPage: '是否為第一頁',
+        lastPage: '是否為最後一頁',
+        empty: '是否沒有資料',
+        totalElement: '總共有幾筆資料',
+        totalPages: '總共有幾頁',
+        targetPage: '目前在第幾頁'
+      }
     }
   }
 }

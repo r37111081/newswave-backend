@@ -908,7 +908,7 @@
             "name": "readState",
             "in": "query",
             "type": "String",
-            "description": "all: 全部, read: 已讀, unread: 未讀"
+            "description": "read: 已讀, unread: 未讀"
           }
         ],
         "responses": {
@@ -1723,6 +1723,49 @@
           }
         ]
       }
+    },
+    "/api/v1/admin/order-page": {
+      "get": {
+        "tags": [
+          "Admins"
+        ],
+        "description": "取得訂閱記錄列表",
+        "parameters": [
+          {
+            "name": "pageSize",
+            "in": "query",
+            "type": "String",
+            "description": "每頁數量"
+          },
+          {
+            "name": "pageIndex",
+            "in": "query",
+            "type": "String",
+            "description": "當前頁數"
+          },
+          {
+            "name": "planType",
+            "in": "query",
+            "type": "String",
+            "description": "month: 年訂閱 | year: 年訂閱"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "訂閱紀錄列表資訊",
+            "schema": {
+              "$ref": "#/definitions/allOrderList"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_key": [
+              "apiKeyAuth"
+            ]
+          }
+        ]
+      }
     }
   },
   "definitions": {
@@ -2374,6 +2417,72 @@
             "unreadElements": {
               "type": "string",
               "example": "未讀通知數量"
+            },
+            "firstPage": {
+              "type": "string",
+              "example": "是否為第一頁"
+            },
+            "lastPage": {
+              "type": "string",
+              "example": "是否為最後一頁"
+            },
+            "empty": {
+              "type": "string",
+              "example": "是否沒有資料"
+            },
+            "totalElement": {
+              "type": "string",
+              "example": "總共有幾筆資料"
+            },
+            "totalPages": {
+              "type": "string",
+              "example": "總共有幾頁"
+            },
+            "targetPage": {
+              "type": "string",
+              "example": "目前在第幾頁"
+            }
+          }
+        }
+      }
+    },
+    "allOrderList": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "boolean",
+          "example": true
+        },
+        "message": {
+          "type": "string",
+          "example": "取得訂閱記錄列表成功"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "orders": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "_id": {
+                    "type": "string",
+                    "example": "訂單ID"
+                  },
+                  "userId": {
+                    "type": "string",
+                    "example": "用戶ID"
+                  },
+                  "planType": {
+                    "type": "string",
+                    "example": "訂閱方案"
+                  },
+                  "itemName": {
+                    "type": "string",
+                    "example": "商品名稱"
+                  }
+                }
+              }
             },
             "firstPage": {
               "type": "string",

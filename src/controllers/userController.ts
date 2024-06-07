@@ -345,7 +345,7 @@ const getUserNoticeList = catchAsync(async (req: Request, res: Response, next: N
 
   const readStateType = readState !== undefined && readState !== ''
     ? readState as string
-    : 'all'
+    : ''
 
   const user = await User.findById(userId)
   if (!user) return appError(apiState.DATA_NOT_FOUND, next)

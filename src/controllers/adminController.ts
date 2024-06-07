@@ -7,6 +7,7 @@ import { postFollowNotice, postSystemNotice } from '../utils/notice'
 import { formatToDate } from '../utils/helper'
 import News from '../models/News'
 import Notice from '../models/Notice'
+import Order from '../models/Order'
 
 // 新增新聞文章
 const createNewsArticle = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
@@ -75,4 +76,45 @@ const getNoticeList = catchAsync(async (req: Request, res: Response, next: NextF
   appSuccess({ res, data, message: '取得通知訊息列表成功' })
 })
 
-export { createNewsArticle, getNoticeList, postSystemNotice }
+// 取得用戶訂閱列表
+const getAllUserOrderList = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+  const { pageIndex, pageSize, planType } = req.query
+
+  const pageIndexNumber = pageIndex !== undefined && pageIndex !== ''
+    ? parseInt(pageIndex as string)
+    : 1
+
+  const pageSizeNumber = pageSize !== undefined && pageSize !== ''
+    ? parseInt(pageSize as string)
+    : 10
+
+  const planTypeState = planType !== undefined && planType !== ''
+    ? { planType }
+    : {}
+
+  const [totalElements, orders] = await Promise.all([
+    Order.countDocuments({ ...planTypeState }),
+    Order.find({ ...planTypeState })
+      .sort({ publishedAt: -1 })
+      .skip((pageIndexNumber - 1) * pageSizeNumber)
+      .limit(pageSizeNumber)
+      .select('userId planType itemName')
+  ])
+
+  const firstPage = pageIndexNumber === 1
+  const lastPage = totalElements <= pageIndexNumber * pageSizeNumber
+  const empty = totalElements === 0
+  const totalPages = Math.ceil(totalElements / pageSizeNumber)
+  let data = {
+    orders,
+    firstPage,
+    lastPage,
+    empty,
+    totalElements,
+    totalPages,
+    targetPage: pageIndexNumber
+  }
+  appSuccess({ res, data, message: '取得訂閱記錄列表成功' })
+})
+
+export { createNewsArticle, getNoticeList, postSystemNotice, getAllUserOrderList }

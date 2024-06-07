@@ -1,6 +1,6 @@
 import express from 'express'
 import { authenticateAdmin } from '../../../controllers/authController'
-import { getNoticeList, createNewsArticle } from '../../../controllers/adminController'
+import { createNewsArticle, getNoticeList, getAllUserOrderList } from '../../../controllers/adminController'
 
 const router = express.Router()
 
@@ -45,11 +45,6 @@ router.get('/notice-list',
       type: 'String',
       description: '當前頁數',
     },
-    #swagger.parameters['readState'] = {
-      in: 'query',
-      type: 'String',
-      description: 'all: 全部, read: 已讀, unread: 未讀',
-    },
     #swagger.responses[200] = {
       description: '通知訊息列表資訊',
       schema: { $ref: '#/definitions/noticeList' }
@@ -88,5 +83,31 @@ router.post('/create-news-article',
     }
   */
   createNewsArticle)
+router.get('/order-page',
+  /*
+    #swagger.tags= ['Admins']
+    #swagger.description = '取得訂閱記錄列表'
+    #swagger.security = [{'api_key': ['apiKeyAuth']}]
+    #swagger.parameters['pageSize'] = {
+      in: 'query',
+      type: 'String',
+      description: '每頁數量',
+    },
+    #swagger.parameters['pageIndex'] = {
+      in: 'query',
+      type: 'String',
+      description: '當前頁數',
+    },
+    #swagger.parameters['planType'] = {
+      in: 'query',
+      type: 'String',
+      description: 'month: 年訂閱 | year: 年訂閱',
+    },
+    #swagger.responses[200] = {
+      description: '訂閱紀錄列表資訊',
+      schema: { $ref: '#/definitions/allOrderList' }
+    }
+  */
+  getAllUserOrderList)
 
 export default router

@@ -347,7 +347,7 @@ router.delete('/article-comment/:id',
 
 router.get('/notice-list',
   /*
-  * #swagger.tags= ['Users']
+  #swagger.tags= ['Users']
   #swagger.description = '取得會員通知訊息列表'
   #swagger.security = [{'api_key': ['apiKeyAuth']}]
   #swagger.parameters['pageSize'] = {
@@ -363,7 +363,7 @@ router.get('/notice-list',
   #swagger.parameters['readState'] = {
     in: 'query',
     type: 'String',
-    description: 'all: 全部, read: 已讀, unread: 未讀',
+    description: 'read: 已讀, unread: 未讀',
   },
   #swagger.responses[200] = {
     description: '通知訊息列表資訊',
