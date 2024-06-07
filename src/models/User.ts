@@ -6,7 +6,6 @@ export interface IUser extends Document {
   email: string;
   password: string;
   avatar: string;
-  isVip: boolean;
   planType: string;
   createdAt: Date;
   subscribeExpiredAt: Date;
@@ -24,7 +23,6 @@ const userSchema = new Schema<IUser>(
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     avatar: { type: String, default: '' },
-    isVip: { type: Boolean, default: false },
     planType: { type: String, default: '' },
     createdAt: { type: Date, default: Date.now },
     subscribeExpiredAt: { type: Date, default: Date.now },

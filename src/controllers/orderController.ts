@@ -107,7 +107,6 @@ const getPaymentResults = catchAsync(async (req:Request, res:Response, next:Next
     if (isPaidSuccess) {
       await User.findByIdAndUpdate(new ObjectId(CustomField1),
         {
-          isVip: true,
           planType: CustomField2,
           subscribeExpiredAt
         }
