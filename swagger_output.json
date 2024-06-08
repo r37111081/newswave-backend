@@ -659,6 +659,38 @@
         ]
       }
     },
+    "/api/v1/user/magazine-article-detail/{articleId}": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "description": "取得雜誌文章詳情",
+        "parameters": [
+          {
+            "name": "articleId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "文章ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "雜誌文章詳情資訊",
+            "schema": {
+              "$ref": "#/definitions/magazineDetailInfo"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_key": [
+              "apiKeyAuth"
+            ]
+          }
+        ]
+      }
+    },
     "/api/v1/user/subscription": {
       "get": {
         "tags": [
@@ -960,38 +992,6 @@
               "xml": {
                 "name": "main"
               }
-            }
-          }
-        },
-        "security": [
-          {
-            "api_key": [
-              "apiKeyAuth"
-            ]
-          }
-        ]
-      }
-    },
-    "/api/v1/member/magazine-article-detail/{articleId}": {
-      "get": {
-        "tags": [
-          "Members"
-        ],
-        "description": "取得雜誌文章詳情",
-        "parameters": [
-          {
-            "name": "articleId",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "description": "文章ID"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "雜誌文章詳情資訊",
-            "schema": {
-              "$ref": "#/definitions/articleDetailInfo"
             }
           }
         },
@@ -1412,92 +1412,141 @@
         },
         "message": {
           "type": "string",
-          "example": "取得文章詳情成功"
+          "example": "取得新聞文章詳情成功"
         },
         "data": {
           "type": "object",
           "properties": {
-            "articles": {
+            "articleId": {
+              "type": "string",
+              "example": "文章ID"
+            },
+            "title": {
+              "type": "string",
+              "example": "文章標題"
+            },
+            "editor": {
+              "type": "string",
+              "example": "文章編輯"
+            },
+            "topics": {
               "type": "array",
+              "example": [
+                "文章標籤"
+              ],
               "items": {
-                "type": "object",
-                "properties": {
-                  "articleId": {
-                    "type": "string",
-                    "example": "文章ID"
-                  },
-                  "title": {
-                    "type": "string",
-                    "example": "文章標題"
-                  },
-                  "editor": {
-                    "type": "string",
-                    "example": "文章編輯"
-                  },
-                  "topics": {
-                    "type": "array",
-                    "example": [
-                      "文章標籤"
-                    ],
-                    "items": {
-                      "type": "string"
-                    }
-                  },
-                  "publishedAt": {
-                    "type": "string",
-                    "example": "文章發布時間"
-                  },
-                  "image": {
-                    "type": "string",
-                    "example": "文章圖片"
-                  },
-                  "imageDescription": {
-                    "type": "string",
-                    "example": "文章圖片描述"
-                  },
-                  "content": {
-                    "type": "string",
-                    "example": "文章內容"
-                  },
-                  "source": {
-                    "type": "object",
-                    "properties": {
-                      "name": {
-                        "type": "string",
-                        "example": "文章來源名稱"
-                      },
-                      "url": {
-                        "type": "string",
-                        "example": "文章來源網址"
-                      }
+                "type": "string"
+              }
+            },
+            "publishedAt": {
+              "type": "string",
+              "example": "文章發布時間"
+            },
+            "image": {
+              "type": "string",
+              "example": "文章圖片"
+            },
+            "imageDescription": {
+              "type": "string",
+              "example": "文章圖片描述"
+            },
+            "content": {
+              "type": "string",
+              "example": "文章內容"
+            },
+            "source": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "example": "文章來源名稱"
+                },
+                "url": {
+                  "type": "string",
+                  "example": "文章來源網址"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "magazineDetailInfo": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "boolean",
+          "example": true
+        },
+        "message": {
+          "type": "string",
+          "example": "取得雜誌文章詳情成功"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "article": {
+              "type": "object",
+              "properties": {
+                "articleId": {
+                  "type": "string",
+                  "example": "文章ID"
+                },
+                "title": {
+                  "type": "string",
+                  "example": "文章標題"
+                },
+                "editor": {
+                  "type": "string",
+                  "example": "文章編輯"
+                },
+                "topics": {
+                  "type": "array",
+                  "example": [
+                    "文章標籤"
+                  ],
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "publishedAt": {
+                  "type": "string",
+                  "example": "文章發布時間"
+                },
+                "image": {
+                  "type": "string",
+                  "example": "文章圖片"
+                },
+                "imageDescription": {
+                  "type": "string",
+                  "example": "文章圖片描述"
+                },
+                "content": {
+                  "type": "string",
+                  "example": "文章內容"
+                },
+                "source": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "example": "文章來源名稱"
+                    },
+                    "url": {
+                      "type": "string",
+                      "example": "文章來源網址"
                     }
                   }
                 }
               }
             },
-            "firstPage": {
+            "numberOfReads": {
               "type": "string",
-              "example": "是否為第一頁"
+              "example": "剩餘可閱讀次數"
             },
-            "lastPage": {
+            "orderSate": {
               "type": "string",
-              "example": "是否為最後一頁"
-            },
-            "empty": {
-              "type": "string",
-              "example": "是否沒有資料"
-            },
-            "totalElement": {
-              "type": "string",
-              "example": "總共有幾筆資料"
-            },
-            "totalPages": {
-              "type": "string",
-              "example": "總共有幾頁"
-            },
-            "targetPage": {
-              "type": "string",
-              "example": "目前在第幾頁"
+              "example": "訂閱狀態"
             }
           }
         }
