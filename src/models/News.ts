@@ -70,6 +70,7 @@ newsSchema.set('toJSON', {
   virtuals: true,
   transform: (doc, ret) => {
     delete ret._id
+    delete ret.id
     return ret
   }
 })

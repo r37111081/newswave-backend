@@ -109,6 +109,8 @@ router.post('/logout',
 
 // 以下放需要被驗證的路由
 router.use(authenticate)
+
+// 會員資料
 router.patch('/password',
   /*
     * #swagger.tags= ['Users']
@@ -197,6 +199,8 @@ router.patch('/info',
     }
   */
   updateUserInfo)
+
+// 文章收藏
 router.get('/collect-page',
   /*
     #swagger.tags= ['Users']
@@ -258,23 +262,63 @@ router.delete('/collect-article/:articleId',
     }
   */
   deleteArticleCollect)
-router.get('/magazine-article-detail/:articleId',
-/*
-  #swagger.tags= ['Users']
-  #swagger.description = '取得雜誌文章詳情'
-  #swagger.security = [{'api_key': ['apiKeyAuth']}]
-  #swagger.parameters['articleId'] = {
-    in: 'path',
-    description: '文章ID',
-    required: true,
-    type: 'string'
-  }
-  #swagger.responses[200] = {
-    description: '雜誌文章詳情資訊',
-    schema: { $ref: '#/definitions/magazineDetailInfo' }
-  }
-*/
-  getMagazineArticleDetail)
+
+// 主題追蹤
+router.get('/follow-topic',
+  /*
+    #swagger.tags= ['Users']
+    #swagger.description = '取得主題追蹤列表'
+    #swagger.security = [{'api_key': ['apiKeyAuth']}]
+    #swagger.responses[200] = {
+      description: '主題列表資訊',
+      schema: {
+        status: true,
+        data: [],
+        message: '取得主題列表成功'
+      }
+    }
+  */
+  getUserFollowList)
+router.post('/follow-topic',
+  /*
+    #swagger.tags= ['Users']
+    #swagger.description = '新增主題追蹤'
+    #swagger.security = [{'api_key': ['apiKeyAuth']}]
+    #swagger.parameters['topic'] = {
+      in: 'query',
+      description: '主題',
+      required: true,
+      type: 'string'
+    }
+    #swagger.responses[200] = {
+      description: '主題追蹤資訊',
+      schema: {
+        status: true,
+        message: '主題追蹤成功'
+      }
+    }
+  */
+  addArticleFollow)
+router.delete('/follow-topic',
+  /*
+    #swagger.tags= ['Users']
+    #swagger.description = '取消主題追蹤'
+    #swagger.security = [{'api_key': ['apiKeyAuth']}]
+    #swagger.parameters['topic'] = {
+      in: 'query',
+      description: '主題',
+      required: true,
+      type: 'string'
+    }
+    #swagger.responses[200] = {
+      description: '主題追蹤資訊',
+      schema: {
+        status: true,
+        message: '取消主題追蹤成功'
+      }
+    }
+  */
+  deleteArticleFollow)
 
 // 留言
 router.get('/article-comment-page',
@@ -345,6 +389,7 @@ router.delete('/article-comment/:id',
   */
   deleteUserComment)
 
+// 通知
 router.get('/notice-list',
   /*
   #swagger.tags= ['Users']
@@ -408,6 +453,26 @@ router.delete('/notice',
     }
   */
   deleteUserAllNotice)
+
+// 雜誌文章
+router.get('/magazine-article-detail/:articleId',
+/*
+  #swagger.tags= ['Users']
+  #swagger.description = '取得雜誌文章詳情'
+  #swagger.security = [{'api_key': ['apiKeyAuth']}]
+  #swagger.parameters['articleId'] = {
+    in: 'path',
+    description: '文章ID',
+    required: true,
+    type: 'string'
+  }
+  #swagger.responses[200] = {
+    description: '雜誌文章詳情資訊',
+    schema: { $ref: '#/definitions/magazineDetailInfo' }
+  }
+*/
+  getMagazineArticleDetail)
+
 // 訂閱服務
 router.get('/subscription',
   /*
@@ -425,61 +490,5 @@ router.get('/subscription',
     }
   */
   getSubscription)
-router.get('/follow-topic',
-  /*
-    #swagger.tags= ['Users']
-    #swagger.description = '取得主題追蹤列表'
-    #swagger.security = [{'api_key': ['apiKeyAuth']}]
-    #swagger.responses[200] = {
-      description: '主題列表資訊',
-      schema: {
-        status: true,
-        data: [],
-        message: '取得主題列表成功'
-      }
-    }
-  */
-  getUserFollowList)
-
-router.post('/follow-topic',
-  /*
-    #swagger.tags= ['Users']
-    #swagger.description = '新增主題追蹤'
-    #swagger.security = [{'api_key': ['apiKeyAuth']}]
-    #swagger.parameters['topic'] = {
-      in: 'query',
-      description: '主題',
-      required: true,
-      type: 'string'
-    }
-    #swagger.responses[200] = {
-      description: '主題追蹤資訊',
-      schema: {
-        status: true,
-        message: '主題追蹤成功'
-      }
-    }
-  */
-  addArticleFollow)
-router.delete('/follow-topic',
-  /*
-    #swagger.tags= ['Users']
-    #swagger.description = '取消主題追蹤'
-    #swagger.security = [{'api_key': ['apiKeyAuth']}]
-    #swagger.parameters['topic'] = {
-      in: 'query',
-      description: '主題',
-      required: true,
-      type: 'string'
-    }
-    #swagger.responses[200] = {
-      description: '主題追蹤資訊',
-      schema: {
-        status: true,
-        message: '取消主題追蹤成功'
-      }
-    }
-  */
-  deleteArticleFollow)
 
 export default router
