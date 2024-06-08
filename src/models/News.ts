@@ -67,6 +67,14 @@ const newsSchema = new Schema<INews>(
   }
 )
 
+newsSchema.set('toJSON', {
+  virtuals: true,
+  transform: (doc, ret) => {
+    delete ret._id
+    return ret
+  }
+})
+
 const News = mongoose.model('New', newsSchema)
 
 export default News

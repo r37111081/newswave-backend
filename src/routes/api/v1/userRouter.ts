@@ -10,6 +10,9 @@ import {
   getUserFollowList,
   addArticleFollow,
   deleteArticleFollow,
+  getUserCommentList,
+  createUserComment,
+  deleteUserComment,
   getMagazineArticleDetail
 } from '../../../controllers/userController'
 import {
@@ -167,7 +170,7 @@ router.get('/info/:id',
   getUserInfo)
 router.patch('/info',
   /*
-    * #swagger.tags= ['Users']
+    #swagger.tags= ['Users']
     #swagger.description = '更新會員基本資料'
     #swagger.security = [{'api_key': ['apiKeyAuth']}]
     #swagger.parameters['body'] = {
@@ -193,7 +196,7 @@ router.patch('/info',
   updateUserInfo)
 router.get('/collect-page',
   /*
-    * #swagger.tags= ['Users']
+    #swagger.tags= ['Users']
     #swagger.description = '取得收藏列表'
     #swagger.security = [{'api_key': ['apiKeyAuth']}]
     #swagger.parameters['pageIndex'] = {
@@ -209,7 +212,7 @@ router.get('/collect-page',
   getUserCollectList)
 router.post('/collect-article/:articleId',
   /*
-    * #swagger.tags= ['Users']
+    #swagger.tags= ['Users']
     #swagger.description = '新增收藏文章'
     #swagger.security = [{'api_key': ['apiKeyAuth']}]
     #swagger.parameters['articleId'] = {
@@ -229,7 +232,7 @@ router.post('/collect-article/:articleId',
   addArticleCollect)
 router.delete('/collect-article/:articleId',
   /*
-    * #swagger.tags= ['Users']
+    #swagger.tags= ['Users']
     #swagger.description = '取消收藏文章'
     #swagger.security = [{'api_key': ['apiKeyAuth']}]
     #swagger.parameters['articleId'] = {
@@ -264,27 +267,96 @@ router.get('/magazine-article-detail/:articleId',
   }
 */
   getMagazineArticleDetail)
+
+// 留言
+router.get('/article-comment-page',
+  /*
+    #swagger.tags= ['Users']
+    #swagger.description = '取得會員留言列表'
+    #swagger.security = [{'api_key': ['apiKeyAuth']}]
+    #swagger.parameters['pageSize'] = {
+      in: 'query',
+      type: 'String',
+      description: '每頁數量',
+    },
+    #swagger.parameters['pageIndex'] = {
+      in: 'query',
+      type: 'String',
+      description: '當前頁數',
+    },
+    #swagger.responses[200] = {
+      description: '留言列表資訊',
+      schema: { $ref: '#/definitions/userCommentList' }
+    }
+  */
+  getUserCommentList)
+router.post('/article-comment/:id',
+  /*
+    #swagger.tags= ['Users']
+    #swagger.description = '新增會員留言'
+    #swagger.security = [{'api_key': ['apiKeyAuth']}]
+    #swagger.parameters['id'] = {
+      in: 'path',
+      description: '文章UID',
+      required: true,
+      type: 'string'
+    }
+    #swagger.parameters['body'] = {
+      in: 'body',
+      schema: {
+        content: '留言內容'
+      },
+    }
+    #swagger.responses[200] = {
+      description: '留言資訊',
+      schema: {
+        status: true,
+        message: '新增留言成功'
+      }
+    }
+  */
+  createUserComment)
+router.delete('/article-comment/:id',
+  /*
+    #swagger.tags= ['Users']
+    #swagger.description = '新增會員留言'
+    #swagger.security = [{'api_key': ['apiKeyAuth']}]
+    #swagger.parameters['id'] = {
+      in: 'path',
+      description: '文章UID',
+      required: true,
+      type: 'string'
+    }
+    #swagger.responses[200] = {
+      description: '留言資訊',
+      schema: {
+        status: true,
+        message: '刪除留言成功'
+      }
+    }
+  */
+  deleteUserComment)
+
 // 訂閱服務
 router.get('/subscription',
   /*
-    * #swagger.tags= ['Users']
-      #swagger.description = '查詢用戶訂單記錄'
-      #swagger.security = [{'api_key': ['apiKeyAuth']}]
-      #swagger.parameters['transactionId'] = {
-        in: 'query',
-        type: 'String',
-        description: '訂單編號',
-      },
-      #swagger.responses[200] = {
-        description: '成功返回用戶的訂閱狀態',
-        schema: {$ref: '#/definitions/subscriptionInfo'}
-      }
-    */
+    #swagger.tags= ['Users']
+    #swagger.description = '查詢用戶訂單記錄'
+    #swagger.security = [{'api_key': ['apiKeyAuth']}]
+    #swagger.parameters['transactionId'] = {
+      in: 'query',
+      type: 'String',
+      description: '訂單編號',
+    },
+    #swagger.responses[200] = {
+      description: '成功返回用戶的訂閱狀態',
+      schema: {$ref: '#/definitions/subscriptionInfo'}
+    }
+  */
   getSubscription)
-
 router.get('/follow-topic',
   /*
-    * #swagger.tags= ['Users']
+    #swagger.tags= ['Users']
     #swagger.description = '取得主題追蹤列表'
     #swagger.security = [{'api_key': ['apiKeyAuth']}]
     #swagger.responses[200] = {
@@ -300,7 +372,7 @@ router.get('/follow-topic',
 
 router.post('/follow-topic',
   /*
-    * #swagger.tags= ['Users']
+    #swagger.tags= ['Users']
     #swagger.description = '新增主題追蹤'
     #swagger.security = [{'api_key': ['apiKeyAuth']}]
     #swagger.parameters['topic'] = {
@@ -320,7 +392,7 @@ router.post('/follow-topic',
   addArticleFollow)
 router.delete('/follow-topic',
   /*
-    * #swagger.tags= ['Users']
+    #swagger.tags= ['Users']
     #swagger.description = '取消主題追蹤'
     #swagger.security = [{'api_key': ['apiKeyAuth']}]
     #swagger.parameters['topic'] = {

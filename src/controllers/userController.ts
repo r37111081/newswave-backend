@@ -1,12 +1,14 @@
 import { NextFunction, Request, Response } from 'express'
 import User from '../models/User'
 import News from '../models/News'
+import Comment from '../models/Comment'
 import bcrypt from 'bcryptjs'
 import validator from 'validator'
 import { catchAsync } from '../utils/catchAsync'
 import { appSuccess } from '../utils/appSuccess'
 import { appError } from '../middleware/errorMiddleware'
 import { apiState } from '../utils/apiState'
+import { formatToDate } from '../utils/helper'
 
 const topics = ['國際', '社會', '科技', '財經', '體育', '娛樂']
 
@@ -223,6 +225,79 @@ const deleteArticleFollow = catchAsync(async (req: Request, res: Response, next:
   appSuccess({ res, message: '取消追蹤主題成功' })
 })
 
+// 取得會員留言列表
+const getUserCommentList = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+  const userId = req.user?._id
+  const { pageIndex, pageSize } = req.query
+
+  const pageIndexNumber = pageIndex !== undefined && pageIndex !== ''
+    ? parseInt(pageIndex as string)
+    : 1
+
+  const pageSizeNumber = pageSize !== undefined && pageSize !== ''
+    ? parseInt(pageSize as string)
+    : 10
+
+  const [totalElements, comments] = await Promise.all([
+    Comment.countDocuments({ user: userId }),
+    Comment.find({ user: userId })
+      .populate('article')
+      .sort({ publishedAt: -1 })
+      .skip((pageIndexNumber - 1) * pageSizeNumber)
+      .limit(pageSizeNumber)
+      .select('-user')
+  ])
+
+  const firstPage = pageIndexNumber === 1
+  const lastPage = totalElements <= pageIndexNumber * pageSizeNumber
+  const empty = totalElements === 0
+  const totalPages = Math.ceil(totalElements / pageSizeNumber)
+  const data = {
+    comments,
+    firstPage,
+    lastPage,
+    empty,
+    totalElements,
+    totalPages,
+    targetPage: pageIndexNumber
+  }
+  appSuccess({ res, data, message: '取得留言列表成功' })
+})
+
+// 新增會員留言
+const createUserComment = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+  const userId = req.user?._id
+  const { id } = req.params
+  const { content } = req.body
+
+  if (!content) return appError(apiState.DATA_MISSING, next)
+
+  const article = await News.findOne({ _id: id })
+  if (!article) return appError(apiState.DATA_NOT_FOUND, next)
+
+  await Comment.create({
+    user: userId,
+    article: id,
+    content,
+    publishedAt: formatToDate()
+  })
+
+  appSuccess({ res, message: '新增留言成功' })
+})
+
+// 刪除會員留言
+const deleteUserComment = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+  const userId = req.user?._id
+  const { id } = req.params
+
+  const comment = await Comment.findOneAndDelete({ _id: id, user: userId })
+  if (!comment) {
+    return appError(apiState.FAIL, next)
+  }
+
+  appSuccess({ res, message: '刪除留言成功' })
+})
+
 // 取得雜誌文章詳情
 const getMagazineArticleDetail = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
   const userId = req.user?._id
@@ -256,5 +331,7 @@ export {
   updateUserInfo, getUserCollectList,
   addArticleCollect, deleteArticleCollect,
   getUserFollowList, addArticleFollow,
-  deleteArticleFollow, getMagazineArticleDetail
+  deleteArticleFollow, getUserCommentList,
+  createUserComment, deleteUserComment,
+  getMagazineArticleDetail
 }

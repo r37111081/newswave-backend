@@ -3,7 +3,8 @@ import {
   getAllMagazine,
   getMagazineList,
   getArticleDetail,
-  getHotNewsList
+  getHotNewsList,
+  getArticleCommentList
 } from '../../../controllers/guestController'
 
 const router = express.Router()
@@ -83,4 +84,31 @@ router.get('/hot-news-list'
       }
   */
   , getHotNewsList)
+router.get('/article-comment-page/:id',
+  /*
+    #swagger.tags= ['Guests']
+    #swagger.description = '取得文章留言列表'
+    #swagger.security = [{'api_key': ['apiKeyAuth']}]
+    #swagger.parameters['id'] = {
+      in: 'path',
+      description: '文章UID',
+      required: true,
+      type: 'string'
+    }
+    #swagger.parameters['pageSize'] = {
+      in: 'query',
+      type: 'String',
+      description: '每頁數量',
+    },
+    #swagger.parameters['pageIndex'] = {
+      in: 'query',
+      type: 'String',
+      description: '當前頁數',
+    },
+    #swagger.responses[200] = {
+      description: '留言列表資訊',
+      schema: { $ref: '#/definitions/guestCommentList' }
+    }
+  */
+  getArticleCommentList)
 export default router
