@@ -202,6 +202,71 @@ const doc = {
         totalPages: '總共有幾頁',
         targetPage: '目前在第幾頁'
       }
+    },
+    allNoticeList: {
+      status: true,
+      message: '取得通知訊息列表成功',
+      data: {
+        notices: [
+          {
+            id: '通知ID',
+            articleId: '文章ID',
+            title: '文章標題',
+            editor: '文章編輯',
+            topics: ['文章標籤'],
+            publishedAt: '文章發布時間'
+          }
+        ],
+        firstPage: '是否為第一頁',
+        lastPage: '是否為最後一頁',
+        empty: '是否沒有資料',
+        totalElement: '總共有幾筆資料',
+        totalPages: '總共有幾頁',
+        targetPage: '目前在第幾頁'
+      }
+    },
+    userNoticeList: {
+      status: true,
+      message: '取得通知訊息列表成功',
+      data: {
+        notices: [
+          {
+            id: '通知ID',
+            articleId: '文章ID',
+            title: '文章標題',
+            editor: '文章編輯',
+            topics: ['文章標籤'],
+            publishedAt: '文章發布時間'
+          }
+        ],
+        unreadElements: '未讀通知數量',
+        firstPage: '是否為第一頁',
+        lastPage: '是否為最後一頁',
+        empty: '是否沒有資料',
+        totalElement: '總共有幾筆資料',
+        totalPages: '總共有幾頁',
+        targetPage: '目前在第幾頁'
+      }
+    },
+    allOrderList: {
+      status: true,
+      message: '取得訂閱記錄列表成功',
+      data: {
+        orders: [
+          {
+            _id: '訂單ID',
+            userId: '用戶ID',
+            planType: '訂閱方案',
+            itemName: '商品名稱'
+          }
+        ],
+        firstPage: '是否為第一頁',
+        lastPage: '是否為最後一頁',
+        empty: '是否沒有資料',
+        totalElement: '總共有幾筆資料',
+        totalPages: '總共有幾頁',
+        targetPage: '目前在第幾頁'
+      }
     }
   }
 }

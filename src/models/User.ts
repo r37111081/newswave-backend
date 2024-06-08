@@ -15,6 +15,10 @@ export interface IUser extends Document {
   follows: string[];
   autoRenew: boolean;
   numberOfReads: number;
+  notices: {
+    noticeId: string;
+    read: boolean;
+  }[];
   comparePassword: (enteredPassword: string) => Promise<boolean>;
 }
 
@@ -27,12 +31,18 @@ const userSchema = new Schema<IUser>(
     planType: { type: String, default: '' },
     createdAt: { type: Date, default: Date.now },
     subscribeExpiredAt: { type: Date, default: Date.now },
-    birthday: { type: String, default: '2000-01-01' },
+    birthday: { type: String, default: '' },
     gender: { type: String, default: '1', enum: ['0', '1'] },
     collects: [{ type: String, ref: 'News' }],
     follows: [{ type: String, ref: 'News' }],
     autoRenew: { type: Boolean, default: true },
-    numberOfReads: { type: Number, default: 3 }
+    numberOfReads: { type: Number, default: 3 },
+    notices: [
+      {
+        noticeId: { type: String, ref: 'Notice' },
+        read: { type: Boolean, default: false }
+      }
+    ]
   },
   {
     versionKey: false

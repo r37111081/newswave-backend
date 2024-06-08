@@ -13,7 +13,10 @@ import {
   getUserCommentList,
   createUserComment,
   deleteUserComment,
-  getMagazineArticleDetail
+  getMagazineArticleDetail,
+  getUserNoticeList,
+  updateUserNoticeRead,
+  deleteUserAllNotice
 } from '../../../controllers/userController'
 import {
   registerUser,
@@ -199,6 +202,11 @@ router.get('/collect-page',
     #swagger.tags= ['Users']
     #swagger.description = '取得收藏列表'
     #swagger.security = [{'api_key': ['apiKeyAuth']}]
+    #swagger.parameters['pageSize'] = {
+      in: 'query',
+      type: 'String',
+      description: '每頁數量',
+    },
     #swagger.parameters['pageIndex'] = {
       in: 'query',
       type: 'String',
@@ -337,6 +345,69 @@ router.delete('/article-comment/:id',
   */
   deleteUserComment)
 
+router.get('/notice-list',
+  /*
+  #swagger.tags= ['Users']
+  #swagger.description = '取得會員通知訊息列表'
+  #swagger.security = [{'api_key': ['apiKeyAuth']}]
+  #swagger.parameters['pageSize'] = {
+    in: 'query',
+    type: 'String',
+    description: '每頁數量',
+  },
+  #swagger.parameters['pageIndex'] = {
+    in: 'query',
+    type: 'String',
+    description: '當前頁數',
+  },
+  #swagger.parameters['readState'] = {
+    in: 'query',
+    type: 'String',
+    description: 'read: 已讀, unread: 未讀',
+  },
+  #swagger.responses[200] = {
+    description: '通知訊息列表資訊',
+    schema: { $ref: '#/definitions/noticeList' }
+  }
+*/
+  getUserNoticeList)
+router.patch('/notice/:noticeId',
+  /*
+    * #swagger.tags= ['Users']
+    #swagger.description = '會員已閱讀此通知訊息'
+    #swagger.security = [{'api_key': ['apiKeyAuth']}]
+    #swagger.parameters['noticeId'] = {
+      in: 'path',
+      description: 'noticeId',
+      required: true,
+      type: 'string'
+    }
+    #swagger.responses[200] = {
+      description: '通知訊息資訊',
+      schema: {
+        status: true,
+        message: '已閱讀通知訊息成功'
+      }
+    }
+  */
+  updateUserNoticeRead)
+router.delete('/notice',
+  /*
+    * #swagger.tags= ['Users']
+    #swagger.description = '會員刪除所有通知訊息'
+    #swagger.security = [{'api_key': ['apiKeyAuth']}]
+    #swagger.responses[200] = {
+      description: '通知訊息資訊',
+      schema: {
+        status: true,
+        data: {
+          notices: []
+        },
+        message: '刪除所有通知訊息成功'
+      }
+    }
+  */
+  deleteUserAllNotice)
 // 訂閱服務
 router.get('/subscription',
   /*
