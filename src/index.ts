@@ -7,6 +7,7 @@ import cookieParser from 'cookie-parser'
 import swaggerUi from 'swagger-ui-express'
 import swaggerFile from '../swagger_output.json'
 import routes from './routes'
+import { connectSocketIo } from './connections/socket'
 
 // 遠端資料庫連線
 import connectUserDB from './connections/userDB'
@@ -21,7 +22,8 @@ interface UserBasicInfo {
   _id: string;
   name: string;
   email: string;
-  isVip: boolean;
+  planType: string;
+  numberOfReads: number;
 }
 
 declare global {
@@ -43,9 +45,10 @@ app.use(cookieParser())
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 
+const originList: string[] = [process.env.FRONT_END_URL || '', process.env.FRONT_END_ADMIN_URL || '']
 // 設置 CORS 選項
 const corsOptions = {
-  origin: process.env.FRONT_END_URL,
+  origin: originList,
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   preflightContinue: false,
   optionsSuccessStatus: 204,
@@ -67,6 +70,7 @@ connectUserDB()
 
 // 啟動server
 const port = process.env.PORT || 3000
-app.listen(port, () => {
+const server = app.listen(port, () => {
   console.log(`Server is running on port ${port}`)
 })
+connectSocketIo(server)

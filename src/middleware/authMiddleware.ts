@@ -21,7 +21,7 @@ const authenticate = asyncHandler(
         throw new AuthenticationError(401, 'UserId not found')
       }
 
-      const user = await User.findById(decoded.userId, '_id name email isVip')
+      const user = await User.findById(decoded.userId, '_id name email planType numberOfReads')
 
       if (!user) {
         throw new AuthenticationError(401, 'User not found')
@@ -36,7 +36,7 @@ const authenticate = asyncHandler(
 )
 
 const vipVerify = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-  if (!req.user?.isVip) {
+  if (req.user?.planType === '' && req.user?.numberOfReads === 0) {
     return appError({ statusCode: 401, message: '非訂閱用戶' }, next)
   }
   next()

@@ -40,7 +40,7 @@ const newsSchema = new Schema<INews>(
     },
     imageDescribe: {
       type: String,
-      required: true
+      default: ''
     },
     image: {
       type: String,
@@ -53,12 +53,11 @@ const newsSchema = new Schema<INews>(
     source: {
       name: {
         type: String,
-        required: true
+        default: ''
       },
       url: {
         type: String,
-        default: '',
-        required: true
+        default: ''
       }
     }
   },
@@ -66,6 +65,15 @@ const newsSchema = new Schema<INews>(
     versionKey: false
   }
 )
+
+newsSchema.set('toJSON', {
+  virtuals: true,
+  transform: (doc, ret) => {
+    delete ret._id
+    delete ret.id
+    return ret
+  }
+})
 
 const News = mongoose.model('New', newsSchema)
 

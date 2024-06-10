@@ -30,6 +30,10 @@ const doc = {
       description: '訂閱使用者'
     },
     {
+      name: 'Orders',
+      description: '訂閱管理-金流'
+    },
+    {
       name: 'Upload',
       description: '上傳檔案'
     },
@@ -90,30 +94,42 @@ const doc = {
     },
     articleDetailInfo: {
       status: true,
-      message: '取得文章詳情成功',
+      message: '取得新聞文章詳情成功',
       data: {
-        articles: [
-          {
-            articleId: '文章ID',
-            title: '文章標題',
-            editor: '文章編輯',
-            topics: ['文章標籤'],
-            publishedAt: '文章發布時間',
-            image: '文章圖片',
-            imageDescription: '文章圖片描述',
-            content: '文章內容',
-            source: {
-              name: '文章來源名稱',
-              url: '文章來源網址'
-            }
+        articleId: '文章ID',
+        title: '文章標題',
+        editor: '文章編輯',
+        topics: ['文章標籤'],
+        publishedAt: '文章發布時間',
+        image: '文章圖片',
+        imageDescription: '文章圖片描述',
+        content: '文章內容',
+        source: {
+          name: '文章來源名稱',
+          url: '文章來源網址'
+        }
+      }
+    },
+    magazineDetailInfo: {
+      status: true,
+      message: '取得雜誌文章詳情成功',
+      data: {
+        article: {
+          articleId: '文章ID',
+          title: '文章標題',
+          editor: '文章編輯',
+          topics: ['文章標籤'],
+          publishedAt: '文章發布時間',
+          image: '文章圖片',
+          imageDescription: '文章圖片描述',
+          content: '文章內容',
+          source: {
+            name: '文章來源名稱',
+            url: '文章來源網址'
           }
-        ],
-        firstPage: '是否為第一頁',
-        lastPage: '是否為最後一頁',
-        empty: '是否沒有資料',
-        totalElement: '總共有幾筆資料',
-        totalPages: '總共有幾頁',
-        targetPage: '目前在第幾頁'
+        },
+        numberOfReads: '剩餘可閱讀次數',
+        orderSate: '訂閱狀態'
       }
     },
     subscriptionInfo: {
@@ -128,6 +144,128 @@ const doc = {
             expiryDate: 'Wed Jun 19 2024 23:39:33 GMT+0800 (台北標準時間)'
           }
         ]
+      }
+    },
+    userCommentList: {
+      status: true,
+      message: '取得留言列表成功',
+      data: {
+        comments: [
+          {
+            articles: [
+              {
+                articleId: '文章ID',
+                title: '文章標題',
+                editor: '文章編輯',
+                topics: ['文章標籤'],
+                publishedAt: '文章發布時間',
+                image: '文章圖片',
+                imageDescription: '文章圖片描述',
+                source: {
+                  name: '文章來源名稱',
+                  url: '文章來源網址'
+                }
+              }
+            ],
+            content: '留言內容',
+            publishedAt: '留言發布時間',
+            id: '留言id'
+          }
+        ],
+        firstPage: '是否為第一頁',
+        lastPage: '是否為最後一頁',
+        empty: '是否沒有資料',
+        totalElement: '總共有幾筆資料',
+        totalPages: '總共有幾頁',
+        targetPage: '目前在第幾頁'
+      }
+    },
+    guestCommentList: {
+      status: true,
+      message: '取得留言列表成功',
+      data: {
+        comments: [
+          {
+            user: {
+              name: '使用者名稱',
+              avatar: '使用者頭像'
+            },
+            content: '留言內容',
+            publishedAt: '留言發布時間',
+            id: '留言id'
+          }
+        ],
+        firstPage: '是否為第一頁',
+        lastPage: '是否為最後一頁',
+        empty: '是否沒有資料',
+        totalElement: '總共有幾筆資料',
+        totalPages: '總共有幾頁',
+        targetPage: '目前在第幾頁'
+      }
+    },
+    allNoticeList: {
+      status: true,
+      message: '取得通知訊息列表成功',
+      data: {
+        notices: [
+          {
+            id: '通知ID',
+            articleId: '文章ID',
+            title: '文章標題',
+            editor: '文章編輯',
+            topics: ['文章標籤'],
+            publishedAt: '文章發布時間'
+          }
+        ],
+        firstPage: '是否為第一頁',
+        lastPage: '是否為最後一頁',
+        empty: '是否沒有資料',
+        totalElement: '總共有幾筆資料',
+        totalPages: '總共有幾頁',
+        targetPage: '目前在第幾頁'
+      }
+    },
+    userNoticeList: {
+      status: true,
+      message: '取得通知訊息列表成功',
+      data: {
+        notices: [
+          {
+            id: '通知ID',
+            articleId: '文章ID',
+            title: '文章標題',
+            editor: '文章編輯',
+            topics: ['文章標籤'],
+            publishedAt: '文章發布時間'
+          }
+        ],
+        unreadElements: '未讀通知數量',
+        firstPage: '是否為第一頁',
+        lastPage: '是否為最後一頁',
+        empty: '是否沒有資料',
+        totalElement: '總共有幾筆資料',
+        totalPages: '總共有幾頁',
+        targetPage: '目前在第幾頁'
+      }
+    },
+    allOrderList: {
+      status: true,
+      message: '取得訂閱記錄列表成功',
+      data: {
+        orders: [
+          {
+            _id: '訂單ID',
+            userId: '用戶ID',
+            planType: '訂閱方案',
+            itemName: '商品名稱'
+          }
+        ],
+        firstPage: '是否為第一頁',
+        lastPage: '是否為最後一頁',
+        empty: '是否沒有資料',
+        totalElement: '總共有幾筆資料',
+        totalPages: '總共有幾頁',
+        targetPage: '目前在第幾頁'
       }
     }
   }

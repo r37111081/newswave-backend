@@ -1,21 +1,24 @@
 import mongoose, { Document, Schema } from 'mongoose'
 import bcrypt from 'bcryptjs'
-import { ISubscription } from './Subscription'
 
 export interface IUser extends Document {
   name: string;
   email: string;
   password: string;
   avatar: string;
-  isVip: boolean;
-  subscriptions: ISubscription[];
+  planType: string;
   createdAt: Date;
-  collectElements: number;
-  followElements: number;
+  subscribeExpiredAt: Date;
   birthday: string;
   gender: string;
   collects: string[];
   follows: string[];
+  autoRenew: boolean;
+  numberOfReads: number;
+  notices: {
+    noticeId: string;
+    read: boolean;
+  }[];
   comparePassword: (enteredPassword: string) => Promise<boolean>;
 }
 
@@ -25,15 +28,21 @@ const userSchema = new Schema<IUser>(
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     avatar: { type: String, default: '' },
-    isVip: { type: Boolean, default: false },
-    subscriptions: [{ type: Schema.Types.ObjectId, ref: 'Subscription' }],
+    planType: { type: String, default: '' },
     createdAt: { type: Date, default: Date.now },
-    collectElements: { type: Number, default: 0 },
-    followElements: { type: Number, default: 0 },
-    birthday: { type: String, default: '2000-01-01' },
+    subscribeExpiredAt: { type: Date, default: Date.now },
+    birthday: { type: String, default: '' },
     gender: { type: String, default: '1', enum: ['0', '1'] },
     collects: [{ type: String, ref: 'News' }],
-    follows: [{ type: String, ref: 'News' }]
+    follows: [{ type: String, ref: 'News' }],
+    autoRenew: { type: Boolean, default: true },
+    numberOfReads: { type: Number, default: 3 },
+    notices: [
+      {
+        noticeId: { type: String, ref: 'Notice' },
+        read: { type: Boolean, default: false }
+      }
+    ]
   },
   {
     versionKey: false
