@@ -147,6 +147,31 @@
         }
       }
     },
+    "/api/v1/guest/news-page": {
+      "get": {
+        "tags": [
+          "Guests"
+        ],
+        "description": "取得新聞首頁列表分頁",
+        "parameters": [
+          {
+            "name": "pageIndex",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "topic",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
     "/api/v1/guest/article-comment-page/{id}": {
       "get": {
         "tags": [
@@ -715,26 +740,121 @@
         ]
       }
     },
-    "/api/v1/user/magazine-article-detail/{articleId}": {
+    "/api/v1/user/follow-topic": {
       "get": {
         "tags": [
           "Users"
         ],
-        "description": "取得雜誌文章詳情",
+        "description": "取得主題追蹤列表",
+        "responses": {
+          "200": {
+            "description": "主題列表資訊",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "data": {
+                  "type": "array",
+                  "example": [],
+                  "items": {}
+                },
+                "message": {
+                  "type": "string",
+                  "example": "取得主題列表成功"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "api_key": [
+              "apiKeyAuth"
+            ]
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Users"
+        ],
+        "description": "新增主題追蹤",
         "parameters": [
           {
-            "name": "articleId",
-            "in": "path",
+            "name": "topic",
+            "in": "query",
+            "description": "主題",
             "required": true,
-            "type": "string",
-            "description": "文章ID"
+            "type": "string"
           }
         ],
         "responses": {
           "200": {
-            "description": "雜誌文章詳情資訊",
+            "description": "主題追蹤資訊",
             "schema": {
-              "$ref": "#/definitions/magazineDetailInfo"
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "message": {
+                  "type": "string",
+                  "example": "主題追蹤成功"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "api_key": [
+              "apiKeyAuth"
+            ]
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Users"
+        ],
+        "description": "取消主題追蹤",
+        "parameters": [
+          {
+            "name": "topic",
+            "in": "query",
+            "description": "主題",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "主題追蹤資訊",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "message": {
+                  "type": "string",
+                  "example": "取消主題追蹤成功"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
             }
           }
         },
@@ -1019,6 +1139,38 @@
         ]
       }
     },
+    "/api/v1/user/magazine-article-detail/{articleId}": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "description": "取得雜誌文章詳情",
+        "parameters": [
+          {
+            "name": "articleId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "文章ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "雜誌文章詳情資訊",
+            "schema": {
+              "$ref": "#/definitions/magazineDetailInfo"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_key": [
+              "apiKeyAuth"
+            ]
+          }
+        ]
+      }
+    },
     "/api/v1/user/subscription": {
       "get": {
         "tags": [
@@ -1038,133 +1190,6 @@
             "description": "成功返回用戶的訂閱狀態",
             "schema": {
               "$ref": "#/definitions/subscriptionInfo"
-            }
-          }
-        },
-        "security": [
-          {
-            "api_key": [
-              "apiKeyAuth"
-            ]
-          }
-        ]
-      }
-    },
-    "/api/v1/user/follow-topic": {
-      "get": {
-        "tags": [
-          "Users"
-        ],
-        "description": "取得主題追蹤列表",
-        "responses": {
-          "200": {
-            "description": "主題列表資訊",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "status": {
-                  "type": "boolean",
-                  "example": true
-                },
-                "data": {
-                  "type": "array",
-                  "example": [],
-                  "items": {}
-                },
-                "message": {
-                  "type": "string",
-                  "example": "取得主題列表成功"
-                }
-              },
-              "xml": {
-                "name": "main"
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "api_key": [
-              "apiKeyAuth"
-            ]
-          }
-        ]
-      },
-      "post": {
-        "tags": [
-          "Users"
-        ],
-        "description": "新增主題追蹤",
-        "parameters": [
-          {
-            "name": "topic",
-            "in": "query",
-            "description": "主題",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "主題追蹤資訊",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "status": {
-                  "type": "boolean",
-                  "example": true
-                },
-                "message": {
-                  "type": "string",
-                  "example": "主題追蹤成功"
-                }
-              },
-              "xml": {
-                "name": "main"
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "api_key": [
-              "apiKeyAuth"
-            ]
-          }
-        ]
-      },
-      "delete": {
-        "tags": [
-          "Users"
-        ],
-        "description": "取消主題追蹤",
-        "parameters": [
-          {
-            "name": "topic",
-            "in": "query",
-            "description": "主題",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "主題追蹤資訊",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "status": {
-                  "type": "boolean",
-                  "example": true
-                },
-                "message": {
-                  "type": "string",
-                  "example": "取消主題追蹤成功"
-                }
-              },
-              "xml": {
-                "name": "main"
-              }
             }
           }
         },

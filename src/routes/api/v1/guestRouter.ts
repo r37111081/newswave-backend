@@ -4,7 +4,8 @@ import {
   getMagazineList,
   getArticleDetail,
   getHotNewsList,
-  getArticleCommentList
+  getArticleCommentList,
+  getNewsPage
 } from '../../../controllers/guestController'
 
 const router = express.Router()
@@ -68,27 +69,16 @@ router.get('/hot-news-list'
   /**
      * #swagger.tags = ['Guests']
      * #swagger.description  = "取得熱門新聞列表"
-     * #swagger.responses[200] = {
-        schema: {
-          "status": true,
-          "message": "取得成功",
-          "data": [
-            {
-              "articleId": "N-1011",
-              "title":"MLB》大谷翔平太傻才被騙? 紐媒酸:他是棒球天才、理財傻瓜",
-              "topic":["體育"],
-              "publishedAt":2024-01-09 15:39,
-              "image": "https://pgw.udn.com.tw/gw/photo.png",
-              "source": {
-                "name": "聯合新聞網",
-                "url": "https://udn.com"
-              }
-            }
-          ]
-        }
       }
+    }s
   */
   , getHotNewsList)
+router.get('/news-page'
+/**
+   * #swagger.tags = ['Guests']
+   * #swagger.description  = "取得新聞首頁列表分頁"
+*/
+  , getNewsPage)
 router.get('/article-comment-page/:id',
   /*
     #swagger.tags= ['Guests']
