@@ -314,20 +314,47 @@ const getMagazineArticleDetail = catchAsync(async (req: Request, res: Response, 
 
   const user = await User.findById(userId)
   if (!user) return appError(apiState.DATA_NOT_FOUND, next)
-  if (user.numberOfReads !== 0 && user.planType === '') {
-    user.numberOfReads -= 1
-    user.save()
-  } else if (user.numberOfReads === 0 && user.planType === '') {
+
+  if (user.planType === '') {
     article.content = article.content.substring(0, 100) + '...'
   }
 
   const data = {
     article,
-    numberOfReads: user.numberOfReads,
-    orderSate: user.planType === '' ? '未訂閱' : user.planType
+    quota: user.numberOfReads,
+    planType: user.planType
   }
 
   appSuccess({ res, data, message: '取得文章詳情成功' })
+})
+
+// 免費閱讀雜誌文章詳情
+const getMagazineArticleQuota = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+  const userId = req.user?._id
+  const { articleId } = req.params
+  const pattern = /^M-\d+$/
+  if (!pattern.test(articleId)) return appError(apiState.ID_ERROR, next)
+
+  const article = await News.findOne({ articleId }).select('-_id')
+  if (!article) return appError(apiState.DATA_NOT_FOUND, next)
+
+  const user = await User.findById(userId)
+  if (!user) return appError(apiState.DATA_NOT_FOUND, next)
+
+  if (user.numberOfReads === 0) {
+    return appError({ statusCode: 400, message: '免費閱讀次數已用完' }, next)
+  }
+
+  user.numberOfReads -= 1
+  await user.save()
+
+  const data = {
+    article,
+    quota: user.numberOfReads,
+    planType: user.planType
+  }
+
+  appSuccess({ res, data, message: '取得免費閱讀文章詳情成功' })
 })
 
 // 取得會員通知訊息列表
@@ -412,5 +439,6 @@ export {
   deleteArticleFollow, getUserCommentList,
   createUserComment, deleteUserComment,
   getMagazineArticleDetail, getUserNoticeList,
-  deleteUserAllNotice, updateUserNoticeRead
+  deleteUserAllNotice, updateUserNoticeRead,
+  getMagazineArticleQuota
 }
