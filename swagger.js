@@ -128,8 +128,8 @@ const doc = {
             url: '文章來源網址'
           }
         },
-        numberOfReads: '剩餘可閱讀次數',
-        orderSate: '訂閱狀態'
+        quota: '剩餘可閱讀次數',
+        planType: '訂閱狀態'
       }
     },
     subscriptionInfo: {
