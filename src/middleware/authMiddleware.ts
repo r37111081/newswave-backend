@@ -5,6 +5,32 @@ import asyncHandler from 'express-async-handler'
 import { AuthenticationError, appError } from './errorMiddleware'
 import { catchAsync } from '../utils/catchAsync'
 
+const getUserId = asyncHandler(
+  async (req: Request, res: Response, next: NextFunction) => {
+    let token = req.headers?.authorization?.split('Bearer ')?.[1]
+
+    if (!token) {
+      return next()
+    }
+
+    const jwtSecret = process.env.JWT_SECRET || ''
+    const decoded = jwt.verify(token, jwtSecret) as JwtPayload
+
+    if (!decoded || !decoded.userId) {
+      return next()
+    }
+
+    const user = await User.findById(decoded.userId, '_id name email planType numberOfReads')
+
+    if (!user) {
+      return next()
+    }
+
+    req.user = user
+    next()
+  }
+)
+
 const authenticate = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -42,4 +68,4 @@ const vipVerify = catchAsync(async (req: Request, res: Response, next: NextFunct
   next()
 })
 
-export { authenticate, vipVerify }
+export { authenticate, vipVerify, getUserId }

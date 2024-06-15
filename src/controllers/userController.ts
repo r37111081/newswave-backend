@@ -245,11 +245,14 @@ const getUserCommentList = catchAsync(async (req: Request, res: Response, next: 
   const [totalElements, comments] = await Promise.all([
     Comment.countDocuments({ user: userId }),
     Comment.find({ user: userId })
-      .populate('article')
-      .sort({ publishedAt: -1 })
+      .populate({
+        path: 'article',
+        select: '-content'
+      })
+      .sort({ createdAt: -1 })
       .skip((pageIndexNumber - 1) * pageSizeNumber)
       .limit(pageSizeNumber)
-      .select('-user')
+      .select('-user -articleId -createdAt -userId')
   ])
 
   const firstPage = pageIndexNumber === 1
@@ -271,17 +274,19 @@ const getUserCommentList = catchAsync(async (req: Request, res: Response, next: 
 // 新增會員留言
 const createUserComment = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
   const userId = req.user?._id
-  const { id } = req.params
+  const { articleId } = req.params
   const { content } = req.body
 
   if (!content) return appError(apiState.DATA_MISSING, next)
 
-  const article = await News.findOne({ _id: id })
+  const article = await News.findOne({ articleId })
   if (!article) return appError(apiState.DATA_NOT_FOUND, next)
 
   await Comment.create({
     user: userId,
-    article: id,
+    userId,
+    articleId,
+    article: article?._id,
     content,
     publishedAt: formatToDate()
   })
@@ -292,9 +297,9 @@ const createUserComment = catchAsync(async (req: Request, res: Response, next: N
 // 刪除會員留言
 const deleteUserComment = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
   const userId = req.user?._id
-  const { id } = req.params
+  const { commentId } = req.params
 
-  const comment = await Comment.findOneAndDelete({ _id: id, user: userId })
+  const comment = await Comment.findOneAndDelete({ _id: commentId, user: userId })
   if (!comment) {
     return appError(apiState.FAIL, next)
   }

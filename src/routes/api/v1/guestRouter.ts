@@ -6,6 +6,7 @@ import {
   getHotNewsList,
   getArticleCommentList
 } from '../../../controllers/guestController'
+import { getUserId } from '../../../middleware/authMiddleware'
 
 const router = express.Router()
 
@@ -89,14 +90,14 @@ router.get('/hot-news-list'
       }
   */
   , getHotNewsList)
-router.get('/article-comment-page/:id',
+router.get('/article-comment-page/:articleId', getUserId
   /*
     #swagger.tags= ['Guests']
     #swagger.description = '取得文章留言列表'
     #swagger.security = [{'api_key': ['apiKeyAuth']}]
-    #swagger.parameters['id'] = {
+    #swagger.parameters['articleId'] = {
       in: 'path',
-      description: '文章UID',
+      description: '文章ID',
       required: true,
       type: 'string'
     }
@@ -115,5 +116,5 @@ router.get('/article-comment-page/:id',
       schema: { $ref: '#/definitions/guestCommentList' }
     }
   */
-  getArticleCommentList)
+  , getArticleCommentList)
 export default router
