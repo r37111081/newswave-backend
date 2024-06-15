@@ -5,7 +5,7 @@
     "title": "REST API",
     "description": ""
   },
-  "host": "localhost:5173",
+  "host": "localhost:3000",
   "basePath": "/",
   "tags": [
     {
@@ -147,7 +147,7 @@
         }
       }
     },
-    "/api/v1/guest/article-comment-page/{id}": {
+    "/api/v1/guest/article-comment-page/{articleId}": {
       "get": {
         "tags": [
           "Guests"
@@ -155,11 +155,11 @@
         "description": "取得文章留言列表",
         "parameters": [
           {
-            "name": "id",
+            "name": "articleId",
             "in": "path",
             "required": true,
             "type": "string",
-            "description": "文章UID"
+            "description": "文章ID"
           },
           {
             "name": "pageSize",
@@ -879,7 +879,7 @@
         ]
       }
     },
-    "/api/v1/user/article-comment/{id}": {
+    "/api/v1/user/article-comment/{articleId}": {
       "post": {
         "tags": [
           "Users"
@@ -887,11 +887,11 @@
         "description": "新增會員留言",
         "parameters": [
           {
-            "name": "id",
+            "name": "articleId",
             "in": "path",
             "required": true,
             "type": "string",
-            "description": "文章UID"
+            "description": "文章ID"
           },
           {
             "name": "body",
@@ -935,19 +935,21 @@
             ]
           }
         ]
-      },
+      }
+    },
+    "/api/v1/user/article-comment/{commentId}": {
       "delete": {
         "tags": [
           "Users"
         ],
-        "description": "新增會員留言",
+        "description": "刪除會員留言",
         "parameters": [
           {
-            "name": "id",
+            "name": "commentId",
             "in": "path",
             "required": true,
             "type": "string",
-            "description": "文章UID"
+            "description": "留言UID"
           }
         ],
         "responses": {
@@ -1151,7 +1153,7 @@
         "tags": [
           "Users"
         ],
-        "description": "取得雜誌文章詳情",
+        "description": "取得免費閱讀雜誌文章詳情",
         "parameters": [
           {
             "name": "articleId",

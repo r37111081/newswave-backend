@@ -343,14 +343,14 @@ router.get('/article-comment-page',
     }
   */
   getUserCommentList)
-router.post('/article-comment/:id',
+router.post('/article-comment/:articleId',
   /*
     #swagger.tags= ['Users']
     #swagger.description = '新增會員留言'
     #swagger.security = [{'api_key': ['apiKeyAuth']}]
-    #swagger.parameters['id'] = {
+    #swagger.parameters['articleId'] = {
       in: 'path',
-      description: '文章UID',
+      description: '文章ID',
       required: true,
       type: 'string'
     }
@@ -369,14 +369,14 @@ router.post('/article-comment/:id',
     }
   */
   createUserComment)
-router.delete('/article-comment/:id',
+router.delete('/article-comment/:commentId',
   /*
     #swagger.tags= ['Users']
-    #swagger.description = '新增會員留言'
+    #swagger.description = '刪除會員留言'
     #swagger.security = [{'api_key': ['apiKeyAuth']}]
-    #swagger.parameters['id'] = {
+    #swagger.parameters['commentId'] = {
       in: 'path',
-      description: '文章UID',
+      description: '留言UID',
       required: true,
       type: 'string'
     }
