@@ -390,10 +390,22 @@ const getUserNoticeList = catchAsync(async (req: Request, res: Response, next: N
   }
 
   const noticeIds = userNotices.map(n => n.noticeId)
-  const notices = await Notice.find({ _id: { $in: noticeIds } })
+  let notices = await Notice.find({ _id: { $in: noticeIds } })
     .sort({ publishedAt: -1 })
     .skip((pageIndexNumber - 1) * pageSizeNumber)
     .limit(pageSizeNumber)
+    .lean()
+
+  notices = notices.map(notice => {
+    const userNotice = userNotices.find(n => n.noticeId.toString() === notice._id.toString())
+    let newNotice = {
+      ...notice,
+      read: userNotice!.read,
+      id: notice._id
+    }
+    delete newNotice._id
+    return newNotice
+  })
 
   const totalElements = noticeIds.length
   const firstPage = pageIndexNumber === 1
@@ -425,15 +437,29 @@ const updateUserNoticeRead = catchAsync(async (req: Request, res: Response, next
   appSuccess({ res, message: '已閱讀通知訊息成功' })
 })
 
-// 會員刪除所有通知訊息
+// 會員刪除通知訊息
 const deleteUserAllNotice = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
   const userId = req.user?._id
+  const { readState } = req.query
 
-  const data = await User.findByIdAndUpdate(userId, {
-    notices: []
-  }, { new: true, runValidators: true }).select('-_id notices')
+  const readStateType = readState !== undefined && readState !== ''
+    ? readState as string
+    : ''
 
-  appSuccess({ res, data, message: '刪除所有通知訊息成功' })
+  const user = await User.findById(userId)
+  if (!user) return appError(apiState.DATA_NOT_FOUND, next)
+
+  if (readStateType === 'unread') {
+    user.notices = user.notices.filter(n => n.read)
+  } else if (readStateType === 'read') {
+    user.notices = user.notices.filter(n => !n.read)
+  } else {
+    user.notices = []
+  }
+
+  await user.save()
+
+  appSuccess({ res, message: '刪除通知訊息成功' })
 })
 
 export {

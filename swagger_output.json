@@ -1012,7 +1012,7 @@
           "200": {
             "description": "通知訊息列表資訊",
             "schema": {
-              "$ref": "#/definitions/noticeList"
+              "$ref": "#/definitions/userNoticeList"
             }
           }
         },
@@ -1075,7 +1075,15 @@
         "tags": [
           "Users"
         ],
-        "description": "會員刪除所有通知訊息",
+        "description": "會員刪除通知訊息",
+        "parameters": [
+          {
+            "name": "readState",
+            "in": "query",
+            "type": "String",
+            "description": "read: 已讀, unread: 未讀"
+          }
+        ],
         "responses": {
           "200": {
             "description": "通知訊息資訊",
@@ -1086,19 +1094,9 @@
                   "type": "boolean",
                   "example": true
                 },
-                "data": {
-                  "type": "object",
-                  "properties": {
-                    "notices": {
-                      "type": "array",
-                      "example": [],
-                      "items": {}
-                    }
-                  }
-                },
                 "message": {
                   "type": "string",
-                  "example": "刪除所有通知訊息成功"
+                  "example": "刪除通知訊息成功"
                 }
               },
               "xml": {
@@ -2444,6 +2442,10 @@
                   "publishedAt": {
                     "type": "string",
                     "example": "文章發布時間"
+                  },
+                  "read": {
+                    "type": "string",
+                    "example": "是否已讀"
                   }
                 }
               }

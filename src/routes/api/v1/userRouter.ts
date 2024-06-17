@@ -413,7 +413,7 @@ router.get('/notice-list',
   },
   #swagger.responses[200] = {
     description: '通知訊息列表資訊',
-    schema: { $ref: '#/definitions/noticeList' }
+    schema: { $ref: '#/definitions/userNoticeList' }
   }
 */
   getUserNoticeList)
@@ -440,16 +440,18 @@ router.patch('/notice/:noticeId',
 router.delete('/notice',
   /*
     * #swagger.tags= ['Users']
-    #swagger.description = '會員刪除所有通知訊息'
+    #swagger.description = '會員刪除通知訊息'
     #swagger.security = [{'api_key': ['apiKeyAuth']}]
+    #swagger.parameters['readState'] = {
+      in: 'query',
+      type: 'String',
+      description: 'read: 已讀, unread: 未讀',
+    },
     #swagger.responses[200] = {
       description: '通知訊息資訊',
       schema: {
         status: true,
-        data: {
-          notices: []
-        },
-        message: '刪除所有通知訊息成功'
+        message: '刪除通知訊息成功'
       }
     }
   */
