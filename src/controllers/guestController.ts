@@ -93,7 +93,10 @@ const getNewsPage = catchAsync(async (req: Request<INews>, res: Response, next: 
   const { pageIndex, pageSize, topic } = req.query
 
   const topicType = topic !== undefined && topic !== ''
-    ? { topic: { $in: [topic] } }
+    ? {
+        topic: { $in: [topic] },
+        articleId: /^N-/
+      }
     : { articleId: /^N-/ }
 
   const pageIndexNumber = pageIndex !== undefined && pageIndex !== ''
