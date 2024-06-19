@@ -176,7 +176,11 @@ router.get('/info/:id',
   getUserInfo)
 router.patch('/info',
   /*
+<<<<<<< HEAD
+    * #swagger.tags= ['Users']
+=======
     #swagger.tags= ['Users']
+>>>>>>> main
     #swagger.description = '更新會員基本資料'
     #swagger.security = [{'api_key': ['apiKeyAuth']}]
     #swagger.parameters['body'] = {

@@ -88,6 +88,50 @@ const getMagazineList = catchAsync(async (req: Request, res: Response) => {
   appSuccess({ res, data, message: '取得文章列表成功' })
 })
 
+// 取得新聞首頁列表分頁
+const getNewsPage = catchAsync(async (req: Request<INews>, res: Response, next: NextFunction) => {
+  const { pageIndex, pageSize, topic } = req.query
+
+  const topicType = topic !== undefined && topic !== ''
+    ? {
+        topic: { $in: [topic] },
+        articleId: /^N-/
+      }
+    : { articleId: /^N-/ }
+
+  const pageIndexNumber = pageIndex !== undefined && pageIndex !== ''
+    ? parseInt(pageIndex as string)
+    : 1
+
+  const pageSizeNumber = pageSize !== undefined && pageSize !== ''
+    ? parseInt(pageSize as string)
+    : 10
+
+  const [totalElements, articles] = await Promise.all([
+    News.countDocuments({ ...topicType }),
+    News.find({ ...topicType })
+      .select('-_id ')
+      .sort({ publishedAt: -1 })
+      .skip((pageIndexNumber - 1) * pageSizeNumber)
+      .limit(pageSizeNumber)
+  ])
+
+  const firstPage = pageIndexNumber === 1
+  const lastPage = totalElements <= pageIndexNumber * pageSizeNumber
+  const empty = totalElements === 0
+  const totalPages = Math.ceil(totalElements / pageSizeNumber)
+  let data = {
+    articles,
+    firstPage,
+    lastPage,
+    empty,
+    totalElements,
+    totalPages,
+    targetPage: pageIndexNumber
+  }
+  appSuccess({ res, data, message: '取得新聞列表' })
+})
+
 // 取得新聞、雜誌文章詳情
 const getArticleDetail = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
   const { articleId } = req.params
@@ -153,4 +197,4 @@ const getArticleCommentList = catchAsync(async (req: Request, res: Response, nex
   appSuccess({ res, data, message: '取得留言列表成功' })
 })
 
-export { getAllMagazine, getMagazineList, getArticleDetail, getHotNewsList, getArticleCommentList }
+export { getAllMagazine, getMagazineList, getArticleDetail, getHotNewsList, getArticleCommentList, getNewsPage }
