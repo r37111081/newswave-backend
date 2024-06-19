@@ -165,7 +165,7 @@
             "type": "string"
           },
           {
-            "name": "category",
+            "name": "topic",
             "in": "query",
             "type": "string"
           }

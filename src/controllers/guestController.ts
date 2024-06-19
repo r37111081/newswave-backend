@@ -90,10 +90,10 @@ const getMagazineList = catchAsync(async (req: Request, res: Response) => {
 
 // 取得新聞首頁列表分頁
 const getNewsPage = catchAsync(async (req: Request<INews>, res: Response, next: NextFunction) => {
-  const { pageIndex, pageSize, category } = req.query
+  const { pageIndex, pageSize, topic } = req.query
 
-  const categoryType = category !== undefined && category !== ''
-    ? { 'source.name': category }
+  const topicType = topic !== undefined && topic !== ''
+    ? { topic: { $in: [topic] } }
     : { articleId: /^N-/ }
 
   const pageIndexNumber = pageIndex !== undefined && pageIndex !== ''
@@ -105,9 +105,9 @@ const getNewsPage = catchAsync(async (req: Request<INews>, res: Response, next: 
     : 10
 
   const [totalElements, articles] = await Promise.all([
-    News.countDocuments({ ...categoryType }),
-    News.find({ ...categoryType })
-      .select('-_id -content')
+    News.countDocuments({ ...topicType }),
+    News.find({ ...topicType })
+      .select('-_id ')
       .sort({ publishedAt: -1 })
       .skip((pageIndexNumber - 1) * pageSizeNumber)
       .limit(pageSizeNumber)
