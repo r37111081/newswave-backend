@@ -1,13 +1,14 @@
 import { Server as HttpServer } from 'http'
 import { Server, Socket } from 'socket.io'
 
-let onlineUsers: { [userId: string]: string } = {}
+const originList: string[] = [process.env.FRONT_END_URL || '', process.env.FRONT_END_ADMIN_URL || '']
 
+let onlineUsers: { [userId: string]: string } = {}
 let io: Server
 export const connectSocketIo = (server: HttpServer) => {
   io = new Server(server, {
     cors: {
-      origin: 'http://localhost:4000',
+      origin: originList,
       methods: ['GET', 'POST'],
       credentials: true
     }

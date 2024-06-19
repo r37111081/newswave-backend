@@ -16,7 +16,8 @@ import {
   getMagazineArticleDetail,
   getUserNoticeList,
   updateUserNoticeRead,
-  deleteUserAllNotice
+  deleteUserAllNotice,
+  getMagazineArticleQuota
 } from '../../../controllers/userController'
 import {
   registerUser,
@@ -346,14 +347,14 @@ router.get('/article-comment-page',
     }
   */
   getUserCommentList)
-router.post('/article-comment/:id',
+router.post('/article-comment/:articleId',
   /*
     #swagger.tags= ['Users']
     #swagger.description = '新增會員留言'
     #swagger.security = [{'api_key': ['apiKeyAuth']}]
-    #swagger.parameters['id'] = {
+    #swagger.parameters['articleId'] = {
       in: 'path',
-      description: '文章UID',
+      description: '文章ID',
       required: true,
       type: 'string'
     }
@@ -372,14 +373,14 @@ router.post('/article-comment/:id',
     }
   */
   createUserComment)
-router.delete('/article-comment/:id',
+router.delete('/article-comment/:commentId',
   /*
     #swagger.tags= ['Users']
-    #swagger.description = '新增會員留言'
+    #swagger.description = '刪除會員留言'
     #swagger.security = [{'api_key': ['apiKeyAuth']}]
-    #swagger.parameters['id'] = {
+    #swagger.parameters['commentId'] = {
       in: 'path',
-      description: '文章UID',
+      description: '留言UID',
       required: true,
       type: 'string'
     }
@@ -416,7 +417,7 @@ router.get('/notice-list',
   },
   #swagger.responses[200] = {
     description: '通知訊息列表資訊',
-    schema: { $ref: '#/definitions/noticeList' }
+    schema: { $ref: '#/definitions/userNoticeList' }
   }
 */
   getUserNoticeList)
@@ -443,16 +444,18 @@ router.patch('/notice/:noticeId',
 router.delete('/notice',
   /*
     * #swagger.tags= ['Users']
-    #swagger.description = '會員刪除所有通知訊息'
+    #swagger.description = '會員刪除通知訊息'
     #swagger.security = [{'api_key': ['apiKeyAuth']}]
+    #swagger.parameters['readState'] = {
+      in: 'query',
+      type: 'String',
+      description: 'read: 已讀, unread: 未讀',
+    },
     #swagger.responses[200] = {
       description: '通知訊息資訊',
       schema: {
         status: true,
-        data: {
-          notices: []
-        },
-        message: '刪除所有通知訊息成功'
+        message: '刪除通知訊息成功'
       }
     }
   */
@@ -476,6 +479,23 @@ router.get('/magazine-article-detail/:articleId',
   }
 */
   getMagazineArticleDetail)
+router.get('/magazine-article-quota/:articleId',
+/*
+  #swagger.tags= ['Users']
+  #swagger.description = '取得免費閱讀雜誌文章詳情'
+  #swagger.security = [{'api_key': ['apiKeyAuth']}]
+  #swagger.parameters['articleId'] = {
+    in: 'path',
+    description: '文章ID',
+    required: true,
+    type: 'string'
+  }
+  #swagger.responses[200] = {
+    description: '雜誌文章詳情資訊',
+    schema: { $ref: '#/definitions/magazineDetailInfo' }
+  }
+*/
+  getMagazineArticleQuota)
 
 // 訂閱服務
 router.get('/subscription',

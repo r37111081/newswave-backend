@@ -245,11 +245,14 @@ const getUserCommentList = catchAsync(async (req: Request, res: Response, next: 
   const [totalElements, comments] = await Promise.all([
     Comment.countDocuments({ user: userId }),
     Comment.find({ user: userId })
-      .populate('article')
-      .sort({ publishedAt: -1 })
+      .populate({
+        path: 'article',
+        select: '-content'
+      })
+      .sort({ createdAt: -1 })
       .skip((pageIndexNumber - 1) * pageSizeNumber)
       .limit(pageSizeNumber)
-      .select('-user')
+      .select('-user -articleId -createdAt -userId')
   ])
 
   const firstPage = pageIndexNumber === 1
@@ -271,17 +274,19 @@ const getUserCommentList = catchAsync(async (req: Request, res: Response, next: 
 // 新增會員留言
 const createUserComment = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
   const userId = req.user?._id
-  const { id } = req.params
+  const { articleId } = req.params
   const { content } = req.body
 
   if (!content) return appError(apiState.DATA_MISSING, next)
 
-  const article = await News.findOne({ _id: id })
+  const article = await News.findOne({ articleId })
   if (!article) return appError(apiState.DATA_NOT_FOUND, next)
 
   await Comment.create({
     user: userId,
-    article: id,
+    userId,
+    articleId,
+    article: article?._id,
     content,
     publishedAt: formatToDate()
   })
@@ -292,9 +297,9 @@ const createUserComment = catchAsync(async (req: Request, res: Response, next: N
 // 刪除會員留言
 const deleteUserComment = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
   const userId = req.user?._id
-  const { id } = req.params
+  const { commentId } = req.params
 
-  const comment = await Comment.findOneAndDelete({ _id: id, user: userId })
+  const comment = await Comment.findOneAndDelete({ _id: commentId, user: userId })
   if (!comment) {
     return appError(apiState.FAIL, next)
   }
@@ -314,20 +319,47 @@ const getMagazineArticleDetail = catchAsync(async (req: Request, res: Response, 
 
   const user = await User.findById(userId)
   if (!user) return appError(apiState.DATA_NOT_FOUND, next)
-  if (user.numberOfReads !== 0 && user.planType === '') {
-    user.numberOfReads -= 1
-    user.save()
-  } else if (user.numberOfReads === 0 && user.planType === '') {
+
+  if (user.planType === '') {
     article.content = article.content.substring(0, 100) + '...'
   }
 
   const data = {
     article,
-    numberOfReads: user.numberOfReads,
-    orderSate: user.planType === '' ? '未訂閱' : user.planType
+    quota: user.numberOfReads,
+    planType: user.planType
   }
 
   appSuccess({ res, data, message: '取得文章詳情成功' })
+})
+
+// 免費閱讀雜誌文章詳情
+const getMagazineArticleQuota = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+  const userId = req.user?._id
+  const { articleId } = req.params
+  const pattern = /^M-\d+$/
+  if (!pattern.test(articleId)) return appError(apiState.ID_ERROR, next)
+
+  const article = await News.findOne({ articleId }).select('-_id')
+  if (!article) return appError(apiState.DATA_NOT_FOUND, next)
+
+  const user = await User.findById(userId)
+  if (!user) return appError(apiState.DATA_NOT_FOUND, next)
+
+  if (user.numberOfReads === 0) {
+    return appError({ statusCode: 400, message: '免費閱讀次數已用完' }, next)
+  }
+
+  user.numberOfReads -= 1
+  await user.save()
+
+  const data = {
+    article,
+    quota: user.numberOfReads,
+    planType: user.planType
+  }
+
+  appSuccess({ res, data, message: '取得免費閱讀文章詳情成功' })
 })
 
 // 取得會員通知訊息列表
@@ -358,10 +390,22 @@ const getUserNoticeList = catchAsync(async (req: Request, res: Response, next: N
   }
 
   const noticeIds = userNotices.map(n => n.noticeId)
-  const notices = await Notice.find({ _id: { $in: noticeIds } })
+  let notices = await Notice.find({ _id: { $in: noticeIds } })
     .sort({ publishedAt: -1 })
     .skip((pageIndexNumber - 1) * pageSizeNumber)
     .limit(pageSizeNumber)
+    .lean()
+
+  notices = notices.map(notice => {
+    const userNotice = userNotices.find(n => n.noticeId.toString() === notice._id.toString())
+    let newNotice = {
+      ...notice,
+      read: userNotice!.read,
+      id: notice._id
+    }
+    delete newNotice._id
+    return newNotice
+  })
 
   const totalElements = noticeIds.length
   const firstPage = pageIndexNumber === 1
@@ -393,15 +437,29 @@ const updateUserNoticeRead = catchAsync(async (req: Request, res: Response, next
   appSuccess({ res, message: '已閱讀通知訊息成功' })
 })
 
-// 會員刪除所有通知訊息
+// 會員刪除通知訊息
 const deleteUserAllNotice = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
   const userId = req.user?._id
+  const { readState } = req.query
 
-  const data = await User.findByIdAndUpdate(userId, {
-    notices: []
-  }, { new: true, runValidators: true }).select('-_id notices')
+  const readStateType = readState !== undefined && readState !== ''
+    ? readState as string
+    : ''
 
-  appSuccess({ res, data, message: '刪除所有通知訊息成功' })
+  const user = await User.findById(userId)
+  if (!user) return appError(apiState.DATA_NOT_FOUND, next)
+
+  if (readStateType === 'unread') {
+    user.notices = user.notices.filter(n => n.read)
+  } else if (readStateType === 'read') {
+    user.notices = user.notices.filter(n => !n.read)
+  } else {
+    user.notices = []
+  }
+
+  await user.save()
+
+  appSuccess({ res, message: '刪除通知訊息成功' })
 })
 
 export {
@@ -412,5 +470,6 @@ export {
   deleteArticleFollow, getUserCommentList,
   createUserComment, deleteUserComment,
   getMagazineArticleDetail, getUserNoticeList,
-  deleteUserAllNotice, updateUserNoticeRead
+  deleteUserAllNotice, updateUserNoticeRead,
+  getMagazineArticleQuota
 }

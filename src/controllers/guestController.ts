@@ -149,7 +149,8 @@ const getArticleDetail = catchAsync(async (req: Request, res: Response, next: Ne
 
 // 取得文章留言列表
 const getArticleCommentList = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-  const { id } = req.params
+  const userId = req.user?._id
+  const { articleId } = req.params
   const { pageIndex, pageSize } = req.query
 
   const pageIndexNumber = pageIndex !== undefined && pageIndex !== ''
@@ -161,16 +162,20 @@ const getArticleCommentList = catchAsync(async (req: Request, res: Response, nex
     : 10
 
   const [totalElements, comments] = await Promise.all([
-    Comment.countDocuments({ article: id }),
-    Comment.find({ article: id })
-      .populate({
+    Comment.countDocuments({ articleId }),
+    Comment.find({ articleId })
+      .populate([{
         path: 'user',
         select: '-_id name avatar'
-      })
-      .sort({ publishedAt: -1 })
+      }, {
+        path: 'userId',
+        match: { _id: { $eq: userId } },
+        select: '_id'
+      }])
+      .sort({ createdAt: -1 })
       .skip((pageIndexNumber - 1) * pageSizeNumber)
       .limit(pageSizeNumber)
-      .select('-article')
+      .select('-article -articleId -createdAt')
   ])
 
   const firstPage = pageIndexNumber === 1

@@ -128,8 +128,8 @@ const doc = {
             url: '文章來源網址'
           }
         },
-        numberOfReads: '剩餘可閱讀次數',
-        orderSate: '訂閱狀態'
+        quota: '剩餘可閱讀次數',
+        planType: '訂閱狀態'
       }
     },
     subscriptionInfo: {
@@ -236,7 +236,8 @@ const doc = {
             title: '文章標題',
             editor: '文章編輯',
             topics: ['文章標籤'],
-            publishedAt: '文章發布時間'
+            publishedAt: '文章發布時間',
+            read: '是否已讀'
           }
         ],
         unreadElements: '未讀通知數量',

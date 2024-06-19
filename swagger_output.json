@@ -160,7 +160,12 @@
             "type": "string"
           },
           {
-            "name": "topic",
+            "name": "pageSize",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "category",
             "in": "query",
             "type": "string"
           }
@@ -172,7 +177,7 @@
         }
       }
     },
-    "/api/v1/guest/article-comment-page/{id}": {
+    "/api/v1/guest/article-comment-page/{articleId}": {
       "get": {
         "tags": [
           "Guests"
@@ -180,11 +185,11 @@
         "description": "取得文章留言列表",
         "parameters": [
           {
-            "name": "id",
+            "name": "articleId",
             "in": "path",
             "required": true,
             "type": "string",
-            "description": "文章UID"
+            "description": "文章ID"
           },
           {
             "name": "pageSize",
@@ -904,7 +909,7 @@
         ]
       }
     },
-    "/api/v1/user/article-comment/{id}": {
+    "/api/v1/user/article-comment/{articleId}": {
       "post": {
         "tags": [
           "Users"
@@ -912,11 +917,11 @@
         "description": "新增會員留言",
         "parameters": [
           {
-            "name": "id",
+            "name": "articleId",
             "in": "path",
             "required": true,
             "type": "string",
-            "description": "文章UID"
+            "description": "文章ID"
           },
           {
             "name": "body",
@@ -960,19 +965,21 @@
             ]
           }
         ]
-      },
+      }
+    },
+    "/api/v1/user/article-comment/{commentId}": {
       "delete": {
         "tags": [
           "Users"
         ],
-        "description": "新增會員留言",
+        "description": "刪除會員留言",
         "parameters": [
           {
-            "name": "id",
+            "name": "commentId",
             "in": "path",
             "required": true,
             "type": "string",
-            "description": "文章UID"
+            "description": "留言UID"
           }
         ],
         "responses": {
@@ -1035,7 +1042,7 @@
           "200": {
             "description": "通知訊息列表資訊",
             "schema": {
-              "$ref": "#/definitions/noticeList"
+              "$ref": "#/definitions/userNoticeList"
             }
           }
         },
@@ -1098,7 +1105,15 @@
         "tags": [
           "Users"
         ],
-        "description": "會員刪除所有通知訊息",
+        "description": "會員刪除通知訊息",
+        "parameters": [
+          {
+            "name": "readState",
+            "in": "query",
+            "type": "String",
+            "description": "read: 已讀, unread: 未讀"
+          }
+        ],
         "responses": {
           "200": {
             "description": "通知訊息資訊",
@@ -1109,19 +1124,9 @@
                   "type": "boolean",
                   "example": true
                 },
-                "data": {
-                  "type": "object",
-                  "properties": {
-                    "notices": {
-                      "type": "array",
-                      "example": [],
-                      "items": {}
-                    }
-                  }
-                },
                 "message": {
                   "type": "string",
-                  "example": "刪除所有通知訊息成功"
+                  "example": "刪除通知訊息成功"
                 }
               },
               "xml": {
@@ -1145,6 +1150,38 @@
           "Users"
         ],
         "description": "取得雜誌文章詳情",
+        "parameters": [
+          {
+            "name": "articleId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "文章ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "雜誌文章詳情資訊",
+            "schema": {
+              "$ref": "#/definitions/magazineDetailInfo"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_key": [
+              "apiKeyAuth"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/v1/user/magazine-article-quota/{articleId}": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "description": "取得免費閱讀雜誌文章詳情",
         "parameters": [
           {
             "name": "articleId",
@@ -2064,11 +2101,11 @@
                 }
               }
             },
-            "numberOfReads": {
+            "quota": {
               "type": "string",
               "example": "剩餘可閱讀次數"
             },
-            "orderSate": {
+            "planType": {
               "type": "string",
               "example": "訂閱狀態"
             }
@@ -2435,6 +2472,10 @@
                   "publishedAt": {
                     "type": "string",
                     "example": "文章發布時間"
+                  },
+                  "read": {
+                    "type": "string",
+                    "example": "是否已讀"
                   }
                 }
               }
