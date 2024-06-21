@@ -221,6 +221,54 @@
         ]
       }
     },
+    "/api/v1/guest/search-news-page": {
+      "get": {
+        "tags": [
+          "Guests"
+        ],
+        "description": "取得搜尋列表分頁",
+        "parameters": [
+          {
+            "name": "pageSize",
+            "in": "query",
+            "type": "String",
+            "description": "每頁數量"
+          },
+          {
+            "name": "pageIndex",
+            "in": "query",
+            "type": "String",
+            "description": "當前頁數"
+          },
+          {
+            "name": "keyword",
+            "in": "query",
+            "type": "String",
+            "description": "關鍵字"
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "type": "String",
+            "description": "news:新聞文章|magazine:雜誌文章"
+          },
+          {
+            "name": "topic",
+            "in": "query",
+            "type": "String",
+            "description": "新聞主題"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "雜誌文章列表資訊",
+            "schema": {
+              "$ref": "#/definitions/articleList"
+            }
+          }
+        }
+      }
+    },
     "/api/v1/user/register": {
       "post": {
         "tags": [

@@ -5,7 +5,8 @@ import {
   getArticleDetail,
   getHotNewsList,
   getArticleCommentList,
-  getNewsPage
+  getNewsPage,
+  getSearchArticleList
 } from '../../../controllers/guestController'
 import { getUserId } from '../../../middleware/authMiddleware'
 
@@ -107,4 +108,39 @@ router.get('/article-comment-page/:articleId', getUserId
     }
   */
   , getArticleCommentList)
+router.get('/search-news-page',
+  /**
+    #swagger.tags = ['Guests']
+    #swagger.description  = "取得搜尋列表分頁"
+    #swagger.parameters['pageSize'] = {
+      in: 'query',
+      type: 'String',
+      description: '每頁數量',
+    },
+    #swagger.parameters['pageIndex'] = {
+      in: 'query',
+      type: 'String',
+      description: '當前頁數',
+    },
+    #swagger.parameters['keyword'] = {
+      in: 'query',
+      type: 'String',
+      description: '關鍵字',
+    },
+    #swagger.parameters['type'] = {
+      in: 'query',
+      type: 'String',
+      description: 'news:新聞文章|magazine:雜誌文章',
+    },
+    #swagger.parameters['topic'] = {
+      in: 'query',
+      type: 'String',
+      description: '新聞主題',
+    },
+    #swagger.responses[200] = {
+      description: '雜誌文章列表資訊',
+      schema: { $ref: '#/definitions/articleList' }
+    }
+  */
+  getSearchArticleList)
 export default router
