@@ -138,7 +138,7 @@ router.get('/search-news-page',
       description: '新聞主題',
     },
     #swagger.responses[200] = {
-      description: '雜誌文章列表資訊',
+      description: '文章列表資訊',
       schema: { $ref: '#/definitions/articleList' }
     }
   */
