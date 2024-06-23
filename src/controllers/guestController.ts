@@ -110,7 +110,7 @@ const getNewsPage = catchAsync(async (req: Request<INews>, res: Response, next: 
   const [totalElements, articles] = await Promise.all([
     News.countDocuments({ ...topicType }),
     News.find({ ...topicType })
-      .select('-_id ')
+      .select('-_id')
       .sort({ publishedAt: -1 })
       .skip((pageIndexNumber - 1) * pageSizeNumber)
       .limit(pageSizeNumber)
@@ -197,4 +197,68 @@ const getArticleCommentList = catchAsync(async (req: Request, res: Response, nex
   appSuccess({ res, data, message: '取得留言列表成功' })
 })
 
-export { getAllMagazine, getMagazineList, getArticleDetail, getHotNewsList, getArticleCommentList, getNewsPage }
+// 取得搜尋文章列表
+const getSearchArticleList = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+  const { keyword, type, topic, pageIndex, pageSize } = req.query
+
+  const keywordSort = keyword !== undefined && keyword !== ''
+    ? { title: new RegExp(keyword as string, 'i') }
+    : {}
+
+  const typeFifter = type !== undefined && type !== '' && (type === 'news' || type === 'magazine')
+    ? (type === 'news' ? { articleId: { $regex: /^N-/ } } : { articleId: { $regex: /^M-/ } })
+    : {}
+
+  const topicFilter = (topic !== undefined && topic !== '') && (type === 'news' || type === 'magazine')
+    ? (type === 'news' ? { topic: { $in: [topic] } } : { 'source.name': topic })
+    : {}
+
+  const pageIndexNumber = pageIndex !== undefined && pageIndex !== ''
+    ? parseInt(pageIndex as string)
+    : 1
+
+  const pageSizeNumber = pageSize !== undefined && pageSize !== ''
+    ? parseInt(pageSize as string)
+    : 10
+
+  const content = { ...keywordSort, ...typeFifter, ...topicFilter }
+  const [totalElements, articles] = await Promise.all([
+    News.countDocuments(content),
+    News.find(content)
+      .select('-_id')
+      .sort({ publishedAt: -1 })
+      .skip((pageIndexNumber - 1) * pageSizeNumber)
+      .limit(pageSizeNumber)
+      .lean()
+  ])
+
+  const newArticles = articles.map((article) => {
+    article.content = article.content.length > 100
+      ? article.content.substring(0, 100) + '...'
+      : article.content
+    return article
+  })
+
+  const firstPage = pageIndexNumber === 1
+  const lastPage = totalElements <= pageIndexNumber * pageSizeNumber
+  const empty = totalElements === 0
+  const totalPages = Math.ceil(totalElements / pageSizeNumber)
+  let data = {
+    articles: newArticles,
+    firstPage,
+    lastPage,
+    empty,
+    totalElements,
+    totalPages,
+    targetPage: pageIndexNumber
+  }
+
+  appSuccess({ res, data, message: '取得搜尋文章列表成功' })
+})
+
+export {
+  getAllMagazine, getMagazineList,
+  getArticleDetail, getHotNewsList,
+  getArticleCommentList, getNewsPage,
+  getSearchArticleList
+}
