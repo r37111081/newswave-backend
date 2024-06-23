@@ -110,7 +110,7 @@ const getNewsPage = catchAsync(async (req: Request<INews>, res: Response, next: 
   const [totalElements, articles] = await Promise.all([
     News.countDocuments({ ...topicType }),
     News.find({ ...topicType })
-      .select('-_id ')
+      .select('-_id')
       .sort({ publishedAt: -1 })
       .skip((pageIndexNumber - 1) * pageSizeNumber)
       .limit(pageSizeNumber)
@@ -205,17 +205,12 @@ const getSearchArticleList = catchAsync(async (req: Request, res: Response, next
     ? { title: new RegExp(keyword as string, 'i') }
     : {}
 
-  const typeStyle = {
-    news: { articleId: { $regex: /^N-/ } },
-    magazine: { articleId: { $regex: /^M-/ } }
-  }
-
-  const typeSort = type !== undefined && type !== '' && (type === 'news' || type === 'magazine')
-    ? typeStyle[type]
+  const typeFifter = type !== undefined && type !== '' && (type === 'news' || type === 'magazine')
+    ? (type === 'news' ? { articleId: { $regex: /^N-/ } } : { articleId: { $regex: /^M-/ } })
     : {}
 
-  const topicSort = topic !== undefined && topic !== ''
-    ? { topic: { $in: [topic] } }
+  const topicFilter = (topic !== undefined && topic !== '') && (type === 'news' || type === 'magazine')
+    ? (type === 'news' ? { topic: { $in: [topic] } } : { 'source.name': topic })
     : {}
 
   const pageIndexNumber = pageIndex !== undefined && pageIndex !== ''
@@ -226,21 +221,30 @@ const getSearchArticleList = catchAsync(async (req: Request, res: Response, next
     ? parseInt(pageSize as string)
     : 10
 
-  const content = { ...keywordSort, ...typeSort, ...topicSort }
+  const content = { ...keywordSort, ...typeFifter, ...topicFilter }
   const [totalElements, articles] = await Promise.all([
     News.countDocuments(content),
     News.find(content)
+      .select('-_id')
       .sort({ publishedAt: -1 })
       .skip((pageIndexNumber - 1) * pageSizeNumber)
       .limit(pageSizeNumber)
+      .lean()
   ])
+
+  const newArticles = articles.map((article) => {
+    article.content = article.content.length > 100
+      ? article.content.substring(0, 100) + '...'
+      : article.content
+    return article
+  })
 
   const firstPage = pageIndexNumber === 1
   const lastPage = totalElements <= pageIndexNumber * pageSizeNumber
   const empty = totalElements === 0
   const totalPages = Math.ceil(totalElements / pageSizeNumber)
   let data = {
-    articles,
+    articles: newArticles,
     firstPage,
     lastPage,
     empty,
