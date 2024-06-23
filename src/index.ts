@@ -48,7 +48,8 @@ app.use(bodyParser.urlencoded({ extended: true }))
 const originList: string[] = [process.env.FRONT_END_URL || '', process.env.FRONT_END_ADMIN_URL || '']
 // 設置 CORS 選項
 const corsOptions = {
-  origin: originList,
+  // origin: originList,
+  origin: '*',
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   preflightContinue: false,
   optionsSuccessStatus: 204,
