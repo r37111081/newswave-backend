@@ -128,18 +128,6 @@
           "Guests"
         ],
         "description": "取得熱門新聞列表",
-        "parameters": [
-          {
-            "name": "limit",
-            "in": "query",
-            "type": "string"
-          },
-          {
-            "name": "type",
-            "in": "query",
-            "type": "string"
-          }
-        ],
         "responses": {
           "default": {
             "description": ""
@@ -153,23 +141,6 @@
           "Guests"
         ],
         "description": "取得新聞首頁列表分頁",
-        "parameters": [
-          {
-            "name": "pageIndex",
-            "in": "query",
-            "type": "string"
-          },
-          {
-            "name": "pageSize",
-            "in": "query",
-            "type": "string"
-          },
-          {
-            "name": "topic",
-            "in": "query",
-            "type": "string"
-          }
-        ],
         "responses": {
           "default": {
             "description": ""
