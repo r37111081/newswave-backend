@@ -140,7 +140,6 @@ newswave-backend
 
 - node.js v20.12.2
 - tsx v3.14.0
-- esbuild v0.19.5 (還在確認)
 - express v4.19.2
 - mongoose v8.3.2
 - jsonwebtoken v9.0.2
@@ -160,6 +159,23 @@ npm run start
 # 產生 Swagger 文件指令 : 用來產生 Swagger 文件
 npm run swagger-dev
 ```
+## CI/CD
+
+此專案有使用 Render 服務部屬，當專案 merge 到 master 時會自動執行以下動作：
+
+- 建立 Node.js 環境
+- 安裝相依套件
+- 編譯程式碼
+- 部署到 render
+
+## 開發團隊
+
+- [chsiyu](https://github.com/sihyun-user)
+- [chrisT](https://github.com/r37111081)
+- [Ciel](https://github.com/NycteaChen)
+- [kiki880409](https://github.com/kiki880409)
+- [Alan](https://github.com/LOOFOO)
+
 <!--
 ## Docker
 
