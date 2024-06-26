@@ -64,7 +64,7 @@ router.post('/create-news-article',
       schema: {
         title: '文章標題',
         editor: '文章編輯',
-        topics: ['文章標籤'],
+        topic: ['文章標籤'],
         image: '文章圖片',
         imageDescription: '文章圖片描述',
         content: '文章內容',
