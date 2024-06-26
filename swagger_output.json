@@ -1737,7 +1737,7 @@
                   "type": "string",
                   "example": "文章編輯"
                 },
-                "topics": {
+                "topic": {
                   "type": "array",
                   "example": [
                     "文章標籤"
