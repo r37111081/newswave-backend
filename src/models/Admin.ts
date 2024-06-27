@@ -1,14 +1,14 @@
 import mongoose, { Document, Schema } from 'mongoose'
 import bcrypt from 'bcryptjs'
 
-export interface IUser extends Document {
+export interface IAdmin extends Document {
   name: string;
   email: string;
   password: string;
   comparePassword: (enteredPassword: string) => Promise<boolean>;
 }
 
-const adminSchema = new Schema<IUser>(
+const adminSchema = new Schema<IAdmin>(
   {
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
