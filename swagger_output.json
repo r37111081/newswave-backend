@@ -1847,6 +1847,161 @@
           }
         ]
       }
+    },
+    "/api/v1/admin/upload/image": {
+      "post": {
+        "tags": [
+          "Upload"
+        ],
+        "description": "上傳一張圖片，支援JPG、PNG和GIF格式，大小限制為5MB",
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "parameters": [
+          {
+            "name": "file",
+            "in": "formData",
+            "description": "要上傳的圖片文件",
+            "type": "file",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "上傳成功",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "message": {
+                  "type": "string",
+                  "example": "上傳成功"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "imgUrl": {
+                      "type": "string",
+                      "example": "https://storage.goose-admin=16756675200zgdWTJpyeU7BK....."
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "400": {
+            "description": "上傳失敗",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "message": {
+                  "type": "string",
+                  "example": "上傳失敗"
+                },
+                "data": {
+                  "type": "array",
+                  "example": [],
+                  "items": {}
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "api_key": [
+              "apiKeyAuth"
+            ]
+          }
+        ]
+      },
+      "get": {
+        "tags": [
+          "Upload"
+        ],
+        "description": "獲取上傳的圖片列表",
+        "responses": {
+          "200": {
+            "description": "獲取圖片列表成功",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "message": {
+                  "type": "string",
+                  "example": "獲取圖片列表成功"
+                },
+                "data": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "fileName": {
+                        "type": "string",
+                        "example": "images/ecee260f-64c8-49f5-8fe2-b49f56d53785.png"
+                      },
+                      "imgUrl": {
+                        "type": "string",
+                        "example": "https://storage.googleapis.com/ne....."
+                      }
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "400": {
+            "description": "獲取圖片列表失敗",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "message": {
+                  "type": "string",
+                  "example": "獲取圖片列表失敗"
+                },
+                "data": {
+                  "type": "array",
+                  "example": [],
+                  "items": {}
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "api_key": [
+              "apiKeyAuth"
+            ]
+          }
+        ]
+      }
     }
   },
   "definitions": {

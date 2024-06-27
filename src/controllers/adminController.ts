@@ -13,7 +13,7 @@ import Order from '../models/Order'
 const createNewsArticle = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
   const { topic, editor, title, image, imageDescribe, content, source } = req.body
   let articleId
-  if (!topic || !editor || !title || !content || !source) {
+  if (!topic || !editor || !title || !image || !imageDescribe || !content || !source) {
     return appError(apiState.DATA_MISSING, next)
   }
 
