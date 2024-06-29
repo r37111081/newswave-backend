@@ -1829,6 +1829,18 @@
             "in": "query",
             "type": "String",
             "description": "month: 年訂閱 | year: 年訂閱"
+          },
+          {
+            "name": "orderId",
+            "in": "query",
+            "type": "String",
+            "description": "訂單編號"
+          },
+          {
+            "name": "userEmail",
+            "in": "query",
+            "type": "String",
+            "description": "會員信箱"
           }
         ],
         "responses": {
@@ -2710,8 +2722,17 @@
                     "example": "訂單ID"
                   },
                   "userId": {
-                    "type": "string",
-                    "example": "用戶ID"
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "string",
+                        "example": "使用者名稱"
+                      },
+                      "email": {
+                        "type": "string",
+                        "example": "使用者信箱"
+                      }
+                    }
                   },
                   "planType": {
                     "type": "string",

@@ -16,7 +16,8 @@ const orderSchema = new Schema<IOrder>(
   {
     userId: {
       type: String,
-      required: true
+      required: true,
+      ref: 'User'
     },
     planType: {
       type: String,

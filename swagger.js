@@ -256,7 +256,11 @@ const doc = {
         orders: [
           {
             _id: '訂單ID',
-            userId: '用戶ID',
+            userId: {
+              _id: '使用者ID',
+              name: '使用者名稱',
+              email: '使用者信箱'
+            },
             planType: '訂閱方案',
             itemName: '商品名稱'
           }
