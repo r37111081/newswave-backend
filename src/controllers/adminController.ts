@@ -78,7 +78,7 @@ const getNoticeList = catchAsync(async (req: Request, res: Response, next: NextF
 
 // 取得用戶訂閱列表
 const getAllUserOrderList = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-  const { pageIndex, pageSize, planType } = req.query
+  const { pageIndex, pageSize, planType, orderId, userEmail } = req.query
 
   const pageIndexNumber = pageIndex !== undefined && pageIndex !== ''
     ? parseInt(pageIndex as string)
@@ -92,21 +92,40 @@ const getAllUserOrderList = catchAsync(async (req: Request, res: Response, next:
     ? { planType }
     : {}
 
+  const orderIdState = orderId !== undefined && orderId !== ''
+    ? { _id: orderId }
+    : {}
+
+  const queryState = { ...planTypeState, ...orderIdState }
   const [totalElements, orders] = await Promise.all([
-    Order.countDocuments({ ...planTypeState }),
-    Order.find({ ...planTypeState })
+    Order.countDocuments({ ...queryState }),
+    Order.find({ ...queryState })
+      .populate({
+        path: 'userId',
+        select: '-_id name email'
+      })
       .sort({ publishedAt: -1 })
       .skip((pageIndexNumber - 1) * pageSizeNumber)
       .limit(pageSizeNumber)
       .select('userId planType itemName')
   ])
 
+  const ordersFilter = orders.filter((order: any) => {
+    if (userEmail === undefined || userEmail === '') {
+      return order
+    } else {
+      const { userId } = order
+      if (!userId) return false
+      return userId.email === userEmail
+    }
+  })
+
   const firstPage = pageIndexNumber === 1
   const lastPage = totalElements <= pageIndexNumber * pageSizeNumber
   const empty = totalElements === 0
   const totalPages = Math.ceil(totalElements / pageSizeNumber)
   let data = {
-    orders,
+    orders: ordersFilter,
     firstPage,
     lastPage,
     empty,

@@ -1829,6 +1829,18 @@
             "in": "query",
             "type": "String",
             "description": "month: 年訂閱 | year: 年訂閱"
+          },
+          {
+            "name": "orderId",
+            "in": "query",
+            "type": "String",
+            "description": "訂單編號"
+          },
+          {
+            "name": "userEmail",
+            "in": "query",
+            "type": "String",
+            "description": "會員信箱"
           }
         ],
         "responses": {

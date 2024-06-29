@@ -38,7 +38,6 @@ router.post('/login',
     */
   authenticateAdmin)
 
-  
 // 以下放需要被驗證的路由
 router.use(adminAuthenticate)
 
@@ -115,6 +114,16 @@ router.get('/order-page',
       type: 'String',
       description: 'month: 年訂閱 | year: 年訂閱',
     },
+    #swagger.parameters['orderId'] = {
+      in: 'query',
+      type: 'String',
+      description: '訂單編號',
+    },
+    #swagger.parameters['userEmail'] = {
+      in: 'query',
+      type: 'String',
+      description: '會員信箱',
+    },
     #swagger.responses[200] = {
       description: '訂閱紀錄列表資訊',
       schema: { $ref: '#/definitions/allOrderList' }
@@ -122,8 +131,6 @@ router.get('/order-page',
   */
   getAllUserOrderList)
 
-  
-  
 router.post('/upload/image', upload.single('file'),
 /*
   #swagger.tags= ['Upload']
