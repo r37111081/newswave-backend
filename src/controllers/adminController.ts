@@ -102,7 +102,7 @@ const getAllUserOrderList = catchAsync(async (req: Request, res: Response, next:
     Order.find({ ...queryState })
       .populate({
         path: 'userId',
-        select: '-_id name email'
+        select: '_id name email'
       })
       .sort({ publishedAt: -1 })
       .skip((pageIndexNumber - 1) * pageSizeNumber)
