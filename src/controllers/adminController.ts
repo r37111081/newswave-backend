@@ -1,3 +1,4 @@
+import mongoose from 'mongoose'
 import { NextFunction, Request, Response } from 'express'
 import { catchAsync } from '../utils/catchAsync'
 import { appSuccess } from '../utils/appSuccess'
@@ -92,9 +93,14 @@ const getAllUserOrderList = catchAsync(async (req: Request, res: Response, next:
     ? { planType }
     : {}
 
-  const orderIdState = orderId !== undefined && orderId !== ''
-    ? { _id: orderId }
-    : {}
+  let orderIdState = {}
+  if (orderId !== undefined && orderId !== '') {
+    if (!mongoose.isValidObjectId(orderId)) {
+      return appError({ statusCode: 400, message: '訂單編號格式有誤' }, next)
+    } else {
+      orderIdState = { _id: orderId }
+    }
+  }
 
   const queryState = { ...planTypeState, ...orderIdState }
   const [totalElements, orders] = await Promise.all([
