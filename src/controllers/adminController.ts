@@ -38,7 +38,7 @@ const createNewsArticle = catchAsync(async (req: Request, res: Response, next: N
     source
   })
   postFollowNotice(data)
-  appSuccess({ res, message: '新增新聞文章成功' })
+  appSuccess({ res, data, message: '新增新聞文章成功' })
 })
 
 // 取得所有通知訊息
