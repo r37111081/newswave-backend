@@ -1,3 +1,4 @@
+import mongoose from 'mongoose'
 import { NextFunction, Request, Response } from 'express'
 import { catchAsync } from '../utils/catchAsync'
 import { appSuccess } from '../utils/appSuccess'
@@ -37,7 +38,7 @@ const createNewsArticle = catchAsync(async (req: Request, res: Response, next: N
     source
   })
   postFollowNotice(data)
-  appSuccess({ res, message: '新增新聞文章成功' })
+  appSuccess({ res, data, message: '新增新聞文章成功' })
 })
 
 // 取得所有通知訊息
@@ -92,9 +93,14 @@ const getAllUserOrderList = catchAsync(async (req: Request, res: Response, next:
     ? { planType }
     : {}
 
-  const orderIdState = orderId !== undefined && orderId !== ''
-    ? { _id: orderId }
-    : {}
+  let orderIdState = {}
+  if (orderId !== undefined && orderId !== '') {
+    if (!mongoose.isValidObjectId(orderId)) {
+      return appError({ statusCode: 400, message: '訂單編號格式有誤' }, next)
+    } else {
+      orderIdState = { _id: orderId }
+    }
+  }
 
   const queryState = { ...planTypeState, ...orderIdState }
   const [totalElements, orders] = await Promise.all([
